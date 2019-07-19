@@ -1,5 +1,14 @@
-# Object file
-*.o
-
-# Ada Library Information
-*.ali
+Thumbs.db
+.DS_Store
+.gradle
+build/
+target/
+out/
+.idea
+*.iml
+*.ipr
+*.iws
+.project
+.settings
+.classpath
+bin
