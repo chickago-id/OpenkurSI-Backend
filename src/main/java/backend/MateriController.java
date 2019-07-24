@@ -73,4 +73,26 @@ public class MateriController {
         }
 
     }
+
+    @Get("/{id}")
+    public String show(Long id) {
+
+        try {
+
+            Materi materi = materiRepository.findById(id);
+
+            MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+
+            return new Gson().toJson(response);
+
+        } catch(Exception e) {
+
+            String message = e.getMessage();
+
+            MateriResponse response = new MateriResponse("error", message);
+
+            return new Gson().toJson(response);
+        }
+        
+    }
 }
