@@ -3,13 +3,14 @@ package backend.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class Materi {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @NotNull(message = "Kode Materi harus diisi.")

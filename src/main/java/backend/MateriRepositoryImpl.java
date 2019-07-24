@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-import backend.model.*;
+import backend.model.Materi;
 
 @Singleton
 public class MateriRepositoryImpl implements MateriRepository{
@@ -24,7 +24,12 @@ public class MateriRepositoryImpl implements MateriRepository{
 
     @Override
     @Transactional
-    public Materi save(@NotNull Materi materi) {
+    public Materi save(@NotNull String kodeMateri, String namaMateri) {
+
+        Materi materi = new Materi();
+        materi.setKodeMateri(kodeMateri);
+        materi.setNamaMateri(namaMateri);
+
         entityManager.persist(materi);
         return materi;
     }

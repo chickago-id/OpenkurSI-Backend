@@ -44,4 +44,29 @@ public class MateriController {
             return new Gson().toJson(response);
         }
     }
+
+    @Post("/")
+    public String create(@Body String userData) {
+
+        try {
+
+            JsonObject data = new JsonParser().parse(userData).getAsJsonObject();
+            String kodeMateri = data.get("kode").getAsString();
+            String namaMateri = data.get("nama").getAsString();
+
+            Materi materi = materiRepository.save(kodeMateri, namaMateri);
+
+            MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+
+            return new Gson().toJson(response);
+
+        } catch(Exception e) {
+            String message = e.getMessage();
+
+            MateriResponse response = new MateriResponse("error", message);
+
+            return new Gson().toJson(response);
+        }
+
+    }
 }

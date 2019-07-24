@@ -14,6 +14,13 @@ public class MateriResponse {
         this.data = materi;
     }
 
+    public MateriResponse(String status, String message, Materi materi) {
+        this.status = status;
+        this.message = message;
+
+        this.data.add(materi);
+    }
+
     public MateriResponse(String status, String message) {
         this.status = status;
         this.message = message;
