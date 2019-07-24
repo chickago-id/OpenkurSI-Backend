@@ -37,7 +37,11 @@ public class MateriController {
 
             return new Gson().toJson(response);
         } catch(Exception e) {
-            return e.getMessage();
+            String message = e.getMessage();
+
+            MateriResponse response = new MateriResponse("error", message);
+
+            return new Gson().toJson(response);
         }
     }
 }
