@@ -1,3 +1,18 @@
 micronaut:
   application:
     name: backend
+    server:
+        port: 8081
+
+datasources:
+    default:
+        url: jdbc:mariadb://localhost:3306/db_openkursi
+        username: root
+        password: "password"
+        driverClassName: org.mariadb.jdbc.Driver 
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
