@@ -10,7 +10,6 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
@@ -54,11 +53,16 @@ public class MateriController {
             String kodeMateri = data.get("kode").getAsString();
             String namaMateri = data.get("nama").getAsString();
 
-            Materi materi = materiRepository.save(kodeMateri, namaMateri);
+            Materi materi = new Materi();
+            materi.setKodeMateri(kodeMateri);
+            materi.setNamaMateri(namaMateri);
 
-            MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+            Materi result = materiRepository.save(materi);
+
+            MateriResponse response = new MateriResponse("ok", "Data materi", result);
 
             return new Gson().toJson(response);
+
 
         } catch(Exception e) {
             String message = e.getMessage();

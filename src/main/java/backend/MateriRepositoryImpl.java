@@ -22,15 +22,25 @@ public class MateriRepositoryImpl implements MateriRepository{
         this.entityManager = entityManager;
     }
 
+    // @Override
+    // @Transactional
+    // public Materi save(@NotNull String kodeMateri, @NotNull String namaMateri) {
+
+    //     Materi materi = new Materi();
+    //     materi.setKodeMateri(kodeMateri);
+    //     materi.setNamaMateri(namaMateri);
+
+    //     entityManager.persist(materi);
+
+    //     return materi;
+    // }
+
     @Override
     @Transactional
-    public Materi save(@NotNull String kodeMateri, String namaMateri) {
-
-        Materi materi = new Materi();
-        materi.setKodeMateri(kodeMateri);
-        materi.setNamaMateri(namaMateri);
+    public Materi save(@NotNull Materi materi) {
 
         entityManager.persist(materi);
+
         return materi;
     }
 
@@ -50,7 +60,7 @@ public class MateriRepositoryImpl implements MateriRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Materi> findById(@NotNull Long id) {
-        return Optional.ofNullable(entityManager.find(Materi.class, id));
+    public Materi findById(@NotNull Long id) {
+        return entityManager.find(Materi.class, id);
     }
 }
