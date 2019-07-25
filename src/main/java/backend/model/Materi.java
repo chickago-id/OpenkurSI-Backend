@@ -18,19 +18,19 @@ public class Materi {
     @NotNull(message = "Nama Materi harus diisi.")
     private String nama_materi;
 
-    public String getKodeMateri() {
+    public String getKode_materi() {
         return kode_materi;
     }
 
-    public void setKodeMateri(String kode_materi) {
+    public void setKode_materi(String kode_materi) {
         this.kode_materi = kode_materi;
     }
 
-    public String getNamaMateri() {
+    public String getNama_materi() {
         return nama_materi;
     }
 
-    public void setNamaMateri(String nama_materi) {
+    public void setNama_materi(String nama_materi) {
         this.nama_materi = nama_materi;
     }
 

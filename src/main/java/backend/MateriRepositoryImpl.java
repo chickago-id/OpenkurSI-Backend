@@ -22,25 +22,10 @@ public class MateriRepositoryImpl implements MateriRepository{
         this.entityManager = entityManager;
     }
 
-    // @Override
-    // @Transactional
-    // public Materi save(@NotNull String kodeMateri, @NotNull String namaMateri) {
-
-    //     Materi materi = new Materi();
-    //     materi.setKodeMateri(kodeMateri);
-    //     materi.setNamaMateri(namaMateri);
-
-    //     entityManager.persist(materi);
-
-    //     return materi;
-    // }
-
     @Override
     @Transactional
     public Materi save(@NotNull Materi materi) {
-
         entityManager.persist(materi);
-
         return materi;
     }
 

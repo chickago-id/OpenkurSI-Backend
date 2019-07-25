@@ -1,6 +1,7 @@
 package backend;
 
-import backend.model.*;
+import backend.model.Materi;
+import backend.model.MateriResponse;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -16,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 @Controller("/materi")
@@ -29,6 +31,7 @@ public class MateriController {
 
     @Get("/")
     public String index() {
+
         try {
             List<Materi> materi = materiRepository.findAll();
 
@@ -45,24 +48,16 @@ public class MateriController {
     }
 
     @Post("/")
-    public String create(@Body String userData) {
+    public String create(@Body Materi materi) {
 
         try {
 
-            JsonObject data = new JsonParser().parse(userData).getAsJsonObject();
-            String kodeMateri = data.get("kode").getAsString();
-            String namaMateri = data.get("nama").getAsString();
-
-            Materi materi = new Materi();
-            materi.setKodeMateri(kodeMateri);
-            materi.setNamaMateri(namaMateri);
-
             Materi result = materiRepository.save(materi);
-
-            MateriResponse response = new MateriResponse("ok", "Data materi", result);
+                
+            MateriResponse response = new MateriResponse("ok", "Berhasil menambahkan data materi", result);
 
             return new Gson().toJson(response);
-
+            
 
         } catch(Exception e) {
             String message = e.getMessage();
@@ -71,7 +66,6 @@ public class MateriController {
 
             return new Gson().toJson(response);
         }
-
     }
 
     @Get("/{id}")
@@ -81,9 +75,15 @@ public class MateriController {
 
             Materi materi = materiRepository.findById(id);
 
-            MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+            if(materi != null) {
+                MateriResponse response = new MateriResponse("ok", "Data materi", materi);
 
-            return new Gson().toJson(response);
+                return new Gson().toJson(response);
+            } else {
+                MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+
+                return new Gson().toJson(response);
+            } 
 
         } catch(Exception e) {
 
