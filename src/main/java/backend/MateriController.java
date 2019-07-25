@@ -95,4 +95,39 @@ public class MateriController {
         }
         
     }
+
+    @Post("/{id}") 
+    public String update(@Body Materi materi) {
+        // Materi getMateri = materiRepository.findById(id);
+
+        Materi result = materiRepository.update(materi);
+
+        if(result != null) {
+            MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
+
+            return new Gson().toJson(response);
+        } else {
+            MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+
+            return new Gson().toJson(response);
+        }
+    }
+
+    @Delete("/{id}")
+    public String delete(Long id) {
+        Materi getMateri = materiRepository.findById(id);
+         
+        if(getMateri != null) {
+            materiRepository.deleteById(id);
+
+            MateriResponse response = new MateriResponse("ok", "Berhasil menghapus data materi");
+
+            return new Gson().toJson(response);
+
+        } else {
+            MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+
+            return new Gson().toJson(response);
+        }
+    }
 }

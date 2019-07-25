@@ -48,4 +48,14 @@ public class MateriRepositoryImpl implements MateriRepository{
     public Materi findById(@NotNull Long id) {
         return entityManager.find(Materi.class, id);
     }
+
+    @Override
+    @Transactional
+    public void deleteById(@NotNull Long id) {
+        Materi materi = findById(id);
+
+        if(materi != null) {
+            entityManager.remove(materi);
+        }
+    }
 }

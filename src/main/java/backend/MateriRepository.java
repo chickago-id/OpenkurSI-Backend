@@ -12,4 +12,5 @@ public interface MateriRepository {
     Materi update(@NotNull Materi materi);
     List<Materi> findAll();
     Materi findById(@NotNull Long id);
+    void deleteById(@NotNull Long id);
 }
