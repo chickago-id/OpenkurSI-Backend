@@ -53,6 +53,14 @@ public class AkunController {
         ArrayList<String> errorBag = new ArrayList<String>();
         String errorText = "";
 
+        // username sudah ada ato belum
+        List<User> userByUsername = userRepository.findByUsername(username);
+
+        if(userByUsername.get(0) != null) {
+            errorBag.add("Username sudah dipakai.");
+            errorCond += 1; // nek kosong brati error
+        }
+
         if(username.isEmpty()) {
             errorBag.add("Username harus diisi.");
             errorCond += 1; // nek kosong brati error
@@ -67,7 +75,12 @@ public class AkunController {
             errorCond += 1; // nek kosong brati error
         }
 
-        // TODO validasi email boleh dipakai
+        // validasi email boleh dipakai
+        List<User> userByEmail = userRepository.findByEmail(email);
+        if(userByEmail.get(0) != null) {
+            errorBag.add("Email sudah dipakai.");
+            errorCond += 1; // nek kosong brati error
+        }
 
         if(nama_lengkap.isEmpty()) {
             errorBag.add("Nama lengkap harus diisi.");
@@ -105,31 +118,18 @@ public class AkunController {
             userData.setUsername(username);
             userData.setEmail(email);
             userData.setPassword(passwordHash);
-            userData.setRole("Admin");
+            userData.setRole("Peserta");
             
             // simpan data ke db user
             userRepository.save(userData);
-            
+
             // TODO simpan data ke db user_detail
             
             
-            ArrayList<Map> returnData = new ArrayList<Map>();
-
-            Map<String, Long> userIdProp = new HashMap<String, Long>();
-            userIdProp.put("id", userData.getId());
-            returnData.add(userIdProp);
-
-            Map<String, String> userUsernameProp = new HashMap<String, String>();
-            userUsernameProp.put("username", userData.getUsername());
-            returnData.add(userUsernameProp);
-
-            Map<String, String> userEmailProp = new HashMap<String, String>();
-            userEmailProp.put("email", userData.getEmail());
-            returnData.add(userEmailProp);
-
-            Map<String, String> userRoleProp = new HashMap<String, String>();
-            userRoleProp.put("role", userData.getRole());
-            returnData.add(userRoleProp);
+            Map<String, String> returnData = new HashMap<String, String>();
+            returnData.put("message", "Berhasil membuat akun");
+            returnData.put("status", "ok");
+            returnData.put("data", userData.toString());
 
             // kembalikan pesan sukses
             return new Gson().toJson(returnData);

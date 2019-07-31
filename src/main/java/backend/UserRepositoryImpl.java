@@ -38,7 +38,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        String qlString = "SELECT m FROM User m";
+        String qlString = "SELECT u FROM User u";
         TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
         return query.getResultList();
     }
@@ -47,6 +47,21 @@ public class UserRepositoryImpl implements UserRepository{
     @Transactional(readOnly = true)
     public User findById(@NotNull Long id) {
         return entityManager.find(User.class, id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findByUsername(@NotNull String username) {
+        String qlString = "SELECT u FROM User u where username = \'" + username +"\'";
+        TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
+        return query.getResultList();
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findByEmail(@NotNull String email) {
+        String qlString = "SELECT u FROM User u where email = \'" + email +"\'";
+        TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
+        return query.getResultList();
     }
 
     @Override
