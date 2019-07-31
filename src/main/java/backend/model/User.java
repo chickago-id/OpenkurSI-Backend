@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class User {
@@ -43,6 +44,7 @@ public class User {
     }
 
     @JsonIgnore
+    @JsonProperty(value = "password")
     public String getPassword() {
         return password;
     }
