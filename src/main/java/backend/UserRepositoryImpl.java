@@ -51,17 +51,17 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> findByUsername(@NotNull String username) {
+    public Optional<User> findByUsername(@NotNull String username) {
         String qlString = "SELECT u FROM User u where username = \'" + username +"\'";
         TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
-        return query.getResultList();
+        return Optional.ofNullable(query.getResultList().stream().findFirst().orElse(null));
     }
     @Override
     @Transactional(readOnly = true)
-    public List<User> findByEmail(@NotNull String email) {
+    public Optional<User> findByEmail(@NotNull String email) {
         String qlString = "SELECT u FROM User u where email = \'" + email +"\'";
         TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
-        return query.getResultList();
+        return Optional.ofNullable(query.getResultList().stream().findFirst().orElse(null));
     }
 
     @Override

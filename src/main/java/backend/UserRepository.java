@@ -11,7 +11,7 @@ public interface UserRepository {
     User update(@NotNull User user);
     List<User> findAll();
     User findById(@NotNull Long id);
-    List<User> findByUsername(@NotNull String username);
-    List<User> findByEmail(@NotNull String email);
+    Optional<User> findByUsername(@NotNull String username);
+    Optional<User> findByEmail(@NotNull String email);
     void deleteById(@NotNull Long id);
 }

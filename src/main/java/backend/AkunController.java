@@ -1,6 +1,7 @@
 package backend;
 
 import backend.model.User;
+import backend.model.UserDetail;
 import backend.helpers.MD5;
 
 import io.micronaut.http.annotation.Body;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -31,9 +33,11 @@ import org.apache.commons.validator.routines.EmailValidator;
 public class AkunController {
 
     private UserRepository userRepository;
+    private UserDetailRepository userDetailRepository;
 
-    public AkunController(UserRepository userRepository) {
+    public AkunController(UserRepository userRepository, UserDetailRepository userDetailRepository) {
         this.userRepository = userRepository;
+        this.userDetailRepository = userDetailRepository;
     }
 
     @Post("/")
@@ -54,9 +58,9 @@ public class AkunController {
         String errorText = "";
 
         // username sudah ada ato belum
-        List<User> userByUsername = userRepository.findByUsername(username);
+        Optional<User> userByUsername = userRepository.findByUsername(username);
 
-        if(userByUsername.get(0) != null) {
+        if(userByUsername.isPresent()) {
             errorBag.add("Username sudah dipakai.");
             errorCond += 1; // nek kosong brati error
         }
@@ -76,8 +80,8 @@ public class AkunController {
         }
 
         // validasi email boleh dipakai
-        List<User> userByEmail = userRepository.findByEmail(email);
-        if(userByEmail.get(0) != null) {
+        Optional<User> userByEmail = userRepository.findByEmail(email);
+        if(userByEmail.isPresent()) {
             errorBag.add("Email sudah dipakai.");
             errorCond += 1; // nek kosong brati error
         }
@@ -123,13 +127,25 @@ public class AkunController {
             // simpan data ke db user
             userRepository.save(userData);
 
-            // TODO simpan data ke db user_detail
-            
+            // generate data user_detail
+            UserDetail userDetail = new UserDetail();
+            userDetail.setId_user(userData.getId());
+            userDetail.setNama_lengkap(nama_lengkap);
+
+            // simpan data ke db user_detail
+            userDetailRepository.save(userDetail);
+
+            JsonObject userProfile = new JsonObject();
+            userProfile.addProperty("id", userData.getId());
+            userProfile.addProperty("username", userData.getUsername());
+            userProfile.addProperty("email", userData.getEmail());
+            userProfile.addProperty("nama_lengkap", nama_lengkap);
+            userProfile.addProperty("role", userData.getRole());
             
             Map<String, String> returnData = new HashMap<String, String>();
             returnData.put("message", "Berhasil membuat akun");
             returnData.put("status", "ok");
-            returnData.put("data", userData.toString());
+            returnData.put("data", new Gson().toJson(userProfile));
 
             // kembalikan pesan sukses
             return new Gson().toJson(returnData);
