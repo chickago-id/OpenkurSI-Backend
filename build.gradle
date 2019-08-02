@@ -26,6 +26,7 @@ dependencyManagement {
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
+    annotationProcessor "io.micronaut:micronaut-security"
     compile "io.micronaut.configuration:micronaut-hibernate-jpa"
     compile "io.micronaut:micronaut-http-client"
     compile "io.micronaut:micronaut-http-server-netty"
