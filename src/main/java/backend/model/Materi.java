@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@table(name="materi")
 public class Materi {
 
     @Id
