@@ -4,10 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@table(name="materi")
+@Table(name="materi")
 public class Materi {
 
     @Id
