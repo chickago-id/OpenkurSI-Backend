@@ -29,6 +29,8 @@ public class UserPasswordAuthProvider implements AuthenticationProvider {
 
         if (userData.isPresent()) {
 
+            User user = userData.get();
+
             String passwordHash = MD5.getMd5(password);
             // compare password
             if(passwordHash.equals(user.getPassword())) {
