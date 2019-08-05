@@ -10,6 +10,9 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
@@ -18,6 +21,7 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Validated
 @Controller("/materi")
@@ -28,16 +32,18 @@ public class MateriController {
     public MateriController(MateriRepository materiRepository) {
         this.materiRepository = materiRepository;
     }
-
     @Get("/")
+    @Secured("isAnonymous()")
     public String index() {
 
         try {
-            List<Materi> materi = materiRepository.findAll();
 
-            MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+                List<Materi> materi = materiRepository.findAll();
 
-            return new Gson().toJson(response);
+                MateriResponse response = new MateriResponse("ok", "Data materi", materi);
+
+                return new Gson().toJson(response);
+            
         } catch(Exception e) {
             String message = e.getMessage();
 
@@ -48,15 +54,36 @@ public class MateriController {
     }
 
     @Post("/")
-    public String create(@Body Materi materi) {
+    @Secured("isAnonymous()")
+    public String create(@Body Materi materi, @Nullable Authentication authentication) {
 
         try {
 
-            Materi result = materiRepository.save(materi);
-                
-            MateriResponse response = new MateriResponse("ok", "Berhasil menambahkan data materi", result);
+            if(authentication == null) {
+                MateriResponse response = new MateriResponse("error", "Unauthorized user.");
 
-            return new Gson().toJson(response);
+                return new Gson().toJson(response);
+            } else {
+                Object data = authentication.getAttributes().get("roles");
+                String roles = data.toString();
+
+                // return new Gson().toJson(roles.toString());
+
+                if(roles.equals("[\"Admin\"]")) {
+                    Materi result = materiRepository.save(materi);
+                    
+                    MateriResponse response = new MateriResponse("ok", "Berhasil menambahkan data materi", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    MateriResponse response = new MateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
+
+                    return new Gson().toJson(response);
+                }
+                
+            }
+
+            
             
 
         } catch(Exception e) {
