@@ -67,8 +67,6 @@ public class MateriController {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
 
-                // return new Gson().toJson(roles.toString());
-
                 if(roles.equals("[\"Admin\"]")) {
                     Materi result = materiRepository.save(materi);
                     
@@ -96,6 +94,7 @@ public class MateriController {
     }
 
     @Get("/{id}")
+    @Secured("isAnonymous()")
     public String show(Long id) {
 
         try {
@@ -124,37 +123,69 @@ public class MateriController {
     }
 
     @Post("/{id}") 
-    public String update(@Body Materi materi) {
-        // Materi getMateri = materiRepository.findById(id);
-
-        Materi result = materiRepository.update(materi);
-
-        if(result != null) {
-            MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
+    @Secured("isAnonymous()")
+    public String update(@Body Materi materi, @Nullable Authentication authentication) {
+        
+        if(authentication == null) {
+            MateriResponse response = new MateriResponse("error", "Unauthorized user.");
 
             return new Gson().toJson(response);
         } else {
-            MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Materi result = materiRepository.update(materi);
+
+                if(result != null) {
+                    MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                MateriResponse response = new MateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
+
+                return new Gson().toJson(response);
+            }
         }
     }
 
     @Delete("/{id}")
-    public String delete(Long id) {
-        Materi getMateri = materiRepository.findById(id);
-         
-        if(getMateri != null) {
-            materiRepository.deleteById(id);
+    @Secured("isAnonymous()")
+    public String delete(Long id, @Nullable Authentication authentication) {
 
-            MateriResponse response = new MateriResponse("ok", "Berhasil menghapus data materi");
+        if(authentication == null) {
+            MateriResponse response = new MateriResponse("error", "Unauthorized user.");
 
             return new Gson().toJson(response);
-
         } else {
-            MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Materi getMateri = materiRepository.findById(id);
+                         
+                if(getMateri != null) {
+                    materiRepository.deleteById(id);
+
+                    MateriResponse response = new MateriResponse("ok", "Berhasil menghapus data materi");
+
+                    return new Gson().toJson(response);
+
+                } else {
+                    MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                MateriResponse response = new MateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
+
+                return new Gson().toJson(response);
+            }
         }
     }
 }
