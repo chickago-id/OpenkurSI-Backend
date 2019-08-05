@@ -11,6 +11,9 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import javax.annotation.Nullable;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
@@ -41,6 +44,7 @@ public class AkunController {
     }
 
     @Post("/")
+    @Secured("isAnonymous()")
     public String register(@Body String userInput) {
 
         // get user input
