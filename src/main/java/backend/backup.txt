@@ -1,0 +1,402 @@
+@extends('layouts.app1')
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 grid-margin d-flex stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="card-title mb-2">Realisasi Kegiatan Mahasiswa</h4>
+                        </div>
+                        <br><br>
+                        
+                    
+                <div>
+                    <ul class="nav nav-tabs tab-no-active-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active pl-2 pr-2" id="revenue-for-last-month-tab" data-toggle="tab" href="#revenue-for-last-month" role="tab" aria-controls="revenue-for-last-month" aria-selected="true"> Realisasi Kegiatan Sekarang</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-2 pr-2" id="server-loading-tab" data-toggle="tab" href="#server-loading" role="tab" aria-controls="server-loading" aria-selected="false">Realisasi Kegiatan Besok</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-2 pr-2" id="data-managed-tab" data-toggle="tab" href="#data-managed" role="tab" aria-controls="data-managed" aria-selected="false">Realisasi Kegiatan Lampau</a>
+                </div>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content tab-no-active-fill-tab-content">
+                        <div class="tab-pane fade show active" id="revenue-for-last-month" role="tabpanel" aria-labelledby="revenue-for-last-month-tab">
+                            <div class="d-lg-flex justify-content-between">
+                                <p class="mb-10">
+<!--Realisasi_Sekarang-->
+<div class="col-md-6">
+    <form action="{{ route('kegiatanrealisasi') }}">
+        <div class="input-group mb-7">
+            <input type="text" name="s" class="form-control" value="{{ $s }}" placeholder="Masukkan Parameter Pencarian" aria-label="Cari" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-md-6 text-right">
+      <a href="{{ route('kegiatanrencana-create_form_mahasiswa') }}" class="btn btn-primary">Tambah</a>
+</div>
+</div>  
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Task</th>
+                
+                <th>Realisasi</th>
+                <th>Kendala</th>
+                <th>Action</th>              
+            </tr>
+        </thead>
+        <tbody>
+            <tr> @forelse($data_sekarang as $key)
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal_mulai }} </td> 
+                <td> 
+                    @foreach($data_coba as $item => $c) 
+                            {{ $c->nama_task }}<br><p>
+                                @endforeach  
+                            </td> 
+                            <td>{{$key->catatan}}</td>  
+                            <td>
+                               @foreach($results as $item)
+                              @if($item->id_rencana == $key->id_rencana)
+                                {{$item->kendala}}@endif
+  @endforeach
+                            </td>   
+                            <td>  
+                             @foreach($data_coba as $item => $a)
+                             @foreach($a as $key)<br>
+                             <p><p>
+                              @if($a->file_kegiatan==NULL)
+                              <button type="button" class="btn btn-outline-warning btn-icon-text">
+                                <a href="{{route('upload_kegiatan_mhs_if', $a->id_task)}}">{{$a->nama_task}}<i class="mdi mdi-upload btn-icon-prepend"></i>
+                                </button></a>
+                                @else
+                                <a class="btn btn-info" href="{{route('lihat_kegiatan_mahasiswa_if', $a->id_task)}}">Lihat</a>
+                                <a href="{{route('form_edit_kegiatan_mahasiswa_if', $a->id_task)}}" class="btn btn-dark">Edit</a>
+
+                                @endif
+                                <!-- @endforeach -->
+                                @endforeach
+                            </td>
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center"><i>Belum ada data.</i></td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <br>
+                </p>
+            </div>
+<br>
+<center><b>Task Mandiri Mahasiswa Sekarang</b></center>
+            <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Task Mandiri</th>
+                <th>Kendala</th>
+                <th>Action</th>              
+            </tr>
+        </thead>
+        <tbody>
+            <tr> @forelse($task_mandiri as $key)
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal}}</td> 
+                <td> {{ $key->nama_task }} <a href="{{route('download_mahasiswa', [$key->id])}}"><span class="badge badge-info"><b> Lihat File </b></td> 
+                            <td>  @foreach($results as $item)
+                              @if($item->id_rencana == $key->id_rencana)
+                                {{$item->kendala}}@endif
+  @endforeach </td>     
+                            <td>  <a href="{{route('form_edit_realisasi_mandiri', $key->id)}}" class="btn btn-dark">Edit</a>
+                            </td>
+
+
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center"><i>Belum ada data.</i></td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <br>
+                </p>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="server-loading" role="tabpanel" aria-labelledby="server-loading-tab">
+            <div class="d-flex justify-content-between">
+                <p class="mb-4">
+<!-- Realisasi_Besok -->
+<div class="col-md-6">
+    <form action="{{ route('kegiatanrealisasi') }}">
+        <div class="input-group mb-7">
+            <input type="text" name="s" class="form-control" value="{{ $s }}" placeholder="Masukkan Parameter Pencarian" aria-label="Cari" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-md-6 text-right">
+    <a href="{{ route('kegiatanrencana-create_form_mahasiswa') }}" class="btn btn-primary">Tambah</a>
+</div>
+</div>  
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+
+                <th>Nama Task</th>
+                <th>Kendala</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($data_besok as $key)
+            <tr>
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal_mulai }}</td>
+                <td>
+
+                    
+
+                    @foreach($data_besok as $item => $b) 
+                    {{ $b->nama_task }}<br><p><p>
+                        @endforeach   
+
+                        @foreach($task_mandiri as $tsk)
+                    {{$tsk->nama_task}}
+                     <span class="badge badge-dark"> Upload Task Mandiri </span><br>
+                    @endforeach <br>
+
+                    </td>
+                    <td>
+                        @foreach($kendala as $kndl => $a) 
+                        {{$kndl}} <br>
+                        @endforeach
+                    </td>     
+                    <td>
+                    
+                       @foreach($data_besok as $item => $a)
+                       @foreach($a as $key)<br>
+                       <p>
+                          @if($a->file_kegiatan==NULL)
+                          <button type="button" class="btn btn-outline-warning btn-icon-text">
+                            <a href="{{route('upload_kegiatan_mhs_if', $a->id_task)}}">{{$a->nama_task}}<i class="mdi mdi-upload btn-icon-prepend"></i>
+                            </button></a>
+                            @else
+                            <a class="btn btn-info" href="{{route('lihat_kegiatan_mahasiswa_if', $a->id_task)}}">Lihat</a>
+                            <a href="{{route('form_edit_kegiatan_mahasiswa_if', $a->id_task)}}" class="btn btn-dark">Edit</a>
+
+
+                            @endif
+                                                           <!-- @endforeach -->
+                   @endforeach
+                       @foreach($task_mandiri as $tsk)<p>
+                     <a href="{{route('form_edit_realisasi_mandiri', $tsk->id)}}" class="btn btn-dark">Edit {{$tsk->nama_task}}</a>
+                    @endforeach <br>
+                </td>
+
+</tr>
+@empty
+<tr>
+    <td colspan="12" class="text-center"><i>Belum ada data.</i></td>
+</tr>
+@endforelse
+</tbody>
+</table>
+<br>
+</p>
+</div>
+
+
+
+<br>
+<center><b>Task Mandiri Mahasiswa Besok</b></center>
+            <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Task Mandiri</th>
+                <th>Kendala</th>
+                <th>Action</th>              
+            </tr>
+        </thead>
+        <tbody>
+            <tr> @forelse($task_mandiri_besok as $key)
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal}}</td> 
+                <td> {{ $key->nama_task }}</td> 
+                            <td>  @foreach($results as $item)
+                              @if($item->id_rencana == $key->id_rencana)
+                                {{$item->kendala}}@endif
+  @endforeach </td>     
+                            <td>  </td>
+
+
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center"><i>Belum ada data.</i></td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <br>
+                </p>
+            </div>
+        </div>
+
+<div class="tab-pane fade" id="data-managed" role="tabpanel" aria-labelledby="data-managed-tab">
+    <div class="d-flex justify-content-between">
+        <p class="mb-4">
+<!-- Realisasi_Lampau -->
+<div class="col-md-6">
+    <form action="{{ route('kegiatanrealisasi') }}">
+        <div class="input-group mb-7">
+            <input type="text" name="s" class="form-control" value="{{ $s }}" placeholder="Masukkan Parameter Pencarian" aria-label="Cari" aria-describedby="button-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-md-6 text-right">
+
+    <a href="{{ route('kegiatanrencana-create_form_mahasiswa') }}" class="btn btn-primary">Tambah</a>
+
+</div>
+</div>  
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Task</th>
+                <th>Kendala</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($data_lampau as $key)
+            <tr>
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal_mulai }} </td>
+
+                <td>
+                    @foreach($data_lampau_ as $item => $b) 
+                    {{ $b->nama_task }}<br><p><p>
+                        @endforeach
+
+                          @foreach($task_mandiri_lampau as $tsk)
+                    {{$tsk->nama_task}}
+                     
+                    @endforeach <br>
+   
+                    </td>
+
+                    <td>
+                        @foreach($kendala as $kndl => $a) 
+                        {{$kndl}} <br>
+                        @endforeach
+                    </td>     
+                    <td>
+                         
+                       @foreach($data_lampau_ as $item => $a)
+                       @foreach($a as $key)<br>
+                       <p>
+                          @if($a->file_kegiatan==NULL)
+                          <button type="button" class="btn btn-outline-warning btn-icon-text">
+                            <a href="{{route('upload_kegiatan_mhs_if', $a->id_task)}}">{{$a->nama_task}}<i class="mdi mdi-upload btn-icon-prepend"></i>
+                            </button></a>
+                            @else
+                            <a class="btn btn-info" href="{{route('lihat_kegiatan_mahasiswa_if', $a->id_task)}}">Lihat</a>
+                            <a href="{{route('form_edit_kegiatan_mahasiswa_if', $a->id_task)}}" class="btn btn-dark">Edit</a>
+                            @endif
+                            <!-- @endforeach -->
+                            @endforeach
+
+                             
+                        </td>
+
+                    </tr>
+                    @empty
+                    <tr>
+                        <td  d colspan="12" class="text-center"><i>Belum ada data.</i></td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            <br>
+
+        </p>
+    </div>
+
+<br>
+<center><b>Task Mandiri  Mahasiswa Lampau</b></center>
+            <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>Nama Task Mandiri</th>
+                <th>Kendala</th>
+                <th>Action</th>              
+            </tr>
+        </thead>
+        <tbody>
+           <tr> @forelse($task_mandiri_lampau as $key)
+                <td>{{ $loop->iteration }}</td> 
+                <td>{{ $key->tanggal}}</td> 
+                <td> {{ $key->nama_task }}</td> 
+                            <td>  @foreach($results as $item)
+                              @if($item->id_rencana == $key->id_rencana)
+                                {{$item->kendala}}@endif
+  @endforeach </td>     
+                            <td>  </td>
+
+
+                        </tr>
+                        @empty
+                            <tr>
+                                <td colspan="12" class="text-center"><i>Belum ada data.</i></td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <br>
+                </p>
+            </div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+@endsection
