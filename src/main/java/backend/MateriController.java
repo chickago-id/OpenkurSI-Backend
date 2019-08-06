@@ -51,7 +51,8 @@ public class MateriController {
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create(@Body Materi materi, @Nullable Authentication authentication) {
+    public String create(@Body Materi materi, @Nullable Authentication authentication) 
+    {
 
 
         try {
@@ -75,6 +76,7 @@ public class MateriController {
 
                     return new Gson().toJson(response);
                 }
+            }
 
             
 
@@ -134,7 +136,6 @@ public class MateriController {
 
                 if(result != null) {
                     MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
-                    Materi result = materiRepository.update(materi);
 
                     return new Gson().toJson(response);
                 } else {
@@ -154,7 +155,6 @@ public class MateriController {
     @Secured("isAnonymous()")
     public String delete(Long id, @Nullable Authentication authentication) 
     {
-
         if(authentication == null) {
             MateriResponse response = new MateriResponse("error", "Unauthorized user.");
             return new Gson().toJson(response);
