@@ -1,8 +1,23 @@
 micronaut:
-  application:
-    name: backend
+    application:
+        name: backend
     server:
-        port: 8080
+        port: 8081
+        cors: 
+            enabled: true
+    security:
+        enabled: true
+        endpoints:
+            login:
+              enabled: true
+        token:
+            jwt:
+                enabled: true
+                signatures:
+                    secret:
+                        generator:
+                            secret: pleaseChangeThisSecretForANewOne
+                            jws-algorithm: HS256
 
 datasources:
     default:

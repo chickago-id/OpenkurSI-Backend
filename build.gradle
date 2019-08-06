@@ -26,6 +26,7 @@ dependencyManagement {
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
+    annotationProcessor "io.micronaut:micronaut-security"
     compile "io.micronaut.configuration:micronaut-hibernate-jpa"
     compile "io.micronaut:micronaut-http-client"
     compile "io.micronaut:micronaut-http-server-netty"
@@ -40,6 +41,12 @@ dependencies {
     testCompile "io.micronaut:micronaut-inject-java"
     testCompile "org.hamcrest:hamcrest-all:1.3"
 
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.4'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.4'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.4'
+
+    compile 'commons-validator:commons-validator:1.4.1'
+    compile "io.micronaut:micronaut-security-jwt"
     
     runtime "org.mariadb.jdbc:mariadb-java-client:2.4.2"
     implementation 'com.google.code.gson:gson:2.8.5'
