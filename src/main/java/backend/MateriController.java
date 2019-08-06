@@ -34,9 +34,12 @@ public class MateriController {
 
         try {
             List<Materi> materi = materiRepository.findAll();
+
+return new Gson().toJson(response);
             MateriResponse response = new MateriResponse("ok", "Data materi", materi);
 
             return new Gson().toJson(response);
+            
         } catch(Exception e) {
             String message = e.getMessage();
             MateriResponse response = new MateriResponse("error", message);
