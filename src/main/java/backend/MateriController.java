@@ -37,15 +37,11 @@ public class MateriController {
     public String index() {
 
         try {
-
             List<Materi> materi = materiRepository.findAll();
+
             MateriResponse response = new MateriResponse("ok", "Data materi", materi);
 
-                List<Materi> materi = materiRepository.findAll();
-
-                MateriResponse response = new MateriResponse("ok", "Data materi", materi);
-
-                return new Gson().toJson(response);
+            return new Gson().toJson(response);
             
         } catch(Exception e) {
             String message = e.getMessage();
