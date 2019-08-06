@@ -12,3 +12,4 @@ out/
 .settings
 .classpath
 bin
+gradle.properties
