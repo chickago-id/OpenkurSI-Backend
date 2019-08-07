@@ -54,7 +54,7 @@ public class KelasController {
         try {
 
             if(authentication == null) {
-                KelasResponse response = new KelasResponse("error", "Unauthorized user.");
+                KelasResponse response = new KelasResponse("error", "Bukan admin, anda tidak boleh posting.");
 
                 return new Gson().toJson(response);
             } else {
@@ -120,7 +120,7 @@ public class KelasController {
       
        
         if(authentication == null) {
-            KelasResponse response = new KelasResponse("error", "Unauthorized user.");
+            KelasResponse response = new KelasResponse("error", "Bukan admin, anda tidak boleh update data.");
 
             return new Gson().toJson(response);
         } else {
@@ -150,7 +150,7 @@ public class KelasController {
     @Secured("isAnonymous()")
     public String delete(Long id, @Nullable Authentication authentication) {
         if(authentication == null) {
-            KelasResponse response = new KelasResponse("error", "Unauthorized user.");
+            KelasResponse response = new KelasResponse("error", "Bukan admin, anda tidak boleh hapus data.");
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
