@@ -10,12 +10,16 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.annotation.Secured;
+
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,15 +49,31 @@ public class KelasController {
     }
 
     @Post("/")
-    public String create(@Body Kelas kelas) {
-
+    @Secured("isAnonymous()")
+    public String create(@Body Kelas kelas, @Nullable Authentication authentication) {
         try {
 
-            Kelas result = kelasRepository.save(kelas);
-                
-            KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data kelas", result);
+            if(authentication == null) {
+                KelasResponse response = new KelasResponse("error", "Unauthorized user.");
 
-            return new Gson().toJson(response);
+                return new Gson().toJson(response);
+            } else {
+                Object data = authentication.getAttributes().get("roles");
+                String roles = data.toString();
+
+                if(roles.equals("[\"Admin\"]")) {
+                    Kelas result = kelasRepository.save(kelas);
+                    
+                    KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data materi", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    KelasResponse response = new KelasResponse("error", "Anda tidak boleh mengakses halaman ini.");
+
+                    return new Gson().toJson(response);
+                }
+            }
+
             
 
         } catch(Exception e) {
@@ -66,6 +86,7 @@ public class KelasController {
     }
 
     @Get("/{id}")
+    @Secured("isAnonymous()")
     public String show(Long id) {
 
         try {
@@ -94,37 +115,66 @@ public class KelasController {
     }
 
     @Post("/{id}") 
-    public String update(@Body Kelas kelas) {
-        // Materi getMateri = materiRepository.findById(id);
-
-        Kelas result = kelasRepository.update(kelas);
-
-        if(result != null) {
-            KelasResponse response = new KelasResponse("ok", "Berhasil memperbarui data kelas", result);
+    @Secured("isAnonymous()")
+    public String update(@Body Kelas kelas, @Nullable Authentication authentication) {
+      
+       
+        if(authentication == null) {
+            KelasResponse response = new KelasResponse("error", "Unauthorized user.");
 
             return new Gson().toJson(response);
         } else {
-            KelasResponse response = new KelasResponse("error", "Data kelas tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Kelas result = kelasRepository.update(kelas);
+
+                if(result != null) {
+                    KelasResponse response = new KelasResponse("ok", "Berhasil memperbarui data kelas", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    KelasResponse response = new KelasResponse("error", "Data kelas tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                KelasResponse response = new KelasResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                return new Gson().toJson(response);
+            } 
         }
     }
 
     @Delete("/{id}")
-    public String delete(Long id) {
-        Kelas getKelas = kelasRepository.findById(id);
-         
-        if(getKelas != null) {
-            kelasRepository.deleteById(id);
-
-            KelasResponse response = new KelasResponse("ok", "Berhasil menghapus data kelas");
-
+    @Secured("isAnonymous()")
+    public String delete(Long id, @Nullable Authentication authentication) {
+        if(authentication == null) {
+            KelasResponse response = new KelasResponse("error", "Unauthorized user.");
             return new Gson().toJson(response);
-
         } else {
-            KelasResponse response = new KelasResponse("error", "Data kelas tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Kelas getMateri = kelasRepository.findById(id);
+                         
+                if(getMateri != null) {
+                    kelasRepository.deleteById(id);
+
+                    KelasResponse response = new KelasResponse("ok", "Berhasil menghapus data kelas");
+
+                    return new Gson().toJson(response);
+
+                } else {
+                    KelasResponse response = new KelasResponse("error", "Data kelas tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                KelasResponse response = new KelasResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                return new Gson().toJson(response);
+            }
         }
     }
 }
