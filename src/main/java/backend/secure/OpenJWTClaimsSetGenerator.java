@@ -31,7 +31,7 @@ public class OpenJWTClaimsSetGenerator extends JWTClaimsSetGenerator {
     protected void populateWithUserDetails(JWTClaimsSet.Builder builder, UserDetails userDetails) {
         super.populateWithUserDetails(builder, userDetails);
         if (userDetails instanceof OpenUserDetails) {
-            builder.claim("user", ((OpenUserDetails)userDetails).getDetail());
+            builder.claim("userId", ((OpenUserDetails)userDetails).getUserId());
         }
     }
 }

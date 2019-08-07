@@ -9,23 +9,23 @@ import backend.model.User;
 
 public class OpenUserDetails extends UserDetails {
 
-    private User detail;
+    private Long userId;
 
     public OpenUserDetails(String username, Collection<String> roles) {
         super(username, roles);
     }
 
 
-    public OpenUserDetails(String username, Collection<String> roles, User detail) {
+    public OpenUserDetails(String username, Collection<String> roles, Long userId) {
         super(username, roles);
-        this.detail = detail;
+        this.userId = userId;
     }
 
-    public User getDetail() {
-        return detail;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setDetail(User detail) {
-        this.detail = detail;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

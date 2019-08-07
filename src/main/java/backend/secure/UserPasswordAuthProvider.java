@@ -37,7 +37,7 @@ public class UserPasswordAuthProvider implements AuthenticationProvider {
             // compare password
             if(passwordHash.equals(user.getPassword())) {
                 user.setPassword("");
-                OpenUserDetails details = new OpenUserDetails(username, Collections.singletonList(user.getRole()), user);
+                OpenUserDetails details = new OpenUserDetails(username, Collections.singletonList(user.getRole()), user.getId());
                 return Flowable.just(details);
             } else {
                 return Flowable.just(new AuthenticationFailed());
