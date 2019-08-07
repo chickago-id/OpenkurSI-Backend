@@ -4,36 +4,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name="kelas")
 public class Kelas {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull(message = "Kode Materi harus diisi.")
+    @NotNull(message = "Kode Kelas harus di isi.")
     private String kode_kelas;
-    @NotNull(message = "Nama Materi harus diisi.")
+    
     private String jenis_kelas;
-///////
-    @NotNull(message = "Jam Pilihan harus diisi.")
     private String jam_pilihan;
-
-    @NotNull(message = "Tanggal Mulai harus diisi.")
     private String tanggal_mulai;
-
-    @NotNull(message = "Target Peserta harus diisi.")
     private String target_peserta;
-
-    @NotNull(message = "Status harus diisi.")
+    private String jumlah_pertemuan;
+    private String biaya;
     private String status;
-    /////////////
 
-
-
-    public String getKode_materi() {
+    public String getKode_kelas() {
         return kode_kelas;
     }
 
@@ -50,7 +42,6 @@ public class Kelas {
     }
 
 
-    //////////////
     public String getJam_pilihan() {
       return jam_pilihan;
   }
@@ -68,7 +59,6 @@ public void setTanggal_mulai(String tanggal_mulai) {
     this.tanggal_mulai = tanggal_mulai;
 }
 
-
 public String getTarget_peserta() {
   return target_peserta;
 }
@@ -76,6 +66,26 @@ public String getTarget_peserta() {
 public void setTarget_peserta(String target_peserta) {
   this.target_peserta = target_peserta;
 }
+
+
+
+
+public String getJumlah_pertemuan() {
+    return jumlah_pertemuan;
+  }
+  
+  public void setJumlah_pertemuan(String jumlah_pertemuan) {
+    this.jumlah_pertemuan = jumlah_pertemuan;
+  }
+  
+public String getBiaya() {
+    return biaya;
+  }
+  
+  public void setBiaya(String biaya) {
+    this.biaya = biaya;
+  }
+
 
 public String getStatus() {
   return status;
