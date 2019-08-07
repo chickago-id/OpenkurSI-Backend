@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 import backend.model.User;
 import backend.model.UserDetail;
@@ -34,7 +36,8 @@ public class UserPasswordAuthProvider implements AuthenticationProvider {
             String passwordHash = MD5.getMd5(password);
             // compare password
             if(passwordHash.equals(user.getPassword())) {
-                UserDetails details = new UserDetails(username, Collections.singletonList(userData.get().getRole()));
+                user.setPassword("");
+                OpenUserDetails details = new OpenUserDetails(username, Collections.singletonList(user.getRole()), user);
                 return Flowable.just(details);
             } else {
                 return Flowable.just(new AuthenticationFailed());
