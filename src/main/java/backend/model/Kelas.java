@@ -4,9 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name="kelas")
 public class Kelas {
 
     @Id
@@ -22,9 +24,6 @@ public class Kelas {
     private String jumlah_pertemuan;
     private String biaya;
     private String status;
-    /////////////
-
-
 
     public String getKode_kelas() {
         return kode_kelas;
@@ -43,7 +42,6 @@ public class Kelas {
     }
 
 
-    //////////////
     public String getJam_pilihan() {
       return jam_pilihan;
   }
