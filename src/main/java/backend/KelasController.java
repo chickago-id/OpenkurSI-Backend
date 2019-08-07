@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 @Validated
 @Controller("/kelas")
+@Secured("isAnonymous()")
 public class KelasController {
 
     private KelasRepository kelasRepository;
