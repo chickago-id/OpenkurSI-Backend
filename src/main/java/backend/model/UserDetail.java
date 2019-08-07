@@ -72,4 +72,8 @@ public class UserDetail {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void setUserPassword(String password) {
+        this.user.setPassword(password);
+    }
 }

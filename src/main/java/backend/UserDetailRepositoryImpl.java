@@ -38,7 +38,7 @@ public class UserDetailRepositoryImpl implements UserDetailRepository{
     @Override
     @Transactional(readOnly = true)
     public Optional<UserDetail> findByUserId(@NotNull Long userId) {
-        String qlString = "SELECT ud FROM User_detail ud where id_user = \'" + userId +"\'";
+        String qlString = "SELECT ud FROM UserDetail ud where id_user = \'" + userId +"\'";
         TypedQuery<UserDetail> query = entityManager.createQuery(qlString, UserDetail.class);
         return Optional.ofNullable(query.getResultList().stream().findFirst().orElse(null));
     }

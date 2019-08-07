@@ -12,6 +12,7 @@ import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.core.util.CollectionUtils;
 import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -24,8 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Collections;
 
-@Controller("/update-profil")
+@Controller("/profil")
 public class ProfilController {
 
     private UserRepository userRepository;
@@ -35,6 +37,58 @@ public class ProfilController {
         this.userRepository = userRepository;
         this.userDetailRepository = userDetailRepository;
     }
+    @Get("/")
+    @Secured("isAnonymous()")
+    public String getProfile(Authentication authentication)
+    {
+        try {
+
+            if(authentication == null) {
+                Map<String, String> errorMessage = new HashMap<String, String>();
+                errorMessage.put("status", "error");
+                errorMessage.put("message", "Unauthorized user");
+
+                return new Gson().toJson(errorMessage);
+            } else {
+
+                Object userId = authentication.getAttributes().get("userId");
+
+                Optional<UserDetail> userDetail = userDetailRepository.findByUserId((Long) userId);
+
+                if(userDetail.isPresent()) {
+                    UserDetail detail = userDetail.get();
+                    detail.setUserPassword("");
+
+                    Map<String, String> returnData = new HashMap<String, String>();
+                    returnData.put("status", "ok");
+                    returnData.put("message", "Profil");
+                    returnData.put("data", new Gson().toJson(detail));
+
+                    return new Gson().toJson(returnData);
+
+                } else {
+                    ArrayList detail = new ArrayList();
+
+                    Map<String, String> returnData = new HashMap<String, String>();
+                    returnData.put("status", "ok");
+                    returnData.put("message", "Profil");
+                    returnData.put("data", new Gson().toJson(detail));
+
+                    return new Gson().toJson(returnData);
+
+                }
+
+                
+            }
+
+        } catch(Exception e) {
+            Map<String, String> errorMessage = new HashMap<String, String>();
+            errorMessage.put("status", "error");
+            errorMessage.put("message", e.getMessage());
+
+            return new Gson().toJson(errorMessage);
+        }
+    }
 
     @Post("/")
     @Secured("isAnonymous()")
@@ -43,13 +97,13 @@ public class ProfilController {
         try {
 
             if(authentication == null) {
-                return "Hello";
-            } else {
                 Map<String, String> errorMessage = new HashMap<String, String>();
                 errorMessage.put("status", "error");
                 errorMessage.put("message", "Unauthorized user");
 
                 return new Gson().toJson(errorMessage);
+            } else {
+                return "Hello";
             }
 
         } catch(Exception e) {
