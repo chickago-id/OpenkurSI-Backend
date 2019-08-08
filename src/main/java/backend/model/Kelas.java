@@ -14,10 +14,10 @@ public class Kelas {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "Kode Kelas harus di isi.")
-    private String id_materi;
-    private String kode_kelas;
+   
     
+    @NotNull(message = "Kode Kelas harus di isi.")
+    private String kode_kelas;
     private String jenis_kelas;
     private String jam_pilihan;
     private String tanggal_mulai;
@@ -25,6 +25,7 @@ public class Kelas {
     private String jumlah_pertemuan;
     private String biaya;
     private String status;
+    private String id_materi;
 
 
 
@@ -102,10 +103,6 @@ public String getId_materi() {
 public void setId_materi(String id_materi) {
   this.id_materi = id_materi;
 }
-
-
-
-
 
 
     public Long getId() {

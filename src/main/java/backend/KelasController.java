@@ -65,7 +65,7 @@ public class KelasController {
                 if(roles.equals("[\"Admin\"]")) {
                     Kelas result = kelasRepository.save(kelas);
                     
-                    KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data materi", result);
+                    KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data kelas", result);
 
                     return new Gson().toJson(response);
                 } else {
