@@ -70,9 +70,6 @@ public void setTarget_peserta(String target_peserta) {
   this.target_peserta = target_peserta;
 }
 
-
-
-
 public String getJumlah_pertemuan() {
     return jumlah_pertemuan;
   }
@@ -89,7 +86,13 @@ public String getBiaya() {
     this.biaya = biaya;
   }
 
-
+  public String getId_materi() {
+    return id_materi;
+  }
+  
+  public void setId_materi(String id_materi) {
+    this.id_materi = id_materi;
+  }
 
 
 
