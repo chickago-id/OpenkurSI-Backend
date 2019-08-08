@@ -15,6 +15,7 @@ public class Kelas {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "Kode Kelas harus di isi.")
+    private String id_materi;
     private String kode_kelas;
     
     private String jenis_kelas;
@@ -24,6 +25,8 @@ public class Kelas {
     private String jumlah_pertemuan;
     private String biaya;
     private String status;
+
+
 
     public String getKode_kelas() {
         return kode_kelas;
@@ -85,6 +88,10 @@ public String getBiaya() {
   public void setBiaya(String biaya) {
     this.biaya = biaya;
   }
+
+
+
+
 
 
 public String getStatus() {
