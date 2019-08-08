@@ -86,17 +86,6 @@ public String getBiaya() {
     this.biaya = biaya;
   }
 
-  public String getId_materi() {
-    return id_materi;
-  }
-  
-  public void setId_materi(String id_materi) {
-    this.id_materi = id_materi;
-  }
-
-
-
-
 public String getStatus() {
   return status;
 }
@@ -104,6 +93,19 @@ public String getStatus() {
 public void setStatus(String status) {
   this.status = status;
 }
+
+
+public String getId_materi() {
+  return id_materi;
+}
+
+public void setId_materi(String id_materi) {
+  this.id_materi = id_materi;
+}
+
+
+
+
 
 
     public Long getId() {

@@ -14,7 +14,6 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.annotation.Secured;
 import javax.annotation.Nullable;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
