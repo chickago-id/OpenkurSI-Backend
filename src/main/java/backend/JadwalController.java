@@ -10,6 +10,9 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.validation.Validated;
 import io.micronaut.http.MediaType;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
@@ -18,9 +21,11 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Validated
 @Controller("/jadwal")
+@Secured("isAnonymous()")
 public class JadwalController {
 
     private JadwalRepository jadwalRepository;
@@ -34,29 +39,45 @@ public class JadwalController {
 
         try {
             List<Jadwal> jadwal = jadwalRepository.findAll();
-
-            JadwalResponse response = new JadwalResponse("ok", "Data jadwal", jadwal);
+            JadwalResponse response = new JadwalResponse("ok", "Data materi", jadwal);
 
             return new Gson().toJson(response);
         } catch(Exception e) {
             String message = e.getMessage();
-
             JadwalResponse response = new JadwalResponse("error", message);
-
             return new Gson().toJson(response);
         }
     }
 
     @Post("/")
-    public String create(@Body Jadwal jadwal) {
+    @Secured("isAnonymous()")
+    public String create(@Body Jadwal jadwal, @Nullable Authentication authentication) 
+    {
+
 
         try {
 
-            Jadwal result = jadwalRepository.save(jadwal);
-                
-            JadwalResponse response = new JadwalResponse("ok", "Berhasil menambahkan jadwal", result);
+            if(authentication == null) {
+                JadwalResponse response = new JadwalResponse("error", "Unauthorized user.");
 
-            return new Gson().toJson(response);
+                return new Gson().toJson(response);
+            } else {
+                Object data = authentication.getAttributes().get("roles");
+                String roles = data.toString();
+
+                if(roles.equals("[\"Admin\"]")) {
+                    Jadwal result = jadwalRepository.save(jadwal);
+                    
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menambahkan data materi", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    JadwalResponse response = new JadwalResponse("error", "Anda tidak boleh mengakses halaman ini.");
+
+                    return new Gson().toJson(response);
+                }
+            }
+
             
 
         } catch(Exception e) {
@@ -69,6 +90,7 @@ public class JadwalController {
     }
 
     @Get("/{id}")
+    @Secured("isAnonymous()")
     public String show(Long id) {
 
         try {
@@ -76,11 +98,11 @@ public class JadwalController {
             Jadwal jadwal = jadwalRepository.findById(id);
 
             if(jadwal != null) {
-                JadwalResponse response = new JadwalResponse("ok", "Data jadwal", jadwal);
+                JadwalResponse response = new JadwalResponse("ok", "Data materi", jadwal);
 
                 return new Gson().toJson(response);
             } else {
-                JadwalResponse response = new JadwalResponse("error", "Jadwal tidak ditemukan");
+                JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
 
                 return new Gson().toJson(response);
             } 
@@ -97,37 +119,68 @@ public class JadwalController {
     }
 
     @Post("/{id}") 
-    public String update(@Body Jadwal jadwal) {
-        // Materi getMateri = materiRepository.findById(id);
-
-        Jadwal result = jadwalRepository.update(jadwal);
-
-        if(result != null) {
-            JadwalResponse response = new JadwalResponse("ok", "Berhasil memperbarui jadwal", result);
+    @Secured("isAnonymous()")
+    public String update(@Body Jadwal jadwal, @Nullable Authentication authentication) 
+    {
+        
+        if(authentication == null) {
+            JadwalResponse response = new JadwalResponse("error", "Unauthorized user.");
 
             return new Gson().toJson(response);
         } else {
-            JadwalResponse response = new JadwalResponse("error", "Jadwal tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Jadwal result = jadwalRepository.update(jadwal);
+
+                if(result != null) {
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil memperbarui data materi", result);
+
+                    return new Gson().toJson(response);
+                } else {
+                    JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                JadwalResponse response = new JadwalResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                return new Gson().toJson(response);
+            } 
         }
     }
 
+
     @Delete("/{id}")
-    public String delete(Long id) {
-        Jadwal getJadwal = jadwalRepository.findById(id);
-         
-        if(getJadwal != null) {
-            jadwalRepository.deleteById(id);
-
-            JadwalResponse response = new JadwalResponse("ok", "Berhasil menghapus jadwal");
-
+    @Secured("isAnonymous()")
+    public String delete(Long id, @Nullable Authentication authentication) 
+    {
+        if(authentication == null) {
+            JadwalResponse response = new JadwalResponse("error", "Unauthorized user.");
             return new Gson().toJson(response);
-
         } else {
-            JadwalResponse response = new JadwalResponse("error", "Jadwal tidak ditemukan");
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
 
-            return new Gson().toJson(response);
+            if(roles.equals("[\"Admin\"]")) {
+                Jadwal getJadwal = jadwalRepository.findById(id);
+                         
+                if(getJadwal != null) {
+                    jadwalRepository.deleteById(id);
+
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menghapus data materi");
+
+                    return new Gson().toJson(response);
+
+                } else {
+                    JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            } else {
+                JadwalResponse response = new JadwalResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                return new Gson().toJson(response);
+            }
         }
     }
 }

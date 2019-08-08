@@ -42,7 +42,7 @@ public class Jadwal {
         return tanggal;
     }
 
-    public void setTangal(String tanggal) {
+    public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
     }
 

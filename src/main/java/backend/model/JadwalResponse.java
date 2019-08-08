@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-// response materi
+// response jadwal
 public class JadwalResponse {
     public String status;
     public String message;
