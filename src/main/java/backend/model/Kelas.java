@@ -1,15 +1,29 @@
 package backend.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
+import javax.persistence.OneToOne;
+
+
+import javax.persistence.JoinColumn;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.ArrayList;
 
 @Entity
 @Table(name="kelas")
 public class Kelas {
+
+  @OneToOne(optional=false)
+  @JoinColumn(name = "id_materi", referencedColumnName="id", insertable = false, updatable = false)
+  private Materi materi;
+  
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +40,6 @@ public class Kelas {
     private String biaya;
     private String status;
     private String id_materi;
-
 
 
     public String getKode_kelas() {
@@ -93,15 +106,6 @@ public String getStatus() {
 
 public void setStatus(String status) {
   this.status = status;
-}
-
-
-public String getId_materi() {
-  return id_materi;
-}
-
-public void setId_materi(String id_materi) {
-  this.id_materi = id_materi;
 }
 
 
