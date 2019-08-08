@@ -103,7 +103,23 @@ public class ProfilController {
 
                 return new Gson().toJson(errorMessage);
             } else {
-                return "Hello";
+                UserDetail result = userDetailRepository.update(userDetail);
+
+                if(result != null) {
+                    
+                    Map<String, String> returnData = new HashMap<String, String>();
+                    returnData.put("status", "ok");
+                    returnData.put("message", "Berhasil memperbarui profil");
+                    returnData.put("data", new Gson().toJson(userDetail));
+
+                    return new Gson().toJson(returnData);
+                } else {
+                    Map<String, String> errorMessage = new HashMap<String, String>();
+                    errorMessage.put("status", "error");
+                    errorMessage.put("message", "Data tidak ditemukan.");
+
+                    return new Gson().toJson(errorMessage);
+                }
             }
 
         } catch(Exception e) {
