@@ -39,7 +39,7 @@ public class JadwalController {
 
         try {
             List<Jadwal> jadwal = jadwalRepository.findAll();
-            JadwalResponse response = new JadwalResponse("ok", "Data materi", jadwal);
+            JadwalResponse response = new JadwalResponse("ok", "Data Jadwal", jadwal);
 
             return new Gson().toJson(response);
         } catch(Exception e) {
@@ -68,7 +68,7 @@ public class JadwalController {
                 if(roles.equals("[\"Admin\"]")) {
                     Jadwal result = jadwalRepository.save(jadwal);
                     
-                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menambahkan data materi", result);
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menambahkan data Jadwal", result);
 
                     return new Gson().toJson(response);
                 } else {
@@ -98,11 +98,11 @@ public class JadwalController {
             Jadwal jadwal = jadwalRepository.findById(id);
 
             if(jadwal != null) {
-                JadwalResponse response = new JadwalResponse("ok", "Data materi", jadwal);
+                JadwalResponse response = new JadwalResponse("ok", "Data Jadwal", jadwal);
 
                 return new Gson().toJson(response);
             } else {
-                JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
+                JadwalResponse response = new JadwalResponse("error", "Jadwal tidak ditemukan");
 
                 return new Gson().toJson(response);
             } 
@@ -135,11 +135,11 @@ public class JadwalController {
                 Jadwal result = jadwalRepository.update(jadwal);
 
                 if(result != null) {
-                    JadwalResponse response = new JadwalResponse("ok", "Berhasil memperbarui data materi", result);
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil memperbarui jadwal", result);
 
                     return new Gson().toJson(response);
                 } else {
-                    JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
+                    JadwalResponse response = new JadwalResponse("error", "jadwal tidak ditemukan");
 
                     return new Gson().toJson(response);
                 }
@@ -168,12 +168,12 @@ public class JadwalController {
                 if(getJadwal != null) {
                     jadwalRepository.deleteById(id);
 
-                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menghapus data materi");
+                    JadwalResponse response = new JadwalResponse("ok", "Berhasil menghapus jadwal");
 
                     return new Gson().toJson(response);
 
                 } else {
-                    JadwalResponse response = new JadwalResponse("error", "Data materi tidak ditemukan");
+                    JadwalResponse response = new JadwalResponse("error", "Jadwal tidak ditemukan");
 
                     return new Gson().toJson(response);
                 }
