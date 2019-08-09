@@ -1,22 +1,37 @@
 package backend.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
+import javax.persistence.OneToOne;
+
+
+import javax.persistence.JoinColumn;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.ArrayList;
 
 @Entity
 @Table(name="kelas")
 public class Kelas {
 
+  @OneToOne(optional=false)
+  @JoinColumn(name = "id_materi", referencedColumnName="id", insertable = false, updatable = false)
+  private Materi materi;
+  
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+   
+    
     @NotNull(message = "Kode Kelas harus di isi.")
     private String kode_kelas;
-    
     private String jenis_kelas;
     private String jam_pilihan;
     private String tanggal_mulai;
@@ -24,6 +39,8 @@ public class Kelas {
     private String jumlah_pertemuan;
     private String biaya;
     private String status;
+    private String id_materi;
+
 
     public String getKode_kelas() {
         return kode_kelas;
@@ -67,9 +84,6 @@ public void setTarget_peserta(String target_peserta) {
   this.target_peserta = target_peserta;
 }
 
-
-
-
 public String getJumlah_pertemuan() {
     return jumlah_pertemuan;
   }
@@ -85,7 +99,6 @@ public String getBiaya() {
   public void setBiaya(String biaya) {
     this.biaya = biaya;
   }
-
 
 public String getStatus() {
   return status;

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-// response materi
 public class KelasResponse {
     public String status;
     public String message;
