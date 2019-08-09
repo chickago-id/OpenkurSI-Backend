@@ -12,9 +12,5 @@ out/
 .settings
 .classpath
 bin
-<<<<<<< HEAD
 src/main/resources/application.yml
 gradle.properties
-=======
-gradle.properties
->>>>>>> 76d6f33658af22c41bc8c7c746fb5992b913e65a
