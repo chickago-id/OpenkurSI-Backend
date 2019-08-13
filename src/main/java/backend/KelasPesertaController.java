@@ -68,7 +68,16 @@ public class KelasPesertaController {
                     KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menambahkan data peserta kelas", result);
 
                     return new Gson().toJson(response);
-                } else {
+                }
+                else if(roles.equals("[\"Peserta\"]")) {
+                    KelasPeserta result = kelasPesertaRepository.save(kelaspeserta);
+                    
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menambahkan data peserta kelas", result);
+
+                    return new Gson().toJson(response);
+                }
+                
+                else {
                     KelasPesertaResponse response = new KelasPesertaResponse("error", "Anda tidak boleh mengakses halaman ini.");
 
                     return new Gson().toJson(response);
