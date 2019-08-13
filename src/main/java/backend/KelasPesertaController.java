@@ -55,7 +55,7 @@ public class KelasPesertaController {
         try {
 
             if(authentication == null) {
-                KelasPesertaResponse response = new KelasPesertaResponse("error", "Bukan admin, anda tidak boleh posting.");
+                KelasPesertaResponse response = new KelasPesertaResponse("error", "Belum Login, anda tidak boleh posting.");
 
                 return new Gson().toJson(response);
             } else {
