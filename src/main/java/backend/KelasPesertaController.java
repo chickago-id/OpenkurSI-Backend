@@ -181,7 +181,25 @@ public class KelasPesertaController {
 
                     return new Gson().toJson(response);
                 }
-            } else {
+            }else if(roles.equals("[\"Peserta\"]")) {
+                KelasPeserta getMateri = kelasPesertaRepository.findById(id);
+                         
+                if(getMateri != null) {
+                    kelasPesertaRepository.deleteById(id);
+
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menghapus data peserta kelas");
+
+                    return new Gson().toJson(response);
+
+                } else {
+                    KelasPesertaResponse response = new KelasPesertaResponse("error", "Data peserta kelas tidak ditemukan");
+
+                    return new Gson().toJson(response);
+                }
+            }
+            
+            
+            else {
                 KelasPesertaResponse response = new KelasPesertaResponse("error", "Anda tidak boleh mengakses halaman ini.");
                 return new Gson().toJson(response);
             }

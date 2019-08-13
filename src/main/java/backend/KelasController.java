@@ -51,11 +51,12 @@ public class KelasController {
 
     @Post("/")
     @Secured("isAnonymous()")
+    
     public String create(@Body Kelas kelas, @Nullable Authentication authentication) {
         try {
 
             if(authentication == null) {
-                KelasResponse response = new KelasResponse("error", "Belum Login, anda tidak boleh posting.");
+                KelasResponse response = new KelasResponse("error", "Bukan admin, anda tidak boleh posting.");
 
                 return new Gson().toJson(response);
             } else {
@@ -68,14 +69,7 @@ public class KelasController {
                     KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data kelas", result);
 
                     return new Gson().toJson(response);
-                }else if(roles.equals("[\"Peserta\"]")) {
-                    Kelas result = kelasRepository.save(kelas);
-                    
-                    KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data kelas", result);
-
-                    return new Gson().toJson(response);
                 } 
-                
                 
                 else {
                     KelasResponse response = new KelasResponse("error", "Anda tidak boleh mengakses halaman ini.");
