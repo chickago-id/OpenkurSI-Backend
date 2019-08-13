@@ -181,7 +181,8 @@ public class KelasPesertaController {
 
                     return new Gson().toJson(response);
                 }
-            }else if(roles.equals("[\"Peserta\"]")) {
+            }
+            else if(roles.equals("[\"Peserta\"]")) {
                 KelasPeserta getMateri = kelasPesertaRepository.findById(id);
                          
                 if(getMateri != null) {
