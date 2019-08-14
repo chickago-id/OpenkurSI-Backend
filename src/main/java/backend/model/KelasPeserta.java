@@ -1,15 +1,24 @@
 package backend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
-import javax.persistence.Table; 
+import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="kelas_peserta")
 public class KelasPeserta {
+
+    @OneToOne(optional=false)
+    @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false)
+    private Kelas kelas;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
