@@ -20,6 +20,10 @@ public class KelasPeserta {
     @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false)
     private Kelas kelas;
 
+    @OneToOne(optional=false)
+    @JoinColumn(name = "id_user", referencedColumnName="id", insertable = false, updatable = false)
+    private User user;
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
