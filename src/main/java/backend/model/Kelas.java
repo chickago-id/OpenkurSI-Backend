@@ -7,7 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.GenerationType;
 import javax.persistence.Table; 
 import javax.validation.constraints.NotNull;
-// import javax.persistence.OneToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import javax.persistence.JoinColumn;
 
@@ -19,9 +20,9 @@ import java.util.ArrayList;
 @Table(name="kelas")
 public class Kelas {
 
-  // @OneToOne(optional=false)
-  // @JoinColumn(name = "id_materi", referencedColumnName="id", insertable = false, updatable = false)
-  // private Materi materi;
+  @ManyToOne(optional=false)
+  @JoinColumn(name = "id_materi", referencedColumnName="id", insertable = false, updatable = false)
+  private Materi materi;
   
 
     @Id
@@ -123,4 +124,8 @@ public void setId_materi(String id_materi) {
     public void setId(Long id) {
         this.id = id;
     }
+  
+public Materi getMateri() {
+    return materi;
+  }
 }
