@@ -19,6 +19,12 @@ public class Materi {
     private String kode_materi;
     @NotNull(message = "Nama Materi harus diisi.")
     private String nama_materi;
+    @NotNull(message = "Jumlah Pertemuan harus diisi")
+    private String jumlah_pertemuan;
+    @NotNull(message = "Jam Pilihan harus diisi")
+    private String jam_pilihan;
+    @NotNull(message = "Biaya harus diisi")
+    private String biaya;
 
     public String getKode_materi() {
         return kode_materi;
@@ -34,6 +40,30 @@ public class Materi {
 
     public void setNama_materi(String nama_materi) {
         this.nama_materi = nama_materi;
+    }
+
+    public String getJumlah_pertemuan(){
+        return jumlah_pertemuan;
+    }
+
+    public void setJumlah_pertemuan(String jumlah_pertemuan){
+        this.jumlah_pertemuan = jumlah_pertemuan;
+    }
+
+    public String getJam_pilihan(){
+        return jam_pilihan;
+    }
+
+    public void setJam_pilihan(String jam_pilihan){
+        this.jam_pilihan = jam_pilihan;
+    } 
+
+    public String getBiaya(){
+        return biaya;
+    }
+
+    public void setBiaya(String biaya){
+        this.biaya = biaya;
     }
 
     public Long getId() {
