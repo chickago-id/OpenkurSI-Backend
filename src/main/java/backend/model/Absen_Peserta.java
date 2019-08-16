@@ -6,16 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
 
 @Entity
-@Table(name="jadwal")
-public class Jadwal {
-
-@OneToOne(optional=false)
- @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false)
-    private Kelas kelas;
+@Table(name="absen_peserta")
+public class Absen_Peserta {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,10 +17,13 @@ public class Jadwal {
 
     @NotNull(message = "Kode kelas harus diisi.")
     private String id_kelas;
-    @NotNull(message = "jam harus dipilih.")
-    private String jam_pilihan;
-    @NotNull(message = "Tanggal diisi.")
+    @NotNull(message = "Kode user harus diisi.")
+    private String id_user;
+    @NotNull(message = "Tanggal harus diisi.")
     private String tanggal;
+    @NotNull(message = "Jam masuk harus diisi.")
+    private String jam_masuk;
+
 
     public String getId_kelas() {
         return id_kelas;
@@ -36,20 +33,28 @@ public class Jadwal {
         this.id_kelas = id_kelas;
     }
 
-    public String getJam_pilihan() {
-        return jam_pilihan;
+    public String getId_user() {
+        return id_user;
     }
 
-    public void setJam_pilihan(String jam_pilihan) {
-        this.jam_pilihan = jam_pilihan;
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public String getTanggal() {
         return tanggal;
     }
 
-    public void setTanggal(String tanggal) {
+    public void setTangal(String tanggal) {
         this.tanggal = tanggal;
+    }
+
+    public String getJam_masuk() {
+        return jam_masuk;
+    }
+
+    public void setJam_masuk(String jam_masuk) {
+        this.jam_masuk = jam_masuk;
     }
 
     public Long getId() {
@@ -59,4 +64,5 @@ public class Jadwal {
     public void setId(Long id) {
         this.id = id;
     }
+
 }

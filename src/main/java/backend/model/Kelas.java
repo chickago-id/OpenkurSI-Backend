@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.persistence.OneToOne;
 
-
 import javax.persistence.JoinColumn;
 
 import java.util.List;
@@ -106,6 +105,14 @@ public String getStatus() {
 
 public void setStatus(String status) {
   this.status = status;
+}
+
+public String getId_materi() {
+  return id_materi;
+}
+
+public void setId_materi(String id_materi) {
+  this.id_materi = id_materi;
 }
 
 

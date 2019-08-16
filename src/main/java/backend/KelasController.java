@@ -51,6 +51,7 @@ public class KelasController {
 
     @Post("/")
     @Secured("isAnonymous()")
+    
     public String create(@Body Kelas kelas, @Nullable Authentication authentication) {
         try {
 
@@ -68,7 +69,9 @@ public class KelasController {
                     KelasResponse response = new KelasResponse("ok", "Berhasil menambahkan data kelas", result);
 
                     return new Gson().toJson(response);
-                } else {
+                } 
+                
+                else {
                     KelasResponse response = new KelasResponse("error", "Anda tidak boleh mengakses halaman ini.");
 
                     return new Gson().toJson(response);
