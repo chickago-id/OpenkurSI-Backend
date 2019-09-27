@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import backend.model.KategoriNilai;
 
@@ -62,7 +61,13 @@ public class KategoriNilaiRepositoryImpl implements KategoriNilaiRepository{
     @Transactional(readOnly = true)
     public List<KategoriNilai> findAll() {
         String qlString = "SELECT k FROM KategoriNilai k";
+        
+        //String qlString = "SELECT SUM(k.bobot_nilai), k FROM KategoriNilai k " +
+        //     "GROUP BY k.materi";
+        
         TypedQuery<KategoriNilai> query = entityManager.createQuery(qlString, KategoriNilai.class);
+        //javax.persistence.Query query =entityManager.createQuery(qlString);
+        
         return query.getResultList();
         
     }
