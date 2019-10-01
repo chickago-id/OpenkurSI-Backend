@@ -3,7 +3,10 @@ package backend.model;
 import java.util.List;
 import java.util.ArrayList;
 
-// response kategori nilai
+/**
+ * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
+ */
+
 public class KategoriNilaiResponse {
     public String status;
     public String message;
