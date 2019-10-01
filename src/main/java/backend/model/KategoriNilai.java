@@ -2,19 +2,20 @@ package backend.model;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
+
+/**
+ * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
+ */
 
 @Entity
 @Table(name = "kategori_nilai")
@@ -26,25 +27,11 @@ public class KategoriNilai {
     @Column(name = "id_kategori_nilai")
     private Integer id_kategori_nilai;
 
-    @NotNull
+    @NotNull(message = "Nama kategori tidak boleh kosong")
     @Column(name = "nama_kategori")
     private String nama_kategori;
 
-    @ManyToOne(targetEntity = Materi.class, optional = false)
-    @JoinColumn(name = "id_materi", referencedColumnName = "id", nullable = false)
-    private Materi materi;
-
-    @NotNull
-    @Column(name = "bobot_nilai")
-    private Float bobot_nilai;
-
-    /*     
-        @JsonIgnoreProperties(value = "kategoriNilai", allowSetters=true, allowGetters = true)
-        @OneToMany(targetEntity = NilaiSiswa.class, mappedBy = "kategoriNilai")
-        private List<NilaiSiswa> nilaiSiswa = new ArrayList<>();
-    */
-
-    @NotNull
+    @NotNull(message = "Created by tidak boleh kosong")
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
 
@@ -65,13 +52,7 @@ public class KategoriNilai {
     public Integer getId_kategori_nilai() {
         return id_kategori_nilai;
     }
-    /**
-     * @param id_kategori_nilai the id_kategori_nilai to set
-     */
-    public void setId_kategori_nilai(Integer id_kategori_nilai) {
-        this.id_kategori_nilai = id_kategori_nilai;
-    }
-
+    
     /**
      * @return the nama_kategori
      */
@@ -84,38 +65,6 @@ public class KategoriNilai {
     public void setNama_kategori(String nama_kategori) {
         this.nama_kategori = nama_kategori;
     }
-
-    /**
-     * @return the materi
-     */
-    public Materi getMateri() {
-        return materi;
-    }
-
-    /**
-     * @param materi the materi to set
-     */
-    public void setMateri(Materi materi) {
-        this.materi = materi;
-    }
-    
-    /**
-     * @return the bobot_nilai
-     */
-    public Float getBobot_nilai() {
-        return bobot_nilai;
-    }
-    /**
-     * @param bobot_nilai the bobot_nilai to set
-     */
-    public void setBobot_nilai(Float bobot_nilai) {
-        this.bobot_nilai = bobot_nilai;
-    }
-
-    /* 
-        public List<NilaiSiswa> getNilaiSiswa() {return nilaiSiswa;}
-        public void setNilaiSiswa(List<NilaiSiswa> nilaiSiswa) {this.nilaiSiswa = nilaiSiswa;} 
-    */
 
     /**
      * @return the created_by
@@ -168,4 +117,6 @@ public class KategoriNilai {
     public void setUpdated_date(Date updated_date) {
         this.updated_date = updated_date;
     }
+    
+    
 }
