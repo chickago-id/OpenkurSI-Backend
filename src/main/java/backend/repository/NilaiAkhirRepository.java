@@ -1,4 +1,4 @@
-package backend;
+package backend.repository;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ Author : supi.core@gmail.com
 public interface NilaiAkhirRepository{
 
     NilaiAkhir save(NilaiAkhir nilaiAkhir);
-    NilaiAkhir update (Long id_nilai_akhir, NilaiAkhir nilaiAkhir);
+    NilaiAkhir update (Long id, NilaiAkhir nilaiAkhir);
     List<NilaiAkhir> findAll();
-    NilaiAkhir findById(@NotNull Long id_nilai_akhir);
-    void deleteById(@NotNull Long id_nilai_akhir);
+    NilaiAkhir findById(@NotNull Long id);
+    void deleteById(@NotNull Long id);
 }

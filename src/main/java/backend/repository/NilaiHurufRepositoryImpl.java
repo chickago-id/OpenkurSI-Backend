@@ -1,4 +1,4 @@
-package backend;
+package backend.repository;
 
 import java.util.List;
 
@@ -11,6 +11,10 @@ import javax.validation.constraints.NotNull;
 import backend.model.NilaiHuruf;
 import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
+
+/**
+ * Author : supi.core@gmail.com
+ */
 
 @Singleton
 public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
@@ -30,7 +34,7 @@ public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
     }
     @Override
     @Transactional
-    public NilaiHuruf update(@NotNull NilaiHuruf nilaihuruf){
+    public NilaiHuruf update(Long id , @NotNull NilaiHuruf nilaihuruf){
         return entityManager.merge(nilaihuruf);
     }
 
@@ -44,14 +48,14 @@ public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
 
     @Override
     @Transactional (readOnly = true)
-    public NilaiHuruf findById(@NotNull Long id_nilai_huruf){
-        return entityManager.find(NilaiHuruf.class, id_nilai_huruf);
+    public NilaiHuruf findById(@NotNull Long id){
+        return entityManager.find(NilaiHuruf.class, id);
     }
 
     @Override
     @Transactional
-    public void deleteById(@NotNull Long id_nilai_huruf) {
-        NilaiHuruf nilaihuruf = findById(id_nilai_huruf);
+    public void deleteById(@NotNull Long id) {
+        NilaiHuruf nilaihuruf = findById(id);
 
         if (nilaihuruf != null){
             entityManager.remove(nilaihuruf);

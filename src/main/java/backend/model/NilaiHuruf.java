@@ -19,7 +19,7 @@ public class NilaiHuruf {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_nilai_huruf;
+    private Long id;
 
     @NotNull(message = "Nilai Huruf Harus diisi")
     private String nilai_huruf;
@@ -71,4 +71,12 @@ public class NilaiHuruf {
     public void setCreated_date(Date created_date){
         this.created_date=created_date;
     }
+
+    public Long getId_nilai_huruf(){
+        return id;
+    }
+    public void setId_nilai_huruf(Long id){
+        this.id=id;
+    }
+
 }

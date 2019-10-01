@@ -1,15 +1,17 @@
-package backend;
+package backend.controller;
 
 import java.util.List;
 
 import com.google.gson.Gson;
 import backend.model.NilaiHuruf;
 import backend.model.NilaiHurufResponse;
+import backend.repository.NilaiHurufRepository;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.validation.Validated;
@@ -43,11 +45,11 @@ public class NilaiHurufController {
         }
     }
 
-    @Get("/{id_nilai_huruf}")
+    @Get("/{id}")
     @Secured("isAnonymous()")
-    public String show(Long id_nilai_huruf){
+    public String show(Long id){
         try {
-            NilaiHuruf nilaihuruf = nilaihurufRepository.findById(id_nilai_huruf);
+            NilaiHuruf nilaihuruf = nilaihurufRepository.findById(id);
             if (nilaihuruf !=null) {
                 NilaiHurufResponse response = new NilaiHurufResponse("Ok", "Data nilai huruf", nilaihuruf);
                 return new Gson().toJson(response);
@@ -90,34 +92,34 @@ public class NilaiHurufController {
         }
     }
 
-    // @Post("/{id_nilai_huruf}")
-    // @Secured("isAnonymous()")
-    // public String update(@Body NilaiHuruf nilaihuruf, @Nullable Authentication authentication){
-    //     if (authentication == null){
-    //         NilaiHurufResponse response = new NilaiHurufResponse ("error", "Unauthorized user.");
-    //         return new Gson().toJson(response);
-    //     } else {
-    //         Object data = authentication.getAttributes().get("roles");
-    //         String roles = data.toString();
-    //         if(roles.equals("[\"Admin\"]")){
-    //             NilaiHuruf result = nilaihurufRepository.update(nilaihuruf);
-    //             if(result !=null){
-    //                 NilaiHurufResponse response = new NilaiHurufResponse ("ok","Berhasil memperbaharui data nilai huruf", result);
-    //                 return new Gson().toJson(response);
-    //             } else {
-    //                 NilaiHurufResponse response = new NilaiHurufResponse("error", "Data nilai huruf tidak ditemukan");
-    //                 return new Gson().toJson(response);
-    //             }
-    //         } else {
-    //             NilaiHurufResponse response = new NilaiHurufResponse("error", "Anda tidak boleh mengakses halaman ini.");
-    //             return new Gson().toJson(response);
-    //         }
-    //     }
-    // }
+    @Put("/{id}")
+    @Secured("isAnonymous()")
+    public String update(Long id, @Body NilaiHuruf nilaihuruf, @Nullable Authentication authentication){
+        if (authentication == null){
+            NilaiHurufResponse response = new NilaiHurufResponse ("error", "Unauthorized user.", nilaihuruf);
+            return new Gson().toJson(response);
+        } else {
+            Object data = authentication.getAttributes().get("roles");
+            String roles = data.toString();
+            if(roles.equals("[\"Admin\"]")){
+                NilaiHuruf result = nilaihurufRepository.update(id, nilaihuruf);
+                if(result !=null){
+                    NilaiHurufResponse response = new NilaiHurufResponse ("ok","Berhasil memperbaharui data nilai huruf", result);
+                    return new Gson().toJson(response);
+                } else {
+                    NilaiHurufResponse response = new NilaiHurufResponse("error", "Data nilai huruf tidak ditemukan");
+                    return new Gson().toJson(response);
+                }
+            } else {
+                NilaiHurufResponse response = new NilaiHurufResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                return new Gson().toJson(response);
+            }
+        }
+    }
 
-    @Delete ("/{id_nilai_huruf}")
+    @Delete ("/{id}")
     @Secured ("isAnonymous()")
-    public String delete (Long id_nilai_huruf, @Nullable Authentication authentication){
+    public String delete (Long id, @Nullable Authentication authentication){
         if (authentication == null){
             NilaiHurufResponse response = new NilaiHurufResponse("error", "Unauthorized user.");
 
@@ -127,10 +129,10 @@ public class NilaiHurufController {
             String roles = data.toString();
 
             if(roles.equals("[\"Admin\"]")) {
-                NilaiHuruf getNilaiHuruf = nilaihurufRepository.findById(id_nilai_huruf);
+                NilaiHuruf getNilaiHuruf = nilaihurufRepository.findById(id);
 
                 if (getNilaiHuruf !=null){
-                    nilaihurufRepository.deleteById(id_nilai_huruf);
+                    nilaihurufRepository.deleteById(id);
 
                     NilaiHurufResponse response = new NilaiHurufResponse("ok","Berhasil menghapus data nilai huruf");
                     return new Gson().toJson(response);
