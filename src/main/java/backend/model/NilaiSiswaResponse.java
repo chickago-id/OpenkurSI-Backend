@@ -3,7 +3,10 @@ package backend.model;
 import java.util.List;
 import java.util.ArrayList;
 
-// response nilai siswa
+/**
+ * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
+ */
+
 public class NilaiSiswaResponse {
     public String status;
     public String message;
