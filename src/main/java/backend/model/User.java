@@ -21,9 +21,13 @@ public class User {
     private Long id;
 
     @NotNull(message = "Username harus diisi.")
+    @Column(unique=true)
     private String username;
+
     @NotNull(message = "Email harus diisi.")
     private String email;
+    @Column(unique=true)
+    
     @NotNull(message = "Password harus diisi.")
     private String password;
     @NotNull(message = "Role harus diisi.")
