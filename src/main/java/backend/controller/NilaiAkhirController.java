@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 
 import backend.model.NilaiAkhir;
 import backend.model.NilaiAkhirResponse;
+import backend.repository.NilaiAkhirRepository;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
