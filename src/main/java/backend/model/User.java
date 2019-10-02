@@ -12,11 +12,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -73,11 +73,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "{\n"+
-            "id:" + id + ",\n"+
-            "username:" + username + ",\n"+
-            "email:" + email + ",\n"+
-            "role:" + role +"\n"+
-        "}";
+        return "{\n" + "id:" + id + ",\n" + "username:" + username + ",\n" + "email:" + email + ",\n" + "role:" + role
+                + "\n" + "}";
     }
+
 }

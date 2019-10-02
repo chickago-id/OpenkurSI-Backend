@@ -42,7 +42,7 @@ public class KelasPesertaController {
             KelasPesertaResponse response = new KelasPesertaResponse("ok", "Data peserta kelas", kelaspeserta);
 
             return new Gson().toJson(response);
-        } catch(Exception e) {
+        } catch (Exception e) {
             String message = e.getMessage();
             KelasPesertaResponse response = new KelasPesertaResponse("error", message);
             return new Gson().toJson(response);
@@ -54,39 +54,40 @@ public class KelasPesertaController {
     public String create(@Body KelasPeserta kelaspeserta, @Nullable Authentication authentication) {
         try {
 
-            if(authentication == null) {
-                KelasPesertaResponse response = new KelasPesertaResponse("error", "Belum Login, anda tidak boleh posting.");
+            if (authentication == null) {
+                KelasPesertaResponse response = new KelasPesertaResponse("error",
+                        "Belum Login, anda tidak boleh posting.");
 
                 return new Gson().toJson(response);
             } else {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
 
-                if(roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]")) {
                     KelasPeserta result = kelasPesertaRepository.save(kelaspeserta);
-                    
-                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menambahkan data peserta kelas", result);
+
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok",
+                            "Berhasil menambahkan data peserta kelas", result);
+
+                    return new Gson().toJson(response);
+                } else if (roles.equals("[\"Peserta\"]")) {
+                    KelasPeserta result = kelasPesertaRepository.save(kelaspeserta);
+
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok",
+                            "Berhasil menambahkan data peserta kelas", result);
 
                     return new Gson().toJson(response);
                 }
-                else if(roles.equals("[\"Peserta\"]")) {
-                    KelasPeserta result = kelasPesertaRepository.save(kelaspeserta);
-                    
-                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menambahkan data peserta kelas", result);
 
-                    return new Gson().toJson(response);
-                }
-                
                 else {
-                    KelasPesertaResponse response = new KelasPesertaResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                    KelasPesertaResponse response = new KelasPesertaResponse("error",
+                            "Anda tidak boleh mengakses halaman ini.");
 
                     return new Gson().toJson(response);
                 }
             }
 
-            
-
-        } catch(Exception e) {
+        } catch (Exception e) {
             String message = e.getMessage();
 
             KelasPesertaResponse response = new KelasPesertaResponse("error", message);
@@ -103,7 +104,7 @@ public class KelasPesertaController {
 
             KelasPeserta kelaspeserta = kelasPesertaRepository.findById(id);
 
-            if(kelaspeserta != null) {
+            if (kelaspeserta != null) {
                 KelasPesertaResponse response = new KelasPesertaResponse("ok", "Data peserta kelas", kelaspeserta);
 
                 return new Gson().toJson(response);
@@ -111,9 +112,9 @@ public class KelasPesertaController {
                 KelasPesertaResponse response = new KelasPesertaResponse("error", "Data peserta kelas tidak ditemukan");
 
                 return new Gson().toJson(response);
-            } 
+            }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             String message = e.getMessage();
 
@@ -121,87 +122,94 @@ public class KelasPesertaController {
 
             return new Gson().toJson(response);
         }
-        
+
     }
 
-    @Post("/{id}") 
+    @Post("/{id}")
     @Secured("isAnonymous()")
     public String update(@Body KelasPeserta kelaspeserta, @Nullable Authentication authentication) {
-      
-       
-        if(authentication == null) {
-            KelasPesertaResponse response = new KelasPesertaResponse("error", "Bukan admin, anda tidak boleh update data.");
+
+        if (authentication == null) {
+            KelasPesertaResponse response = new KelasPesertaResponse("error",
+                    "Bukan admin, anda tidak boleh update data.");
 
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
             String roles = data.toString();
 
-            if(roles.equals("[\"Admin\"]")) {
+            if (roles.equals("[\"Admin\"]")) {
                 KelasPeserta result = kelasPesertaRepository.update(kelaspeserta);
 
-                if(result != null) {
-                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil memperbarui data peserta kelas", result);
+                if (result != null) {
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok",
+                            "Berhasil memperbarui data peserta kelas", result);
 
                     return new Gson().toJson(response);
                 } else {
-                    KelasPesertaResponse response = new KelasPesertaResponse("error", "Data peserta kelas tidak ditemukan");
+                    KelasPesertaResponse response = new KelasPesertaResponse("error",
+                            "Data peserta kelas tidak ditemukan");
 
                     return new Gson().toJson(response);
                 }
             } else {
-                KelasPesertaResponse response = new KelasPesertaResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                KelasPesertaResponse response = new KelasPesertaResponse("error",
+                        "Anda tidak boleh mengakses halaman ini.");
                 return new Gson().toJson(response);
-            } 
+            }
         }
     }
 
     @Delete("/{id}")
     @Secured("isAnonymous()")
     public String delete(Long id, @Nullable Authentication authentication) {
-        if(authentication == null) {
-            KelasPesertaResponse response = new KelasPesertaResponse("error", "Bukan admin, anda tidak boleh hapus data.");
+        if (authentication == null) {
+            KelasPesertaResponse response = new KelasPesertaResponse("error",
+                    "Bukan admin, anda tidak boleh hapus data.");
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
             String roles = data.toString();
 
-            if(roles.equals("[\"Admin\"]")) {
+            if (roles.equals("[\"Admin\"]")) {
                 KelasPeserta getMateri = kelasPesertaRepository.findById(id);
-                         
-                if(getMateri != null) {
+
+                if (getMateri != null) {
                     kelasPesertaRepository.deleteById(id);
 
-                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menghapus data peserta kelas");
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok",
+                            "Berhasil menghapus data peserta kelas");
 
                     return new Gson().toJson(response);
 
                 } else {
-                    KelasPesertaResponse response = new KelasPesertaResponse("error", "Data peserta kelas tidak ditemukan");
+                    KelasPesertaResponse response = new KelasPesertaResponse("error",
+                            "Data peserta kelas tidak ditemukan");
 
                     return new Gson().toJson(response);
                 }
-            }
-            else if(roles.equals("[\"Peserta\"]")) {
+            } else if (roles.equals("[\"Peserta\"]")) {
                 KelasPeserta getMateri = kelasPesertaRepository.findById(id);
-                         
-                if(getMateri != null) {
+
+                if (getMateri != null) {
                     kelasPesertaRepository.deleteById(id);
 
-                    KelasPesertaResponse response = new KelasPesertaResponse("ok", "Berhasil menghapus data peserta kelas");
+                    KelasPesertaResponse response = new KelasPesertaResponse("ok",
+                            "Berhasil menghapus data peserta kelas");
 
                     return new Gson().toJson(response);
 
                 } else {
-                    KelasPesertaResponse response = new KelasPesertaResponse("error", "Data peserta kelas tidak ditemukan");
+                    KelasPesertaResponse response = new KelasPesertaResponse("error",
+                            "Data peserta kelas tidak ditemukan");
 
                     return new Gson().toJson(response);
                 }
             }
-            
-            
+
             else {
-                KelasPesertaResponse response = new KelasPesertaResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                KelasPesertaResponse response = new KelasPesertaResponse("error",
+                        "Anda tidak boleh mengakses halaman ini.");
                 return new Gson().toJson(response);
             }
         }
