@@ -2,7 +2,7 @@ package backend;
 
 import backend.model.KelasPeserta;
 import backend.model.KelasPesertaResponse;
-
+import backend.repository.KelasPesertaRepository;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -38,8 +38,9 @@ public class KelasPesertaController {
     public String index() {
 
         try {
-            List<KelasPeserta> kelaspeserta = kelasPesertaRepository.findAll();
-            KelasPesertaResponse response = new KelasPesertaResponse("ok", "Data peserta kelas", kelaspeserta);
+            // List<KelasPeserta> kelaspeserta = KelasPesertaRepository.findAll();
+            List<KelasPeserta> kelasPeserta = kelasPesertaRepository.findAll();
+            KelasPesertaResponse response = new KelasPesertaResponse("ok", "Data peserta kelas", kelasPeserta);
 
             return new Gson().toJson(response);
         } catch (Exception e) {
