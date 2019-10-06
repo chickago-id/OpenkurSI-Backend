@@ -95,6 +95,44 @@ public class KategoriNilaiMateriController {
         }
     }
 
+    @Get("/materi/{id_materi}")
+    @Secured("isAnonymous()")
+    public String showByIdMateri(Long id_materi) {
+        try {
+            List<KategoriNilaiMateri> kategoriNilaiMateri = KategoriNilaiMateriRepository.findByIdMateri(id_materi);
+            if (kategoriNilaiMateri != null) {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("ok", "Data Kategori nilai materi", kategoriNilaiMateri);
+                return new Gson().toJson(response);
+            } else {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Data kategori nilai tidak ditemukan");
+                return new Gson().toJson(response);
+            }
+        } catch (Exception e) {
+            String message = e.getMessage();
+            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", message);
+            return new Gson().toJson(response);
+        }
+    }
+
+    /* @Get("/materi/sum/{id_materi}")
+    @Secured("isAnonymous()")
+    public String showSumOfBobotNilai(Long id_materi) {
+        try {
+            KategoriNilaiMateri kategoriNilaiMateri = KategoriNilaiMateriRepository.sumOfMateri(id_materi);
+            if (kategoriNilaiMateri != null) {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("ok", "Data Kategori nilai materi", kategoriNilaiMateri);
+                return new Gson().toJson(response);
+            } else {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Data kategori nilai tidak ditemukan");
+                return new Gson().toJson(response);
+            }
+        } catch (Exception e) {
+            String message = e.getMessage();
+            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", message);
+            return new Gson().toJson(response);
+        }
+    } */
+
     @Get("/{id}")
     @Secured("isAnonymous()")
     public String show(Long id) {
