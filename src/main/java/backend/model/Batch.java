@@ -1,5 +1,6 @@
 package backend.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ public class Batch {
     private Long id_batch;
 
     @NotNull(message = "Nomor Batch harus diisi.")
+    @Column(unique = true)
     private Integer no_batch;
 
     public Long getId_batch() {
