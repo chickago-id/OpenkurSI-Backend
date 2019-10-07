@@ -1,30 +1,54 @@
 package backend.model;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
+
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core  
+ */
 
 @Entity
 @Table(name="materi")
 public class Materi {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+    @GenericGenerator(name="incrementId",strategy="increment")
+    @GeneratedValue(generator = "incrementId")
+    @Column(name = "id")
+    private Integer id;
 
     @NotNull(message = "Kode Materi harus diisi.")
+    @Column(unique=true)
     private String kode_materi;
+
     @NotNull(message = "Nama Materi harus diisi.")
     private String nama_materi;
-    @NotNull(message = "Jumlah Pertemuan harus diisi")
-    private String jumlah_pertemuan;
-    @NotNull(message = "Jam Pilihan harus diisi")
-    private String jam_pilihan;
-    @NotNull(message = "Biaya harus diisi")
-    private String biaya;
+   
+    @NotNull(message = "Created by tidak boleh kosong")
+    @Column(name = "created_by", nullable = false, updatable = false)
+    private Long created_by;
+
+    @Column(name = "created_date", nullable = false, updatable = false)
+    @CreationTimestamp
+    private Date created_date;
+
+    @Column(name = "updated_by", nullable =  true)
+    private Long updated_by;
+
+    @Column(name = "updated_date", nullable = false, updatable = true)
+    @UpdateTimestamp
+    private Date updated_date;
+    
 
     public String getKode_materi() {
         return kode_materi;
@@ -42,35 +66,53 @@ public class Materi {
         this.nama_materi = nama_materi;
     }
 
-    public String getJumlah_pertemuan(){
-        return jumlah_pertemuan;
+    /**
+     * @return the created_by
+     */
+    public Long getCreated_by() {
+        return created_by;
+    }
+    /**
+     * @param created_by the created_by to set
+     */
+    public void setCreated_by(Long created_by) {
+        this.created_by = created_by;
+    }
+    /**
+     * @return the created_date
+     */
+    public Date getCreated_date() {
+        return created_date;
+    }
+    /**
+     * @param created_date the created_date to set
+     */
+    public void setCreated_date(Date created_date) {
+        this.created_date = created_date;
+    }
+    /**
+     * @return the updated_by
+     */
+    public Long getUpdated_by() {
+        return updated_by;
+    }
+    /**
+     * @param updated_by the updated_by to set
+     */
+    public void setUpdated_by(Long updated_by) {
+        this.updated_by = updated_by;
     }
 
-    public void setJumlah_pertemuan(String jumlah_pertemuan){
-        this.jumlah_pertemuan = jumlah_pertemuan;
+    /**
+     * @return the updated_date
+     */
+    public Date getUpdated_date() {
+        return updated_date;
     }
-
-    public String getJam_pilihan(){
-        return jam_pilihan;
-    }
-
-    public void setJam_pilihan(String jam_pilihan){
-        this.jam_pilihan = jam_pilihan;
-    } 
-
-    public String getBiaya(){
-        return biaya;
-    }
-
-    public void setBiaya(String biaya){
-        this.biaya = biaya;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    /**
+     * @param updated_date the updated_date to set
+     */
+    public void setUpdated_date(Date updated_date) {
+        this.updated_date = updated_date;
     }
 }
