@@ -1,32 +1,26 @@
 package backend.model;
 
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.Date;
-import java.util.Timer;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core
  */
 
 @Entity
 @Table(name = "sesi")
 
-/**
- * Sesi
- */
 public class Sesi {
 
     @Id
@@ -41,7 +35,8 @@ public class Sesi {
     @NotNull(message = "Jam selesai tidak boleh kosong !")
     private Time jam_selesai;
 
-    @NotNull(message = "Status setting tidak boleh kosong !")
+   // @NotNull(message = "Status setting tidak boleh kosong !")
+    @ColumnDefault("1")
     private Integer setting;
     // @Enumerated(EnumType.STRING)
     // @Column(columnDefinition = "post_setting")
@@ -52,7 +47,6 @@ public class Sesi {
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
 
-    @NotNull (message = "Tanggal buat tidak boleh kosong !")
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Date created_at;
