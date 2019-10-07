@@ -7,12 +7,12 @@ import javax.validation.constraints.NotNull;
 import backend.model.Sesi;
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core  
  */
 
  public interface SesiRepository{
-     Sesi save(@NotNull Sesi sesi);
-     Sesi update(Integer id, @NotNull Sesi sesi);
+     Sesi save(Sesi sesi);
+     Sesi update(Integer id, Sesi sesi);
 
      List<Sesi> findAll();
 
