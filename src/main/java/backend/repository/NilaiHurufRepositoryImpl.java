@@ -13,7 +13,7 @@ import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1.core
  */
 
 @Singleton
@@ -27,15 +27,15 @@ public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
 
     @Override
     @Transactional
-    public NilaiHuruf save(@NotNull NilaiHuruf nilaihuruf){
-        entityManager.persist(nilaihuruf);
-
-        return nilaihuruf;
+    public NilaiHuruf save(NilaiHuruf nilaiHuruf){
+        entityManager.persist(nilaiHuruf);
+        return nilaiHuruf;
     }
     @Override
     @Transactional
-    public NilaiHuruf update(Long id , @NotNull NilaiHuruf nilaihuruf){
-        return entityManager.merge(nilaihuruf);
+    public NilaiHuruf update(Long id , NilaiHuruf nilaiHuruf) {
+        entityManager.merge(nilaiHuruf);
+        return nilaiHuruf;
     }
 
     @Override
@@ -55,10 +55,10 @@ public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
     @Override
     @Transactional
     public void deleteById(@NotNull Long id) {
-        NilaiHuruf nilaihuruf = findById(id);
+        NilaiHuruf nilaiHuruf = findById(id);
 
-        if (nilaihuruf != null){
-            entityManager.remove(nilaihuruf);
+        if (nilaiHuruf != null){
+            entityManager.remove(nilaiHuruf);
         }
     }
 }
