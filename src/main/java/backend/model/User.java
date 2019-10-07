@@ -25,8 +25,8 @@ public class User {
     private String username;
 
     @NotNull(message = "Email harus diisi.")
-    private String email;
     @Column(unique=true)
+    private String email;
     
     @NotNull(message = "Password harus diisi.")
     private String password;
