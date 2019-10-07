@@ -2,6 +2,7 @@ package backend.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,16 +10,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
+
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core  
+ */
+
 @Entity
 @Table(name="nilai_huruf")
 
-/**
- * NilaiHuruf
- */
 public class NilaiHuruf {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name="incrementId",strategy="increment")
+    @GeneratedValue(generator = "incrementId")
+    @Column(name = "id")
     private Long id;
 
     @NotNull(message = "Nilai Huruf Harus diisi")
@@ -33,9 +41,16 @@ public class NilaiHuruf {
     @NotNull(message = "ID Pembuat Tidak Boleh Kosong !")
     private Long created_by;
 
-    @NotNull(message = "Tanggal Data Dibuat Tidak Boleh Kosong")
+    @Column(name = "created_date", nullable = false, updatable = false)
+    @CreationTimestamp
     private Date created_date;
+    
+    @Column(name = "updated_by", nullable =  true)
+    private Long updated_by;
 
+    @Column(name = "updated_date", nullable = false, updatable = true)
+    @UpdateTimestamp
+    private Date updated_date;
 
     public String getNilai_huruf(){
         return nilai_huruf;
@@ -70,6 +85,31 @@ public class NilaiHuruf {
     }
     public void setCreated_date(Date created_date){
         this.created_date=created_date;
+    }
+
+    /**
+     * @return the updated_by
+     */
+    public Long getUpdated_by() {
+        return updated_by;
+    }
+    /**
+     * @param updated_by the updated_by to set
+     */
+    public void setUpdated_by(Long updated_by) {
+        this.updated_by = updated_by;
+    }
+    /**
+     * @return the updated_date
+     */
+    public Date getUpdated_date() {
+        return updated_date;
+    }
+    /**
+     * @param updated_date the updated_date to set
+     */
+    public void setUpdated_date(Date updated_date) {
+        this.updated_date = updated_date;
     }
 
     public Long getId_nilai_huruf(){
