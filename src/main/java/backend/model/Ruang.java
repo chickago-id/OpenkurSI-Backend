@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
- *  Author : supi.core@gmail.com
+ *  Author : supi.core@gmail.com    |   github.com/sup1core
  */
 
  @Entity
@@ -28,6 +28,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     private Integer id;
 
     @NotNull(message = "Nama ruang tidak boleh kosong !")
+    @Column(unique=true)
     private String name;
      
     @NotNull(message = "Kapasitas tidak boleh kosong !")
@@ -40,7 +41,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
 
-    @NotNull (message = "Tanggal buat tidak boleh kosong !")
+    //@NotNull (message = "Tanggal buat tidak boleh kosong !")
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Date created_at;
