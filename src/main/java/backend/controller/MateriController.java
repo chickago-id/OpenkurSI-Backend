@@ -33,6 +33,7 @@ public class MateriController {
     }
 
     @Get("/")
+    @Secured("isAnonymous()")
     public String index(@Nullable Authentication auth) {
         try {
             if (auth == null ){
@@ -47,7 +48,7 @@ public class MateriController {
                         MateriResponse response = new MateriResponse("ok", "success findAll() !", result);
                         return new Gson().toJson(response);
                     } else {
-                        MateriResponse response = new MateriResponse ("ok", "Failed findAll() !", result);
+                        MateriResponse response = new MateriResponse ("error", "Failed findAll() !", result);
                         return new Gson().toJson(response);
                     }
                 } else {
