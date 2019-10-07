@@ -2,9 +2,11 @@ package backend.model;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Optional;
 
-// response materi
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core  
+ */
+
 public class MateriResponse {
     public String status;
     public String message;
