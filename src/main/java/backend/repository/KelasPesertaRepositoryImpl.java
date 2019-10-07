@@ -37,9 +37,23 @@ public class KelasPesertaRepositoryImpl implements KelasPesertaRepository{
     @Override
     @Transactional(readOnly = true)
     public List<KelasPeserta> findAll() {
-        String qlString = "SELECT k FROM KelasPeserta k";
-        ///get model String qlString = "SELECT k FROM KelasPeserta k";
-        TypedQuery<KelasPeserta> query = entityManager.createQuery(qlString, KelasPeserta.class);
+        String qlString = "select a from KelasPeserta a";
+        TypedQuery<KelasPeserta> query = entityManager.createQuery(
+            qlString, 
+            KelasPeserta.class
+            );
+        return query.getResultList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<KelasPeserta> findByIdKelas(Long id_kelas) {
+        String qlString = "select a from KelasPeserta a " +
+                            "inner join UserDetail b on a.id_user = b.id where id_kelas = " + id_kelas;
+        TypedQuery<KelasPeserta> query = entityManager.createQuery(
+                qlString, 
+                KelasPeserta.class
+            );
         return query.getResultList();
     }
 

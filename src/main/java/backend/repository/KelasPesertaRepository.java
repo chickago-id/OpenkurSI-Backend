@@ -11,4 +11,5 @@ public interface KelasPesertaRepository {
     List<KelasPeserta> findAll();
     KelasPeserta findById(@NotNull Long id);
     void deleteById(@NotNull Long id);
+    List<KelasPeserta> findByIdKelas(Long id_kelas);
 }
