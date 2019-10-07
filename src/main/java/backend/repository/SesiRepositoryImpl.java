@@ -13,13 +13,10 @@ import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
 
 /*
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core  
  */
 
  @Singleton
- /**
-  * SesiRepositoryImpl
-  */
  public class SesiRepositoryImpl implements SesiRepository{
      @PersistenceContext
      private EntityManager entityManager;
@@ -38,7 +35,8 @@ import io.micronaut.spring.tx.annotation.Transactional;
     @Override
     @Transactional
     public Sesi update(Integer id, @NotNull Sesi sesi){
-        return entityManager.merge(sesi);
+        entityManager.merge(sesi);
+        return sesi;
     }
 
     @Override
