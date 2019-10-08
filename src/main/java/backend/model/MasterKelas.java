@@ -19,45 +19,27 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "master_kelas")
 public class MasterKelas {
 
-    // @ManyToOne(optional = false)
-    // @JoinColumn(name = "kode_kelas", referencedColumnName = "kode_kelas",
-    // insertable = false, updatable = false)
-    // private Kelas kelas;
-
     @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "kode_kelas")
+    @Column(name = "kode_kelas", unique = true)
     private String kode_kelas;
 
     @NotNull(message = "Nama Materi harus diisi.")
     @Column(name = "nama_kelas")
     private String nama_kelas;
 
-    @NotNull(message = "Created By harus diisi.")
     @Column(name = "created_by")
     private Integer created_by;
 
-    @NotNull(message = "Jumlah Pertemuan harus diisi")
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
     private Date created_date;
 
-    @NotNull(message = "Updated By harus diisi")
     @Column(name = "updated_by")
     private Integer updated_by;
 
-    @NotNull(message = "Updated Date harus diisi")
     @Column(name = "updated_date", nullable = false, updatable = true)
     @UpdateTimestamp
     private Date updated_date;
-
-    // public Long getId_master_kelas() {
-    // return id_master_kelas;
-    // }
-
-    // public void setId_master_kelas(Long id_master_kelas) {
-    // this.id_master_kelas = id_master_kelas;
-    // }
 
     public String getKode_kelas() {
         return kode_kelas;
@@ -106,9 +88,5 @@ public class MasterKelas {
     public void setUpdated_date(Date updated_date) {
         this.updated_date = updated_date;
     }
-
-    // public Kelas getKelas() {
-    // return kelas;
-    // }
 
 }
