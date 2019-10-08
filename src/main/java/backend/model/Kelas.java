@@ -26,10 +26,6 @@ import java.util.Date;
 public class Kelas {
 
   @ManyToOne(optional = false)
-  @JoinColumn(name = "id_materi", referencedColumnName = "id", insertable = false, updatable = false)
-  private Materi materi;
-
-  @ManyToOne(optional = false)
   @JoinColumn(name = "kode_kelas", referencedColumnName = "kode_kelas", insertable = false, updatable = false)
   private MasterKelas masterKelas;
 
@@ -43,15 +39,6 @@ public class Kelas {
 
   @Column(name = "jenis_kelas")
   private String jenis_kelas;
-
-  @Column(name = "jam_pilihan")
-  private String jam_pilihan;
-
-  @Column(name = "jam_mulai")
-  private String jam_mulai;
-
-  @Column(name = "jam_selesai")
-  private String jam_selesai;
 
   @Column(name = "tanggal_mulai", nullable = false, updatable = true)
   @CreationTimestamp
@@ -69,9 +56,6 @@ public class Kelas {
   @Column(name = "status")
   private String status;
 
-  @Column(name = "id_materi")
-  private Long id_materi;
-
   public String getKode_kelas() {
     return kode_kelas;
   }
@@ -86,14 +70,6 @@ public class Kelas {
 
   public void setJenis_kelas(String jenis_kelas) {
     this.jenis_kelas = jenis_kelas;
-  }
-
-  public String getJam_pilihan() {
-    return jam_pilihan;
-  }
-
-  public void setjam_pilihan(String jam_pilihan) {
-    this.jam_pilihan = jam_pilihan;
   }
 
   public Date getTanggal_mulai() {
@@ -136,28 +112,8 @@ public class Kelas {
     this.id = id;
   }
 
-  public Materi getMateri() {
-    return materi;
-  }
-
   public MasterKelas getMasterKelas() {
     return masterKelas;
-  }
-
-  public String getJam_mulai() {
-    return jam_mulai;
-  }
-
-  public void setJam_mulai(String jam_mulai) {
-    this.jam_mulai = jam_mulai;
-  }
-
-  public String getJam_selesai() {
-    return jam_selesai;
-  }
-
-  public void setJam_selesai(String jam_selesai) {
-    this.jam_selesai = jam_selesai;
   }
 
   public Integer getTarget_peserta() {
@@ -175,11 +131,4 @@ public class Kelas {
     this.masterKelas = masterKelas;
   }
 
-  public Long getId_materi() {
-    return id_materi;
-  }
-
-  public void setId_materi(Long id_materi) {
-    this.id_materi = id_materi;
-  }
 }
