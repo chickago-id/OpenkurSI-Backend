@@ -51,6 +51,17 @@ public class NilaiSiswaRepositoryImpl implements NilaiSiswaRepository{
 
     @Override
     @Transactional(readOnly = true)
+    public List<NilaiSiswa> findByIdKelas(Long id_kelas) {
+        String qlString = "select a from NilaiSiswa a " + 
+            "inner join KelasPeserta b on a.id_kelas_peserta = b.id " +
+            "inner join Kelas c on b.id_kelas = c.id " +
+            "where c.id = " + id_kelas;
+        TypedQuery<NilaiSiswa> query = entityManager.createQuery(qlString, NilaiSiswa.class);
+        return query.getResultList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public NilaiSiswa findById(@NotNull Long id) {
         return entityManager.find(NilaiSiswa.class, id);
     }
