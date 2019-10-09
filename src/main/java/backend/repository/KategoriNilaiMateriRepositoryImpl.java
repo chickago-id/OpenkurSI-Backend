@@ -65,13 +65,8 @@ public class KategoriNilaiMateriRepositoryImpl implements KategoriNilaiMateriRep
     @Transactional(readOnly = true)
     public List<KategoriNilaiMateri> findAll() {
         String qlString = "SELECT k FROM KategoriNilaiMateri k";
-        TypedQuery<KategoriNilaiMateri> query = entityManager.createQuery(qlString, KategoriNilaiMateri.class);
-        
+        TypedQuery<KategoriNilaiMateri> query = entityManager.createQuery(qlString, KategoriNilaiMateri.class); 
         return query.getResultList();
-
-        /* return entityManager.createQuery("SELECT a FROM KategoriNilaiMateri a LEFT JOIN FETCH a.KategoriNilaiMateriMateris", KategoriNilaiMateri.class)
-        .getResultList(); */
-        
     }
 
     /* @Override
@@ -85,7 +80,7 @@ public class KategoriNilaiMateriRepositoryImpl implements KategoriNilaiMateriRep
 
     @Override
     @Transactional(readOnly = true)
-    public List<KategoriNilaiMateri> findByIdMateri(Long id_materi) {
+    public List<KategoriNilaiMateri> findByIdMateri(Integer id_materi) {
         String qlString = "SELECT a FROM KategoriNilaiMateri a where id_materi = " + id_materi;
         TypedQuery<KategoriNilaiMateri> query = entityManager.createQuery(qlString, KategoriNilaiMateri.class);
         return query.getResultList(); 
