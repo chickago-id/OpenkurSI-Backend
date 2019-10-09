@@ -37,7 +37,7 @@ public class KategoriNilaiMateri implements Serializable{
     @ManyToOne
     @JoinColumn(name="id_materi", insertable = false, updatable=false, nullable=false)
     private Materi materi;
-    private Long id_materi;
+    private Integer id_materi;
 
     private Float bobot_nilai;
 
@@ -109,14 +109,14 @@ public class KategoriNilaiMateri implements Serializable{
     /**
      * @return the id_materi
      */
-    public Long getId_materi() {
+    public Integer getId_materi() {
         return id_materi;
     }
 
     /**
      * @param id_materi the id_materi to set
      */
-    public void setId_materi(Long id_materi) {
+    public void setId_materi(Integer id_materi) {
         this.id_materi = id_materi;
     }
 
