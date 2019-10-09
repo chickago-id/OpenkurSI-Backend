@@ -17,5 +17,6 @@ public interface NilaiSiswaRepository {
     //List<Object> findGroup();
     NilaiSiswa findById(@NotNull Long id);
     void deleteById(@NotNull Long id);
+    List<NilaiSiswa> findByIdKelas(Long id_kelas);
 
 }
