@@ -1,4 +1,4 @@
-package backend;
+package backend.repository;
 
 import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import backend.model.Jadwal;
+import backend.repository.JadwalRepository;
 
 @Singleton
 public class JadwalRepositoryImpl implements JadwalRepository{
