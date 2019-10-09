@@ -17,12 +17,14 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.validation.Validated;
 import io.reactivex.annotations.Nullable;
 
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core
+ */
+
 @Validated
 @Controller("/nilaihuruf")
 @Secured("isAnonymous()")
-/**
- * NilaiHurufController
- */
+
 public class NilaiHurufController {
     private NilaiHurufRepository nilaihurufRepository;
 
@@ -33,8 +35,8 @@ public class NilaiHurufController {
     @Get("/")
     public String index(){
         try {
-            List<NilaiHuruf> nilaihuruf = nilaihurufRepository.findAll();
-            NilaiHurufResponse response = new NilaiHurufResponse ("ok", "data nilai huruf", nilaihuruf );
+            List<NilaiHuruf> nilaiHuruf = nilaihurufRepository.findAll();
+            NilaiHurufResponse response = new NilaiHurufResponse ("ok", "data nilai huruf", nilaiHuruf );
 
             return new Gson().toJson(response);
         } catch (Exception e) {
@@ -49,9 +51,9 @@ public class NilaiHurufController {
     @Secured("isAnonymous()")
     public String show(Long id){
         try {
-            NilaiHuruf nilaihuruf = nilaihurufRepository.findById(id);
-            if (nilaihuruf !=null) {
-                NilaiHurufResponse response = new NilaiHurufResponse("Ok", "Data nilai huruf", nilaihuruf);
+            NilaiHuruf nilaiHuruf = nilaihurufRepository.findById(id);
+            if (nilaiHuruf !=null) {
+                NilaiHurufResponse response = new NilaiHurufResponse("Ok", "Data nilai huruf", nilaiHuruf);
                 return new Gson().toJson(response);
             } else {
                 NilaiHurufResponse response = new NilaiHurufResponse("Error", "Data tidak ditemukan");
@@ -66,7 +68,7 @@ public class NilaiHurufController {
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create (@Body NilaiHuruf nilaihuruf, @Nullable Authentication authentication){
+    public String create (@Body NilaiHuruf nilaiHuruf, @Nullable Authentication authentication){
         try {
             if(authentication == null){
                 NilaiHurufResponse response = new NilaiHurufResponse("Error", "Unauthorized user.");
@@ -76,7 +78,7 @@ public class NilaiHurufController {
                 String roles = data.toString();
 
                 if(roles.equals("[\"Admin\"]")) {
-                    NilaiHuruf result = nilaihurufRepository.save(nilaihuruf);
+                    NilaiHuruf result = nilaihurufRepository.save(nilaiHuruf);
                     NilaiHurufResponse response = new NilaiHurufResponse ("ok","Berhasil menambahkan data nilai huruf", result);
                     return new Gson().toJson(response);
                 } else {
@@ -94,15 +96,15 @@ public class NilaiHurufController {
 
     @Put("/{id}")
     @Secured("isAnonymous()")
-    public String update(Long id, @Body NilaiHuruf nilaihuruf, @Nullable Authentication authentication){
+    public String update(Long id, @Body NilaiHuruf nilaiHuruf, @Nullable Authentication authentication){
         if (authentication == null){
-            NilaiHurufResponse response = new NilaiHurufResponse ("error", "Unauthorized user.", nilaihuruf);
+            NilaiHurufResponse response = new NilaiHurufResponse ("error", "Unauthorized user.", nilaiHuruf);
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
             String roles = data.toString();
             if(roles.equals("[\"Admin\"]")){
-                NilaiHuruf result = nilaihurufRepository.update(id, nilaihuruf);
+                NilaiHuruf result = nilaihurufRepository.update(id, nilaiHuruf);
                 if(result !=null){
                     NilaiHurufResponse response = new NilaiHurufResponse ("ok","Berhasil memperbaharui data nilai huruf", result);
                     return new Gson().toJson(response);
