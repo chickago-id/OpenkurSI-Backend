@@ -13,7 +13,7 @@ import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core
  */
 
 @Singleton

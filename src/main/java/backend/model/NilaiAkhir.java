@@ -19,7 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "nilai_akhir")
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core
  */
 public class NilaiAkhir {
 
@@ -35,8 +35,13 @@ public class NilaiAkhir {
     @NotNull(message = "Nilai Total Tidak Boleh Kosong")
     private Float nilai_total;
 
-    @NotNull(message = "ID Pembuat Tidak Boleh Kosong")
-    @Column(name = "created_by", nullable = false, updatable = false)
+    // @NotNull(message = "ID Pembuat Tidak Boleh Kosong")
+    // @Column(name = "created_by", nullable = false, updatable = false)
+    // private Long created_by;
+
+    @ManyToOne(targetEntity = User.class, optional = false)
+    @JoinColumn(name= "created_by", referencedColumnName = "id", insertable = false, updatable = false)
+    private User user;
     private Long created_by;
 
     @ManyToOne(targetEntity=NilaiHuruf.class, optional=false)
@@ -45,7 +50,7 @@ public class NilaiAkhir {
     private Long id_nilai_huruf;
     
 
-    @NotNull(message = "Tanggal Pembuatan TIdak Boleh Kosong")
+    
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
     private Date created_date;

@@ -23,7 +23,7 @@ import io.reactivex.annotations.Nullable;
 @Secured("isAnonymous()")
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | github.com/sup1core
  */
 public class NilaiAkhirController {
 
@@ -52,7 +52,7 @@ public class NilaiAkhirController {
     public String create(@Body NilaiAkhir nilaiAkhir, @Nullable Authentication authentication){
         try {
             if(authentication == null){
-                NilaiAkhirResponse response = new NilaiAkhirResponse("ok","Belum log in, dilarang posting.");
+                NilaiAkhirResponse response = new NilaiAkhirResponse("error","You must login before POST data.");
                 return new Gson().toJson(response);
             } else {
                 Object data = authentication.getAttributes().get("roles");
@@ -112,10 +112,10 @@ public class NilaiAkhirController {
                 NilaiAkhir result = nilaiAkhirRepository.update(id, nilaiAkhir);
 
                 if (result != null) {
-                    NilaiAkhirResponse response = new NilaiAkhirResponse("error", "Data berhasil diupdate", result);
+                    NilaiAkhirResponse response = new NilaiAkhirResponse("ok", "Data berhasil diupdate", result);
                     return new Gson().toJson(response);
                 } else {
-                    NilaiAkhirResponse response = new NilaiAkhirResponse("errir", "Data tidak ditemukan");
+                    NilaiAkhirResponse response = new NilaiAkhirResponse("error", "Data tidak ditemukan");
                     return new Gson().toJson(response);
                 }
             } else {
