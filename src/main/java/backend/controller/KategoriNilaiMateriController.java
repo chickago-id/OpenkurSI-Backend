@@ -44,7 +44,7 @@ public class KategoriNilaiMateriController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     List<KategoriNilaiMateri> result = KategoriNilaiMateriRepository.findAll();
                     if (result != null) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
@@ -91,11 +91,11 @@ public class KategoriNilaiMateriController {
                 String roles = data.toString();
                 if(roles.equals("[\"Admin\"]")) {
                     KategoriNilaiMateri result = KategoriNilaiMateriRepository.save(KategoriNilaiMateri);
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("ok", "Berhasil menambahkan data kategori nilai", result);
-                    return new Gson().toJson(response);
-                } else if(roles.equals("[\"Peserta\"]")) {
-                    KategoriNilaiMateri result = KategoriNilaiMateriRepository.save(KategoriNilaiMateri);
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("ok", "Berhasil menambahkan data kategori nilai", result);
+                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                        "ok", 
+                        "Berhasil menambahkan data kategori nilai", 
+                        result
+                        );
                     return new Gson().toJson(response);
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
@@ -111,7 +111,7 @@ public class KategoriNilaiMateriController {
 
     @Get("/materi/{id_materi}")
     @Secured("isAnonymous()")
-    public String showByIdMateri(Long id_materi, @Nullable Authentication auth) {
+    public String showByIdMateri(Integer id_materi, @Nullable Authentication auth) {
         try {
             if (auth == null) {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
@@ -122,7 +122,7 @@ public class KategoriNilaiMateriController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     List<KategoriNilaiMateri> result = KategoriNilaiMateriRepository.findByIdMateri(id_materi);
                     if (result != null) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
@@ -189,7 +189,7 @@ public class KategoriNilaiMateriController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     KategoriNilaiMateri result = KategoriNilaiMateriRepository.findById(id);
                     if(result != null) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
