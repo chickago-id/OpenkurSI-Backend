@@ -35,175 +35,238 @@ public class KategoriNilaiController {
     }
 
     @Get("/")
-    public String index() {
-
+    public String index(@Nullable Authentication auth) {
         try {
-            List<KategoriNilai> kategoriNilai = kategoriNilaiRepository.findAll();
-            KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Data peserta kelas", kategoriNilai);
-
-            return new Gson().toJson(response);
+            if (auth == null) {
+                KategoriNilaiResponse response = new KategoriNilaiResponse(
+                    "ERROR", 
+                    "GET DATA FAILED NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
+                    List<KategoriNilai> result = kategoriNilaiRepository.findAll();
+                    if (result != null) {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "OK", 
+                        "GET DATA SUCCESS",
+                        result
+                    );
+                    return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "ERROR", 
+                            "GET DATA FAILED NOT FOUND",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "ERROR", 
+                        "GET DATA FAILED NOT ADMIN OR PENGAJAR"
+                    );
+                    return new Gson().toJson(response);           
+                }
+            }
         } catch(Exception e) {
             String message = e.getMessage();
-            KategoriNilaiResponse response = new KategoriNilaiResponse("error", message);
+            KategoriNilaiResponse response = new KategoriNilaiResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create(@Body KategoriNilai kategoriNilai, @Nullable Authentication authentication) {
+    public String create(@Body KategoriNilai kategoriNilai, @Nullable Authentication auth) {
         try {
-
-            if(authentication == null) {
-                KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Belum Login, anda tidak boleh posting.");
-
+            if(auth == null) {
+                KategoriNilaiResponse response = new KategoriNilaiResponse(
+                    "ERROR", 
+                    "POST DATA FAILED NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
             } else {
-                Object data = authentication.getAttributes().get("roles");
+                Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-
                 if(roles.equals("[\"Admin\"]")) {
+                    /*
+                    Object objectId = auth.getAttributes().get("id");
+                    String stringId = objectId.toString();
+                    Long id = Long.parseLong(stringId);
+                    kategoriNilai.setCreated_by(id);
+                    */
                     KategoriNilai result = kategoriNilaiRepository.save(kategoriNilai);
-                    
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Berhasil menambahkan data kategori nilai", result);
-
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "OK", 
+                        "POST DATA SUCCESS", 
+                        result
+                    );
                     return new Gson().toJson(response);
-                }
-                else if(roles.equals("[\"Peserta\"]")) {
-                    KategoriNilai result = kategoriNilaiRepository.save(kategoriNilai);
-                    
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Berhasil menambahkan data kategori nilai", result);
-
-                    return new Gson().toJson(response);
-                }
-                
-                else {
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Anda tidak boleh mengakses halaman ini.");
-
+                } else {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "ERROR", 
+                        "POST DATA FAILED NOT ADMIN"
+                    );
                     return new Gson().toJson(response);
                 }
             }
-
-            
-
         } catch(Exception e) {
             String message = e.getMessage();
-
-            KategoriNilaiResponse response = new KategoriNilaiResponse("error", message);
-
+            KategoriNilaiResponse response = new KategoriNilaiResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
 
     @Get("/{id}")
     @Secured("isAnonymous()")
-    public String show(Integer id) {
-
+    public String show(Integer id, @Nullable Authentication auth) {
         try {
-
-            KategoriNilai kategoriNilai = kategoriNilaiRepository.findById(id);
-
-            if(kategoriNilai != null) {
-                KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Data kategori nilai", kategoriNilai);
-
+            if (auth == null) {
+                KategoriNilaiResponse response = new KategoriNilaiResponse(
+                    "ERROR", 
+                    "GET DATA FAILED NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
             } else {
-                KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Data kategori nilai tidak ditemukan");
-
-                return new Gson().toJson(response);
-            } 
-
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
+                    KategoriNilai result = kategoriNilaiRepository.findById(id);
+                    if (result != null) {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "OK", 
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "ERROR", 
+                            "GET DATA FAILED NOT FOUND",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "ERROR", 
+                        "GET DATA FAILED NOT Admin OR Pengajar"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
         } catch(Exception e) {
-
             String message = e.getMessage();
-
-            KategoriNilaiResponse response = new KategoriNilaiResponse("error", message);
-
+            KategoriNilaiResponse response = new KategoriNilaiResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
-        
     }
 
     @Put("/{id_kategori_nilai}") 
     @Secured("isAnonymous()")
-    public String update(Integer id_kategori_nilai, @Body KategoriNilai kategoriNilai, @Nullable Authentication authentication) {
-             
-        if(authentication == null) {
-            KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Bukan admin, anda tidak boleh update data.", kategoriNilai);
-
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-            
-
-            if(roles.equals("[\"Admin\"]")) {
-                KategoriNilai result = kategoriNilaiRepository.update(id_kategori_nilai, kategoriNilai);
-
-                if(result != null) {
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Berhasil memperbarui data kategori nilai", result);
-
-                    return new Gson().toJson(response);
-                } else {
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Data kategori nilai tidak ditemukan");
-
-                    return new Gson().toJson(response);
-                }
-            } else {
-                KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Anda tidak boleh mengakses halaman ini.");
+    public String update(Integer id_kategori_nilai, @Body KategoriNilai kategoriNilai, @Nullable Authentication authentication) {             
+        try {
+            if(authentication == null) {
+                KategoriNilaiResponse response = new KategoriNilaiResponse(
+                    "ERROR", 
+                    "PUT DATA FAILED NOT SIGNED IN", 
+                    kategoriNilai
+                );
                 return new Gson().toJson(response);
-            } 
+            } else {
+                Object data = authentication.getAttributes().get("roles");
+                String roles = data.toString();
+                if(roles.equals("[\"Admin\"]")) {
+                    KategoriNilai result = kategoriNilaiRepository.update(id_kategori_nilai, kategoriNilai);
+                    if(result != null) {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "OK", 
+                            "PUT DATA SUCCESS", 
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "ERROR", 
+                            "PUT DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "ERROR", 
+                        "PUT DATA FAILED NOT Admin"
+                    );
+                    return new Gson().toJson(response);
+                } 
+            }    
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            KategoriNilaiResponse response = new KategoriNilaiResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
         }
     }
 
     @Delete("/{id}")
     @Secured("isAnonymous()")
     public String delete(Integer id, @Nullable Authentication authentication) {
-        if(authentication == null) {
-            KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Bukan admin, anda tidak boleh hapus data.");
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-
-            if(roles.equals("[\"Admin\"]")) {
-                KategoriNilai result = kategoriNilaiRepository.findById(id);
-                         
-                if(result != null) {
-                    kategoriNilaiRepository.deleteById(id);
-
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Berhasil menghapus data kategori nilai");
-
-                    return new Gson().toJson(response);
-
-                } else {
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Data kategori nilai tidak ditemukan");
-
-                    return new Gson().toJson(response);
-                }
-            }
-            else if(roles.equals("[\"Peserta\"]")) {
-                KategoriNilai result = kategoriNilaiRepository.findById(id);
-                         
-                if(result != null) {
-                    kategoriNilaiRepository.deleteById(id);
-
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("ok", "Berhasil menghapus data kategori nilai");
-
-                    return new Gson().toJson(response);
-
-                } else {
-                    KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Data kategori nilai tidak ditemukan");
-
-                    return new Gson().toJson(response);
-                }
-            }
-            
-            
-            else {
-                KategoriNilaiResponse response = new KategoriNilaiResponse("error", "Anda tidak boleh mengakses halaman ini.");
+        try {
+            if(authentication == null) {
+                KategoriNilaiResponse response = new KategoriNilaiResponse(
+                    "ERROR", 
+                    "DELETE DATA FAILED NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
-            }
+            } else {
+                Object data = authentication.getAttributes().get("roles");
+                String roles = data.toString();
+                if(roles.equals("[\"Admin\"]")) {
+                    KategoriNilai result = kategoriNilaiRepository.findById(id);
+                    if(result != null) {
+                        kategoriNilaiRepository.deleteById(id);
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "OK", 
+                            "DELETE DATA SUCCESS"
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiResponse response = new KategoriNilaiResponse(
+                            "ERROR", 
+                            "DELETE DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    KategoriNilaiResponse response = new KategoriNilaiResponse(
+                        "ERROR", 
+                        "DELETE DATA FAILED NOT Admin"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }    
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            KategoriNilaiResponse response = new KategoriNilaiResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
         }
+        
     }
 }
