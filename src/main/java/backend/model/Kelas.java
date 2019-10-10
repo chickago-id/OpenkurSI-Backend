@@ -29,7 +29,7 @@ public class Kelas {
   private Long id;
 
   @NotNull(message = "Kode Kelas harus di isi.")
-  @Column(name = "kode_kelas")
+  @Column(name = "kode_kelas", length = 100)
   private String kode_kelas;
 
   @Column(name = "jenis_kelas")
