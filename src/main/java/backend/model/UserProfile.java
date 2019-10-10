@@ -15,12 +15,12 @@ public class UserProfile {
   // false, updatable = false)
   // private User user;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  // @OneToOne(optional = false)
-  // @JoinColumn(name = "id", referencedColumnName = "id_user_profile", insertable
-  // = false, updatable = false)
-  @JoinTable(name = "kelas_peserta", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "id_user_profile"))
-  private KelasPeserta kelasPeserta;
+  // @OneToOne(cascade = CascadeType.ALL)
+  // // @OneToOne(optional = false)
+  // // @JoinColumn(name = "id", referencedColumnName = "id_user_profile", insertable
+  // // = false, updatable = false)
+  // @JoinTable(name = "kelas_peserta", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "id_user_profile"))
+  // private KelasPeserta kelasPeserta;
 
   // @OneToMany(cascade=CascadeType.ALL)
   // @JoinTable(name="propertysub",joinColumns=@JoinColumn(name="propertyid"),
@@ -60,5 +60,13 @@ public class UserProfile {
   public void setId_user(Long id_user) {
     this.id_user = id_user;
   }
+
+  // public KelasPeserta getKelasPeserta() {
+  //   return kelasPeserta;
+  // }
+
+  // public void setKelasPeserta(KelasPeserta kelasPeserta) {
+  // this.kelasPeserta = kelasPeserta;
+  // }
 
 }
