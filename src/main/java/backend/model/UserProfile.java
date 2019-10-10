@@ -32,13 +32,12 @@ public class UserProfile {
   // false, updatable = false)
   // private User user;
 
-  // @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   // @OneToOne(optional = false)
   // @JoinColumn(name = "id", referencedColumnName = "id_user_profile", insertable
   // = false, updatable = false)
-  // @JoinTable(name = "kelas_peserta", joinColumns = @JoinColumn(name = "id"),
-  // inverseJoinColumns = @JoinColumn(name = "id_user_profile"))
-  // private KelasPeserta kelasPeserta;
+  @JoinTable(name = "kelas_peserta", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "id_user_profile"))
+  private KelasPeserta kelasPeserta;
 
   // @OneToMany(cascade=CascadeType.ALL)
   // @JoinTable(name="propertysub",joinColumns=@JoinColumn(name="propertyid"),
