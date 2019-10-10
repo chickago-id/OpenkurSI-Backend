@@ -20,7 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class MasterKelas {
 
     @Id
-    @Column(name = "kode_kelas", unique = true)
+    @Column(name = "kode_kelas", length = 100, unique = true)
     private String kode_kelas;
 
     @NotNull(message = "Nama Materi harus diisi.")
