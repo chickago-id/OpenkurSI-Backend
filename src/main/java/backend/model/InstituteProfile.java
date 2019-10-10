@@ -10,6 +10,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
  */
@@ -19,7 +22,8 @@ import javax.validation.constraints.NotNull;
 public class InstituteProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GenericGenerator(name="incrementId",strategy="increment")
+    @GeneratedValue(generator = "incrementId")
     private Integer id;
     @NotNull
     private String nama_institusi;
@@ -40,16 +44,14 @@ public class InstituteProfile {
     private String npwp;
     @NotNull
     @Column(unique = true)
-    private String kode_perusahaan;
+    private String kode_institusi;
     @NotNull
     private String negara;
     @NotNull
     private String provinsi;
     @NotNull
     private String kota;
-    @Lob
-    @Column(length = 100000)
-    private byte[] logo;
+    private String logo;
 
     /**
      * @return the id
@@ -136,16 +138,16 @@ public class InstituteProfile {
         this.email = email;
     }
     /**
-     * @return the kode_perusahaan
+     * @return the kode_institusi
      */
-    public String getKode_perusahaan() {
-        return kode_perusahaan;
+    public String getKode_institusi() {
+        return kode_institusi;
     }
     /**
-     * @param kode_perusahaan the kode_perusahaan to set
+     * @param kode_institusi the kode_institusi to set
      */
-    public void setKode_perusahaan(String kode_perusahaan) {
-        this.kode_perusahaan = kode_perusahaan;
+    public void setKode_institusi(String kode_institusi) {
+        this.kode_institusi = kode_institusi;
     }
     /**
      * @return the kota
@@ -162,13 +164,13 @@ public class InstituteProfile {
     /**
      * @return the logo
      */
-    public byte[] getLogo() {
+    public String getLogo() {
         return logo;
     }
     /**
      * @param logo the logo to set
      */
-    public void setLogo(byte[] logo) {
+    public void setLogo(String logo) {
         this.logo = logo;
     }
     /**
