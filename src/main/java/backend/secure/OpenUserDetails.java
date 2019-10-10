@@ -1,11 +1,7 @@
 package backend.secure;
 
 import io.micronaut.security.authentication.*;
-import javax.annotation.Nullable;
-
 import java.util.Collection;
-
-import backend.model.User;
 
 public class OpenUserDetails extends UserDetails {
 

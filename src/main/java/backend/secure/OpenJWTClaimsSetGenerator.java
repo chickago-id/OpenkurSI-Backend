@@ -2,7 +2,6 @@ package backend.secure;
 
 import io.micronaut.security.authentication.*;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.micronaut.security.token.jwt.generator.claims.*;
@@ -11,8 +10,6 @@ import io.micronaut.runtime.ApplicationConfiguration;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import io.micronaut.context.annotation.Replaces;
-
-import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 
 import backend.secure.OpenUserDetails;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-Author : supi.core@gmail.com
+Author : supi.core@gmail.com | github.com/sup1core
 */
 
 public class SesiResponse {

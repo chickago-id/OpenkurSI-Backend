@@ -39,11 +39,13 @@ public class NilaiAkhir {
     // @Column(name = "created_by", nullable = false, updatable = false)
     // private Long created_by;
 
+    @NotNull
     @ManyToOne(targetEntity = User.class, optional = false)
     @JoinColumn(name= "created_by", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
     private Long created_by;
 
+    @NotNull
     @ManyToOne(targetEntity=NilaiHuruf.class, optional=false)
     @JoinColumn(name="id_nilai_huruf", referencedColumnName = "id", insertable = false, updatable = false)
     private NilaiHuruf nilaihuruf;

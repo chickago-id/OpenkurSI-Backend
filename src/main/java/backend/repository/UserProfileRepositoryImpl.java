@@ -9,8 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
-
 import backend.model.UserProfile;
 
 @Singleton
@@ -29,7 +27,6 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     @Transactional
     public void deleteById(@NotNull Long id_user_profile) {
-        // TODO Auto-generated method stub
         UserProfile userProfile = findById(id_user_profile);
 
         if (userProfile != null) {
@@ -41,7 +38,6 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     @Transactional(readOnly = true)
     public List<UserProfile> findAll() {
-        // TODO Auto-generated method stub
         String qlString = "SELECT u FROM UserProfile u";
         TypedQuery<UserProfile> query = entityManager.createQuery(qlString, UserProfile.class);
         return query.getResultList();
@@ -50,14 +46,12 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     @Transactional(readOnly = true)
     public UserProfile findById(@NotNull Long id_user_profile) {
-        // TODO Auto-generated method stub
         return entityManager.find(UserProfile.class, id_user_profile);
     }
 
     @Override
     @Transactional
     public UserProfile save(@NotNull UserProfile userProfile) {
-        // TODO Auto-generated method stub
         entityManager.persist(userProfile);
         return userProfile;
     }
@@ -65,7 +59,6 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     @Override
     @Transactional
     public UserProfile update(@NotNull UserProfile userProfile) {
-        // TODO Auto-generated method stub
         return entityManager.merge(userProfile);
     }
 

@@ -1,4 +1,4 @@
-package backend;
+package backend.repository;
 
 import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
 import io.micronaut.spring.tx.annotation.Transactional;
@@ -39,6 +39,15 @@ public class UserRepositoryImpl implements UserRepository{
     @Transactional(readOnly = true)
     public List<User> findAll() {
         String qlString = "SELECT u FROM User u";
+        TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
+        return query.getResultList();
+    }
+
+    //supicore added
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getAll(){
+        String qlString ="select u FROM User u inner join UserDetail ud on ud.id_user = ud.id";
         TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
         return query.getResultList();
     }

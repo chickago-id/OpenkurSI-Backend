@@ -1,4 +1,4 @@
-package backend;
+package backend.repository;
 
 import backend.model.User;
 
@@ -10,6 +10,7 @@ public interface UserRepository {
     User save(@NotNull User user);
     User update(@NotNull User user);
     List<User> findAll();
+    List<User> getAll();
     User findById(@NotNull Long id);
     Optional<User> findByUsername(@NotNull String username);
     Optional<User> findByEmail(@NotNull String email);

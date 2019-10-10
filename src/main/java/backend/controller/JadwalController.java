@@ -15,7 +15,6 @@ import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 import java.util.List;
-import java.util.Optional;
 
 @Validated
 @Controller("/jadwal")
