@@ -10,8 +10,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Type;
-
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
  */

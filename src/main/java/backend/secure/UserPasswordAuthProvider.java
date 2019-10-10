@@ -8,12 +8,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
-
 import backend.model.User;
-import backend.model.UserDetail;
-import backend.UserRepository;
+import backend.repository.UserRepository;
 import backend.helpers.MD5;
 
 @Singleton

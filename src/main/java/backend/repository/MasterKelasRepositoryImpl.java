@@ -9,8 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
-
 import backend.model.MasterKelas;
 
 @Singleton
@@ -26,7 +24,6 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
     @Override
     @Transactional
     public void deleteById(@NotNull String kode_kelas) {
-        // TODO Auto-generated method stub
         MasterKelas masterKelas = findById(kode_kelas);
         if (masterKelas != null)
 
@@ -38,7 +35,6 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
     @Override
     @Transactional(readOnly = true)
     public List<MasterKelas> findAll() {
-        // TODO Auto-generated method stub
         String qlString = "SELECT m FROM MasterKelas m";
         TypedQuery<MasterKelas> query = entityManager.createQuery(qlString, MasterKelas.class);
         return query.getResultList();
@@ -47,14 +43,12 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
     @Override
     @Transactional(readOnly = true)
     public MasterKelas findById(@NotNull String kode_kelas) {
-        // TODO Auto-generated method stub
         return entityManager.find(MasterKelas.class, kode_kelas);
     }
 
     @Override
     @Transactional
     public MasterKelas save(@NotNull MasterKelas masterKelas) {
-        // TODO Auto-generated method stub
         entityManager.persist(masterKelas);
         return masterKelas;
     }
@@ -62,7 +56,6 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
     @Override
     @Transactional
     public MasterKelas update(@NotNull MasterKelas masterKelas) {
-        // TODO Auto-generated method stub
         entityManager.merge(masterKelas);
         return masterKelas;
     }

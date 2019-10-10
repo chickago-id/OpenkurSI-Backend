@@ -10,8 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "user_detail")
 public class UserDetail {
