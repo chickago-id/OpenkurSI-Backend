@@ -316,4 +316,51 @@ public class KategoriNilaiMateriController {
             }
         }
     }
+
+    @Get("/materi/{id_materi}/kategori-nilai/{id_kategori_nilai}")
+    @Secured("isAnonymous()")
+    public String showByIdMateriAndIdKategoriNilai(Integer id_materi, Long id_kategori_nilai, @Nullable Authentication auth) {
+        try {
+            if (auth == null) {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                    "ERROR", 
+                    "NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
+                    KategoriNilaiMateri result = KategoriNilaiMateriRepository.findByIdMateriAndIdKategoriNilai(id_materi, id_kategori_nilai);
+                    if(result != null) {
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "OK", 
+                            "GET DATA findById() SUCCESS", 
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "ERROR", 
+                            "GET DATA findById() FAILED: NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }       
+                } else {
+                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                        "ERROR", 
+                        "GET DATA findById() FAILED: NOT ADMIN"
+                    );
+                    return new Gson().toJson(response);
+                }
+            } 
+        } catch(Exception e) {
+            String message = e.getMessage();
+            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                "ERROR", 
+                message
+            );
+            return new Gson().toJson(response);
+        }
+    }
 }

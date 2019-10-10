@@ -86,6 +86,15 @@ public class KategoriNilaiMateriRepositoryImpl implements KategoriNilaiMateriRep
         return query.getResultList(); 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public KategoriNilaiMateri findByIdMateriAndIdKategoriNilai(Integer id_materi, Long id_kategori_nilai) {
+        String qlString = "SELECT a FROM KategoriNilaiMateri a where id_materi = " + id_materi + 
+                            "and id_kategori_nilai = "+ id_kategori_nilai;
+        TypedQuery<KategoriNilaiMateri> query = entityManager.createQuery(qlString, KategoriNilaiMateri.class);
+        return query.getSingleResult(); 
+    }
+
     /* @Override
     public KategoriNilaiMateri sumOfMateri(Long id_materi) {
         String qlString = "SELECT sum(bobot_nilai) FROM KategoriNilaiMateri a where id_materi = " + id_materi;
