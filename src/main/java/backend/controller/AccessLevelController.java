@@ -48,15 +48,15 @@ public class AccessLevelController {
                     List<AccessLevel> result = repoAL.findAll();
                     if (result != null) {
                         AccessLevelResponse response = new AccessLevelResponse(
-                            "ERROR",
-                            "GET DATA FAILED NOT FOUND",
+                            "OK",
+                            "GET DATA SUCCESS",
                             result
                         );
                         return new Gson().toJson(response);
                     } else {
                         AccessLevelResponse response = new AccessLevelResponse(
-                            "OK", 
-                            "GET DATA SUCCESS",
+                            "ERROR", 
+                            "GET DATA FAILED NOT FOUND",
                             result
                         );
                         return new Gson().toJson(response);
