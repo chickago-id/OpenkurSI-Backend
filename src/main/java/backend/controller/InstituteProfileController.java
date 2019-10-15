@@ -16,11 +16,15 @@ import io.micronaut.validation.Validated;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.annotation.Secured;
 import javax.annotation.Nullable;
+import javax.imageio.stream.FileImageOutputStream;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,6 +63,7 @@ public class InstituteProfileController {
         String negara,
         String provinsi,
         String kota,
+        //Integer is_group,
         Authentication auth
         ) {
             try {
@@ -73,32 +78,35 @@ public class InstituteProfileController {
                     String roles = data.toString();
                     if (roles.equals("[\"Admin\"]")) {
                         try {
-                            Date date = new Date();
-                        String fileName = file.getFilename() + date + ".png";
-                        Path filePath = Files.createTempFile(Paths.get(DIR_PATH), 
-                            file.getFilename(), date + ".png" );
-                        InputStream input = file.getInputStream(); 
-                        Files.copy(input, filePath, StandardCopyOption.REPLACE_EXISTING);
-                        InstituteProfile objIP = new InstituteProfile();
-                        objIP.setNama_institusi(nama_institusi); 
-                        objIP.setAlamat(alamat); 
-                        objIP.setKode_pos(kode_pos);
-                        objIP.setNo_telepon(no_telepon); 
-                        objIP.setWebsite(website); 
-                        objIP.setEmail(email);
-                        objIP.setNpwp(npwp); 
-                        objIP.setKode_institusi(kode_institusi); 
-                        objIP.setNegara(negara);
-                        objIP.setProvinsi(provinsi); 
-                        objIP.setKota(kota); 
-                        objIP.setLogo(fileName);
-                        InstituteProfile result = repoIP.save(objIP);
-                        InstituteProfileResponse response = new InstituteProfileResponse(
-                            "OK", 
-                            "POST DATA SUCCESS",
-                            result
-                        );
-                        return new Gson().toJson(response);    
+                            File f = new File(DIR_PATH+"/"+kode_institusi+ file.getFilename());
+                            if (!f.exists()) {
+                                f.createNewFile();
+                            }
+                            OutputStream output = new FileOutputStream(f);
+                            output.write(file.getBytes());
+                            output.flush();
+                            output.close();
+                            InstituteProfile objIP = new InstituteProfile();
+                            objIP.setNama_institusi(nama_institusi); 
+                            objIP.setAlamat(alamat); 
+                            objIP.setKode_pos(kode_pos);
+                            objIP.setNo_telepon(no_telepon); 
+                            objIP.setWebsite(website); 
+                            objIP.setEmail(email);
+                            objIP.setNpwp(npwp); 
+                            objIP.setKode_institusi(kode_institusi); 
+                            objIP.setNegara(negara);
+                            objIP.setProvinsi(provinsi); 
+                            objIP.setKota(kota); 
+                            objIP.setLogo(f.getName().toString());
+                            //objIP.setIs_group(is_group);
+                            InstituteProfile result = repoIP.save(objIP);
+                            InstituteProfileResponse response = new InstituteProfileResponse(
+                                "OK", 
+                                "POST DATA SUCCESS",
+                                result
+                            );
+                            return new Gson().toJson(response);    
                         } catch (IOException e) {
                             String message = e.getMessage();
                             InstituteProfileResponse response = new InstituteProfileResponse(
@@ -238,6 +246,7 @@ public class InstituteProfileController {
         String negara,
         String provinsi,
         String kota,
+        //Integer is_group,
         Authentication auth
     ) 
         {
@@ -253,12 +262,14 @@ public class InstituteProfileController {
                     String roles = data.toString();
                     if (roles.equals("[\"Admin\"]")) {
                         try {
-                            Date date = new Date();
-                            String fileName = file.getFilename() + date + ".png";
-                            Path filePath = Files.createTempFile(Paths.get(DIR_PATH), 
-                                file.getFilename(), date + ".png" );
-                            InputStream input = file.getInputStream(); 
-                            Files.copy(input, filePath, StandardCopyOption.REPLACE_EXISTING);
+                            File f = new File(DIR_PATH+"/"+kode_institusi+ file.getFilename());
+                            if (!f.exists()) {
+                                f.createNewFile();
+                            }
+                            OutputStream output = new FileOutputStream(f);
+                            output.write(file.getBytes());
+                            output.flush();
+                            output.close();
                             InstituteProfile objIP = new InstituteProfile();
                             objIP.setId(id);
                             objIP.setNama_institusi(nama_institusi); 
@@ -272,7 +283,8 @@ public class InstituteProfileController {
                             objIP.setNegara(negara);
                             objIP.setProvinsi(provinsi); 
                             objIP.setKota(kota); 
-                            objIP.setLogo(fileName);
+                            objIP.setLogo(f.getName().toString());
+                            //objIP.setIs_group(is_group);
                             InstituteProfile result = repoIP.update(id, objIP);
                             InstituteProfileResponse response = new InstituteProfileResponse(
                                 "OK", 
