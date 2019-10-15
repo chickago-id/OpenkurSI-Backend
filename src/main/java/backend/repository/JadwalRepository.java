@@ -1,15 +1,19 @@
 package backend.repository;
 
-import backend.model.*;
-
 import javax.validation.constraints.NotNull;
+
+import backend.model.Jadwal;
+
 import java.util.List;
 
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core
+ */
+
 public interface JadwalRepository {
-    // Materi save(@NotNull String kodeMateri, @NotNull String namaMateri);
-    Jadwal save(@NotNull Jadwal jadwal);
-    Jadwal update(@NotNull Jadwal jadwal);
+    Jadwal save(Jadwal jadwal);
+    Jadwal update(Integer id, Jadwal jadwal);
     List<Jadwal> findAll();
-    Jadwal findById(@NotNull Long id);
-    void deleteById(@NotNull Long id);
+    Jadwal findById(@NotNull Integer id);
+    void deleteById(@NotNull Integer id);
 }

@@ -12,6 +12,10 @@ import java.util.List;
 import backend.model.Jadwal;
 import backend.repository.JadwalRepository;
 
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core
+ */
+
 @Singleton
 public class JadwalRepositoryImpl implements JadwalRepository{
     @PersistenceContext
@@ -23,34 +27,34 @@ public class JadwalRepositoryImpl implements JadwalRepository{
 
     @Override
     @Transactional
-    public Jadwal save(@NotNull Jadwal jadwal) {
+    public Jadwal save(Jadwal jadwal) {
         entityManager.persist(jadwal);
         return jadwal;
     }
 
     @Override
     @Transactional
-    public Jadwal update(@NotNull Jadwal jadwal) {
+    public Jadwal update(Integer id, Jadwal jadwal) {
         return entityManager.merge(jadwal);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Jadwal> findAll() {
-        String qlString = "SELECT m FROM Jadwal m";
+        String qlString = "SELECT j FROM Jadwal j";
         TypedQuery<Jadwal> query = entityManager.createQuery(qlString, Jadwal.class);
         return query.getResultList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Jadwal findById(@NotNull Long id) {
+    public Jadwal findById(@NotNull Integer id) {
         return entityManager.find(Jadwal.class, id);
     }
 
     @Override
     @Transactional
-    public void deleteById(@NotNull Long id) {
+    public void deleteById(@NotNull Integer id) {
         Jadwal jadwal = findById(id);
 
         if(jadwal != null) {

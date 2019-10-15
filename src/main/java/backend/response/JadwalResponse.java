@@ -1,9 +1,15 @@
-package backend.model;
+package backend.response;
 
 import java.util.List;
+
+import backend.model.Jadwal;
+
 import java.util.ArrayList;
 
-// response jadwal
+/**
+ * Author : supi.core@gmail.com | github.com/sup1core
+ */
+
 public class JadwalResponse {
     public String status;
     public String message;
