@@ -27,183 +27,244 @@ import java.util.List;
 @Controller("/access-level")
 @Secured("isAnonymous()")
 public class AccessLevelController {
-
-    private AccessLevelRepository AccessLevelRepository;
-
-    public AccessLevelController(AccessLevelRepository AccessLevelRepository) {
-        this.AccessLevelRepository = AccessLevelRepository;
+    private AccessLevelRepository repoAL;
+    public AccessLevelController(AccessLevelRepository repoAL) {
+        this.repoAL = repoAL;
     }
 
     @Get("/")
-    public String index() {
-
+    public String index(Authentication auth) {
         try {
-            List<AccessLevel> AccessLevel = AccessLevelRepository.findAll();
-            AccessLevelResponse response = new AccessLevelResponse("ok", "Data peserta kelas", AccessLevel);
-
-            return new Gson().toJson(response);
-        } catch(Exception e) {
-            String message = e.getMessage();
-            AccessLevelResponse response = new AccessLevelResponse("error", message);
+            if (auth == null) {
+                AccessLevelResponse response = new AccessLevelResponse(
+                    "ERROR",
+                    "GET DATA FAILED NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]")) {
+                    List<AccessLevel> result = repoAL.findAll();
+                    if (result != null) {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "OK", 
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AccessLevelResponse response = new AccessLevelResponse(
+                        "ERORR", 
+                        "GET DATA FAILED NOT Admin"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }   
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            AccessLevelResponse response = new AccessLevelResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
             return new Gson().toJson(response);
         }
     }
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create(@Body AccessLevel AccessLevel, @Nullable Authentication authentication) {
+    public String create(@Body AccessLevel accessLevel, @Nullable Authentication auth) {
         try {
-
-            if(authentication == null) {
-                AccessLevelResponse response = new AccessLevelResponse("error", "Belum Login, anda tidak boleh posting.");
-
+            if (auth == null) {
+                AccessLevelResponse response = new AccessLevelResponse(
+                    "ERROR", 
+                    "POST DATA FAILED NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
             } else {
-                Object data = authentication.getAttributes().get("roles");
+                Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-
-                if(roles.equals("[\"Admin\"]")) {
-                    AccessLevel result = AccessLevelRepository.save(AccessLevel);
-                    
-                    AccessLevelResponse response = new AccessLevelResponse("ok", "Berhasil menambahkan data kategori nilai", result);
-
-                    return new Gson().toJson(response);
-                }
-                else if(roles.equals("[\"Peserta\"]")) {
-                    AccessLevel result = AccessLevelRepository.save(AccessLevel);
-                    
-                    AccessLevelResponse response = new AccessLevelResponse("ok", "Berhasil menambahkan data kategori nilai", result);
-
-                    return new Gson().toJson(response);
-                }
-                
-                else {
-                    AccessLevelResponse response = new AccessLevelResponse("error", "Anda tidak boleh mengakses halaman ini.");
-
+                if (roles.equals("[\"Admin\"]")) {
+                    AccessLevel result = repoAL.save(accessLevel);
+                    if (result != null) {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "OK",
+                            "POST DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "ERROR",
+                            "POST DATA FAILED NULL",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AccessLevelResponse response = new AccessLevelResponse(
+                        "ERROR",
+                        "POST DATA FAILED NOT Admin"
+                    );
                     return new Gson().toJson(response);
                 }
             }
-
-            
-
         } catch(Exception e) {
             String message = e.getMessage();
-
-            AccessLevelResponse response = new AccessLevelResponse("error", message);
-
+            AccessLevelResponse response = new AccessLevelResponse(
+                "EXCEPTION ERROR", 
+                message);
             return new Gson().toJson(response);
         }
     }
 
     @Get("/{id}")
     @Secured("isAnonymous()")
-    public String show(Integer id) {
-
+    public String show(Integer id, @Nullable Authentication auth) {
         try {
-
-            AccessLevel AccessLevel = AccessLevelRepository.findById(id);
-
-            if(AccessLevel != null) {
-                AccessLevelResponse response = new AccessLevelResponse("ok", "Data kategori nilai", AccessLevel);
-
+            if (auth == null) {
+                AccessLevelResponse response = new AccessLevelResponse(
+                    "ERROR",
+                    "NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
             } else {
-                AccessLevelResponse response = new AccessLevelResponse("error", "Data kategori nilai tidak ditemukan");
-
-                return new Gson().toJson(response);
-            } 
-
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]")) {
+                    AccessLevel result = repoAL.findById(id);
+                    if (result != null) {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AccessLevelResponse response = new AccessLevelResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Admin"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
         } catch(Exception e) {
-
-            String message = e.getMessage();
-
-            AccessLevelResponse response = new AccessLevelResponse("error", message);
-
+            String msg = e.getMessage();
+            AccessLevelResponse response = new AccessLevelResponse(
+                "ERROR", 
+                msg
+            );
             return new Gson().toJson(response);
         }
-        
     }
 
     @Put("/{id}") 
     @Secured("isAnonymous()")
-    public String update(Integer id, @Body AccessLevel AccessLevel, @Nullable Authentication authentication) {
-             
-        if(authentication == null) {
-            AccessLevelResponse response = new AccessLevelResponse("error", "Bukan admin, anda tidak boleh update data.", AccessLevel);
-
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-            
-
-            if(roles.equals("[\"Admin\"]")) {
-                AccessLevel result = AccessLevelRepository.update(id, AccessLevel);
-
-                if(result != null) {
-                    AccessLevelResponse response = new AccessLevelResponse("ok", "Berhasil memperbarui data kategori nilai", result);
-
-                    return new Gson().toJson(response);
+    public String update(Integer id, @Body AccessLevel accessLevel, @Nullable Authentication auth) {
+        try {
+            if (auth == null) {
+                AccessLevelResponse response = new AccessLevelResponse(
+                    "ERROR",
+                    "PUT DATA FAILED NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]")) {
+                    AccessLevel result = repoAL.update(id, accessLevel);
+                    if (result != null) {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "OK",
+                            "PUT DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "ERROR",
+                            "PUT DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
                 } else {
-                    AccessLevelResponse response = new AccessLevelResponse("error", "Data kategori nilai tidak ditemukan");
-
+                    AccessLevelResponse response = new AccessLevelResponse(
+                        "ERROR", 
+                        "PUT DATA FAILED NOT Admin"
+                    );
                     return new Gson().toJson(response);
                 }
-            } else {
-                AccessLevelResponse response = new AccessLevelResponse("error", "Anda tidak boleh mengakses halaman ini.");
-                return new Gson().toJson(response);
-            } 
+            }
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            AccessLevelResponse response = new AccessLevelResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
         }
     }
 
     @Delete("/{id}")
     @Secured("isAnonymous()")
-    public String delete(Integer id, @Nullable Authentication authentication) {
-        if(authentication == null) {
-            AccessLevelResponse response = new AccessLevelResponse("error", "Bukan admin, anda tidak boleh hapus data.");
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-
-            if(roles.equals("[\"Admin\"]")) {
-                AccessLevel result = AccessLevelRepository.findById(id);
-                         
-                if(result != null) {
-                    AccessLevelRepository.deleteById(id);
-
-                    AccessLevelResponse response = new AccessLevelResponse("ok", "Berhasil menghapus data kategori nilai");
-
-                    return new Gson().toJson(response);
-
-                } else {
-                    AccessLevelResponse response = new AccessLevelResponse("error", "Data kategori nilai tidak ditemukan");
-
-                    return new Gson().toJson(response);
-                }
-            }
-            else if(roles.equals("[\"Peserta\"]")) {
-                AccessLevel result = AccessLevelRepository.findById(id);
-                         
-                if(result != null) {
-                    AccessLevelRepository.deleteById(id);
-
-                    AccessLevelResponse response = new AccessLevelResponse("ok", "Berhasil menghapus data kategori nilai");
-
-                    return new Gson().toJson(response);
-
-                } else {
-                    AccessLevelResponse response = new AccessLevelResponse("error", "Data kategori nilai tidak ditemukan");
-
-                    return new Gson().toJson(response);
-                }
-            }
-            
-            
-            else {
-                AccessLevelResponse response = new AccessLevelResponse("error", "Anda tidak boleh mengakses halaman ini.");
+    public String delete(Integer id, @Nullable Authentication auth) {
+        try {
+            if (auth == null) {
+                AccessLevelResponse response = new AccessLevelResponse(
+                    "ERROR", 
+                    "DELETE DATA FAILED NOT SIGNED IN"
+                );
                 return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]")) {
+                    AccessLevel result = repoAL.findById(id);
+                    if (result != null) {
+                        repoAL.deleteById(id);
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "OK",
+                            "DELETE DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AccessLevelResponse response = new AccessLevelResponse(
+                            "ERROR",
+                            "DELETE DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AccessLevelResponse response = new AccessLevelResponse(
+                        "ERROR",
+                        "DELETE DATA FAILED NOT Admin"
+                    );
+                    return new Gson().toJson(response);
+                }
             }
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            AccessLevelResponse response = new AccessLevelResponse(
+                "EXCEPTION ERROR",
+                msg
+            );
+            return new Gson().toJson(response);
         }
     }
 }
