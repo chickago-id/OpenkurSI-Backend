@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
  */
@@ -17,7 +19,8 @@ import javax.validation.constraints.NotNull;
 public class AccessLevel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GenericGenerator(name="incrementId",strategy="increment")
+    @GeneratedValue(generator = "incrementId")
     private Integer id;
 
     @NotNull(message = "Akses level tidak boleh kosong")
