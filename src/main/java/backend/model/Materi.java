@@ -38,9 +38,9 @@ public class Materi {
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
 
-    @Column(name = "created_date", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    private Date created_date;
+    private Date created_at;
 
     @Column(name = "updated_by", nullable =  true)
     private Long updated_by;
@@ -79,16 +79,16 @@ public class Materi {
         this.created_by = created_by;
     }
     /**
-     * @return the created_date
+     * @return the created_at
      */
-    public Date getCreated_date() {
-        return created_date;
+    public Date getCreated_at() {
+        return created_at;
     }
     /**
-     * @param created_date the created_date to set
+     * @param created_at the created_at to set
      */
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
     }
     /**
      * @return the updated_by
