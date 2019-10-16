@@ -52,6 +52,11 @@ public class InstituteProfile {
     @NotNull
     private String kota;
     private String logo;
+    private String download_path;
+    //@NotNull
+    //private Integer is_group;
+
+    //public InstituteProfile (Integer id,)
 
     /**
      * @return the id
@@ -209,5 +214,24 @@ public class InstituteProfile {
     public void setProvinsi(String provinsi) {
         this.provinsi = provinsi;
     }
-    
+    /**
+     * @return the download_path
+     */
+    public String getDownload_path() {
+        return download_path;
+    }
+    /**
+     * @param download_path the download_path to set
+     */
+    public void setDownload_path(String download_path) {
+        this.download_path = download_path;
+    }
+    /*
+    public Integer getIs_group() {
+        return is_group;
+    }
+    public void setIs_group(Integer is_group) {
+        this.is_group = is_group;
+    }
+    */
 }
