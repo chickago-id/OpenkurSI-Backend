@@ -3,6 +3,8 @@ package backend.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -32,6 +34,11 @@ public class User {
     private String password;
     @NotNull(message = "Role harus diisi.")
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "levelid", insertable = false, updatable = false, nullable = false)
+    private AccessLevel accessLevel;
+    private Integer levelid;
 
     public String getUsername() {
         return username;
@@ -73,6 +80,31 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * @param accessLevel the accessLevel to set
+     */
+    public void setAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+    /**
+     * @return the accessLevel
+     */
+    public AccessLevel getAccessLevel() {
+        return accessLevel;
+    }
+    /**
+     * @param levelid the levelid to set
+     */
+    public void setLevelid(Integer levelid) {
+        this.levelid = levelid;
+    }
+    /**
+     * @return the levelid
+     */
+    public Integer getLevelid() {
+        return levelid;
     }
 
     @Override
