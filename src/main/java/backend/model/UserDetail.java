@@ -7,14 +7,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user_detail")
-public class UserDetail {
+public class UserDetail implements Serializable {
 
-    @OneToOne(optional=false)
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    @OneToOne(optional = false)
     @JoinColumn(name = "id_user", referencedColumnName="id", insertable = false, updatable = false)
     private User user;
 
