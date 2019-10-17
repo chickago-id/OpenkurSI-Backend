@@ -52,6 +52,12 @@ public class Jadwal {
     private Sesi sesi;
     private Integer id_sesi;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "id_materi", insertable = false, updatable = false)
+    private Materi materi;
+    private Integer id_materi;
+
     @NotNull(message = "Created by not allowed null")
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
@@ -271,5 +277,30 @@ public class Jadwal {
      */
     public Long getDeleted_by() {
         return deleted_by;
+    }
+
+    /**
+     * @param id_materi the id_materi to set
+     */
+    public void setId_materi(Integer id_materi) {
+        this.id_materi = id_materi;
+    }
+    /**
+     * @return the id_materi
+     */
+    public Integer getId_materi() {
+        return id_materi;
+    }
+    /**
+     * @param materi the materi to set
+     */
+    public void setMateri(Materi materi) {
+        this.materi = materi;
+    }
+    /**
+     * @return the materi
+     */
+    public Materi getMateri() {
+        return materi;
     }
 }
