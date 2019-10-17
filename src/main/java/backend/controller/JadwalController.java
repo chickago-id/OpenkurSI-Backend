@@ -50,7 +50,7 @@ public class JadwalController {
                         return new Gson().toJson(response);
                     }
                 } else {
-                    JadwalResponse response = new JadwalResponse("error", "You level does not have this access.");
+                    JadwalResponse response = new JadwalResponse("error", "Your level does not have this access.");
                     return new Gson().toJson(response);
                 }
             }
@@ -92,7 +92,7 @@ public class JadwalController {
     public String show(Integer id, @Nullable Authentication authentication) {
         try {
             if (authentication == null) {
-                JadwalResponse response = new JadwalResponse("error", "failed get data, please not sign in first");
+                JadwalResponse response = new JadwalResponse("error", "failed get data, you must sign in first");
                 return new Gson().toJson(response);
             } else {
                 Object data = authentication.getAttributes().get("roles");
