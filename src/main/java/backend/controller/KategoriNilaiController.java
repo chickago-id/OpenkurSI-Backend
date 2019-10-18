@@ -2,7 +2,7 @@ package backend.controller;
 
 import backend.repository.KategoriNilaiRepository;
 import backend.model.KategoriNilai;
-import backend.model.KategoriNilaiResponse;
+import backend.response.KategoriNilaiResponse;
 
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
