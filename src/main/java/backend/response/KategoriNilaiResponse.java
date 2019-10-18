@@ -1,7 +1,8 @@
-package backend.model;
+package backend.response;
 
 import java.util.List;
 import java.util.ArrayList;
+import backend.model.KategoriNilai;
 
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
