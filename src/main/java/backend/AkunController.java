@@ -39,7 +39,6 @@ public class AkunController {
         JsonObject data = new JsonParser().parse(userInput).getAsJsonObject();
         String username = data.get("username").getAsString();
         String email = data.get("email").getAsString();
-        String nama_lengkap = data.get("nama_lengkap").getAsString();
         String password = data.get("password").getAsString();
 
         // ora error critane neng awal
@@ -78,10 +77,6 @@ public class AkunController {
             errorCond += 1; // nek kosong brati error
         }
 
-        if(nama_lengkap.isEmpty()) {
-            errorBag.add("Nama lengkap harus diisi.");
-            errorCond += 1; // nek kosong brati error
-        }
         if(password.isEmpty()) {
             errorBag.add("Password harus diisi.");
             errorCond += 1; // nek kosong brati error
@@ -122,7 +117,7 @@ public class AkunController {
             // generate data user_detail
             UserDetail userDetail = new UserDetail();
             userDetail.setId_user(userData.getId());
-            userDetail.setNama_lengkap(nama_lengkap);
+            userDetail.setEmail(email);
 
             // simpan data ke db user_detail
             userDetailRepository.save(userDetail);
@@ -131,7 +126,6 @@ public class AkunController {
             userProfile.addProperty("id", userData.getId());
             userProfile.addProperty("username", userData.getUsername());
             userProfile.addProperty("email", userData.getEmail());
-            userProfile.addProperty("nama_lengkap", nama_lengkap);
             userProfile.addProperty("role", userData.getRole());
             
             Map<String, String> returnData = new HashMap<String, String>();

@@ -33,7 +33,7 @@ public class UserDetail implements Serializable {
     @Column(nullable=false)
     private Long id_user;
 
-    @NotNull(message = "Nama Lengkap harus diisi.")
+    //@NotNull(message = "Nama Lengkap harus diisi.")
     private String nama_lengkap;
     private String tempat_lahir;
     private String tanggal_lahir;
