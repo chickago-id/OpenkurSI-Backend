@@ -1,6 +1,7 @@
 package backend.repository;
 
 import backend.model.AttendanceToken;
+import backend.model.Jadwal;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -17,5 +18,5 @@ public interface AttendanceTokenRepository {
     AttendanceToken findById(@NotNull Integer id);
     void deleteById(@NotNull Integer id);
     AttendanceToken findByToken(String token);
-    
+    List<Jadwal> findByIdPengajar(Long id_pengajar);
 }
