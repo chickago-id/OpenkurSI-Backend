@@ -79,20 +79,39 @@ public class AttendanceRepositoryImpl implements AttendanceRepository{
 
     @Override
     @Transactional
-    public Boolean existByUserIdAndToken(Long user_id, String token) {
-        String qlString = "select a from Attendance a where a.user_id = :user_id " +
+    public Boolean existByIdUserAndToken(Long id_user, String token) {
+        String qlString = "select a from Attendance a where a.id_user = :id_user " +
             "and a.token = :token";
         TypedQuery<Attendance> query = entityManager.createQuery(
             qlString,
             Attendance.class
-            ).setParameter("user_id", user_id)
+            ).setParameter("id_user", id_user)
             .setParameter("token", token)
             .setMaxResults(1);
         return query.getResultList().isEmpty();
-        /* if(query.getResultList().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        } */
+    }
+
+    @Override
+    @Transactional
+    public List<Attendance> findByIdKelasAndIdUser(Long id_kelas, Long id_user) {
+        String qlString = "select a from Attendance a where a.id_user = :id_user " +
+            "and a.id_kelas = :id_kelas";
+        TypedQuery<Attendance> query = entityManager.createQuery(
+            qlString,
+            Attendance.class
+        ).setParameter("id_user", id_user)
+        .setParameter("id_kelas", id_kelas);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Attendance> findByIdKelasAndToken(Long id_kelas, String token) {
+        String qlString = "select a from Attendance a where a.id_kelas = :id_kelas and a.token = :token order by a.clock desc";
+        TypedQuery<Attendance> query = entityManager.createQuery(
+            qlString,
+            Attendance.class
+        ).setParameter("id_kelas", id_kelas)
+        .setParameter("token", token);
+        return query.getResultList();
     }
 }
