@@ -5,9 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +29,10 @@ public class AttendanceToken {
     private Date created_at;
     @Column(nullable = false)
     private Date expired_at;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
+    private Kelas kelas;
+    private Long id_kelas;
     /**
      * @return the id
      */
@@ -73,6 +80,30 @@ public class AttendanceToken {
      */
     public void setExpired_at(Date expired_at) {
         this.expired_at = expired_at;
+    }
+    /**
+     * @return the kelas
+     */
+    public Kelas getKelas() {
+        return kelas;
+    }
+    /**
+     * @param kelas the kelas to set
+     */
+    public void setKelas(Kelas kelas) {
+        this.kelas = kelas;
+    }
+    /**
+     * @return the id_kelas
+     */
+    public Long getId_kelas() {
+        return id_kelas;
+    }
+    /**
+     * @param id_kelas the id_kelas to set
+     */
+    public void setId_kelas(Long id_kelas) {
+        this.id_kelas = id_kelas;
     }
     public void setExpiryDate(int minutes){
         Calendar now = Calendar.getInstance();
