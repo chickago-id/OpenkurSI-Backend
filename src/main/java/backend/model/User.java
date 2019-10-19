@@ -1,17 +1,19 @@
 package backend.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "user")
@@ -37,6 +39,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "levelid", insertable = false, updatable = false, nullable = false)
+    @ColumnDefault("4")
     private AccessLevel accessLevel;
     private Integer levelid;
 
