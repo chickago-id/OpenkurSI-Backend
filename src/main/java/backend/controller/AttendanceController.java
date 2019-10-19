@@ -65,7 +65,7 @@ public class AttendanceController {
                     }
                 } else {
                     AttendanceResponse response = new AttendanceResponse(
-                        "ERORR", 
+                        "ERROR", 
                         "GET DATA FAILED NOT Admin"
                     );
                     return new Gson().toJson(response);
@@ -281,61 +281,72 @@ public class AttendanceController {
                 );
                 return new Gson().toJson(response);    
             } else {
-                AttendanceToken objAT = repoAttendance.findByToken(token);
-                if(objAT == null) {
-                    AttendanceResponse response = new AttendanceResponse(
-                        "ERROR", 
-                        "ABSEN GAGAL: TOKEN TIDAK VALID"
-                    );
-                    return new Gson().toJson(response);
-                } else {
-                    if(token.equals(objAT.getToken())) {
-                        String id = auth.getAttributes().get("userId").toString();
-                        Long user_id = Long.parseLong(id);
-                        if(repoAttendance.existByUserIdAndToken(user_id, token)) {
-                            Date clock = new Date();
-                            Integer clockValue = clock.compareTo(objAT.getExpired_at());
-                            if(clockValue <= 0) {
-                                Attendance objAttendance = new Attendance();
-                                objAttendance.setClock(clock);
-                                objAttendance.setToken(token);
-                                objAttendance.setUser_id(user_id);
-                                objAttendance.setStatus(1);
-                                Attendance result = repoAttendance.save(objAttendance);
-                                AttendanceResponse response = new AttendanceResponse(
-                                    "OK", 
-                                    "ABSEN BERHASIL",
-                                    result
-                                );
-                                return new Gson().toJson(response);
-                            } else if(clockValue > 0) {
-                                AttendanceResponse response = new AttendanceResponse(
-                                    "ERROR", 
-                                    "ABSEN GAGAL: TOKEN KADALUARSA"
-                                );
-                                return new Gson().toJson(response);
-                            } else {
-                                AttendanceResponse response = new AttendanceResponse(
-                                    "ERROR", 
-                                    "ABSEN GAGAL: ???"
-                                );
-                                return new Gson().toJson(response);
-                            }
-                        } else {
-                            AttendanceResponse response = new AttendanceResponse(
-                                "ERROR", 
-                                "ABSEN GAGAL: ANDA SUDAH ABSEN"
-                            );
-                            return new Gson().toJson(response);
-                        }     
-                    } else {
+                Object userRoles = auth.getAttributes().get("roles");
+                String roles = userRoles.toString();
+                if(roles.equals("[\"Peserta\"]")) {
+                    AttendanceToken objAT = repoAttendance.findByToken(token);
+                    if(objAT == null) {
                         AttendanceResponse response = new AttendanceResponse(
                             "ERROR", 
                             "ABSEN GAGAL: TOKEN TIDAK VALID"
                         );
                         return new Gson().toJson(response);
+                    } else {
+                        if(token.equals(objAT.getToken())) {
+                            String id = auth.getAttributes().get("userId").toString();
+                            Long id_user = Long.parseLong(id);
+                            if(repoAttendance.existByIdUserAndToken(id_user, token)) {
+                                Date clock = new Date();
+                                Integer clockValue = clock.compareTo(objAT.getExpired_at());
+                                if(clockValue <= 0) {
+                                    Attendance objAttendance = new Attendance();
+                                    objAttendance.setClock(clock);
+                                    objAttendance.setToken(token);
+                                    objAttendance.setId_user(id_user);
+                                    objAttendance.setId_kelas(objAT.getId_kelas());
+                                    objAttendance.setStatus(1);
+                                    Attendance result = repoAttendance.save(objAttendance);
+                                    AttendanceResponse response = new AttendanceResponse(
+                                        "OK", 
+                                        "ABSEN BERHASIL",
+                                        result
+                                    );
+                                    return new Gson().toJson(response);
+                                } else if(clockValue > 0) {
+                                    AttendanceResponse response = new AttendanceResponse(
+                                        "ERROR", 
+                                        "ABSEN GAGAL: TOKEN KADALUARSA"
+                                    );
+                                    return new Gson().toJson(response);
+                                } else {
+                                    AttendanceResponse response = new AttendanceResponse(
+                                        "ERROR", 
+                                        "ABSEN GAGAL: ???"
+                                    );
+                                    return new Gson().toJson(response);
+                                }
+                            } else {
+                                AttendanceResponse response = new AttendanceResponse(
+                                    "ERROR", 
+                                    "ABSEN GAGAL: ANDA SUDAH ABSEN"
+                                );
+                                return new Gson().toJson(response);
+                            }     
+                        } else {
+                            AttendanceResponse response = new AttendanceResponse(
+                                "ERROR", 
+                                "ABSEN GAGAL: TOKEN TIDAK VALID"
+                            );
+                            return new Gson().toJson(response);
+                        }
                     }
-                } 
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR", 
+                        "ABSEN GAGAL: BUKAN PESERTA"
+                    );
+                    return new Gson().toJson(response);
+                }   
             }
         } catch (Exception e) {
             AttendanceResponse response = new AttendanceResponse(
@@ -343,7 +354,102 @@ public class AttendanceController {
                 "ABSEN GAGAL: " + e.getMessage()
             );
             return new Gson().toJson(response);
+        }   
+    }
+
+    @Post(uri = "/find/peserta")
+    @Secured("isAnonymous()")
+    public String findByIdPeserta(Long id_kelas, Authentication auth) {
+        try {
+            if (auth == null) {
+                AttendanceResponse response = new AttendanceResponse(
+                    "ERROR",
+                    "NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                Object userId = auth.getAttributes().get("userId");
+                Long id_user = Long.parseLong(userId.toString());
+                String roles = data.toString();
+                if (roles.equals("[\"Peserta\"]")) {
+                    List<Attendance> result = repoAttendance.findByIdKelasAndIdUser(id_kelas, id_user);
+                    if (result != null) {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Peserta"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch(Exception e) {
+            String msg = e.getMessage();
+            AttendanceResponse response = new AttendanceResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
         }
-        
+    }
+    
+    @Post(uri = "/find/kelas")
+    @Secured("isAnonymous()")
+    public String findByIdKelasAndToken(Long id_kelas, String token, Authentication auth) {
+        try {
+            if (auth == null) {
+                AttendanceResponse response = new AttendanceResponse(
+                    "ERROR",
+                    "NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Pengajar\"]")) {
+                    List<Attendance> result = repoAttendance.findByIdKelasAndToken(id_kelas, token);
+                    if (result != null) {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Pengajar"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch(Exception e) {
+            String msg = e.getMessage();
+            AttendanceResponse response = new AttendanceResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
+        }
     }
 }
