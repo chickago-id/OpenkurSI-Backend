@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import backend.model.AttendanceToken;
+import backend.model.Jadwal;
 
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
@@ -73,5 +74,18 @@ public class AttendanceTokenRepositoryImpl implements AttendanceTokenRepository{
         ).setParameter("token", token);
         return query.getSingleResult();
     }
+
+    @Override
+    @Transactional
+    public List<Jadwal> findByIdPengajar(Long id_pengajar) {
+        String qlString = "select a from Jadwal a " +
+            "join fetch Kelas b on a.id_kelas = b.id where a.id_pengajar = :id_pengajar " +
+            "group by a.id_kelas";
+        TypedQuery<Jadwal> query =entityManager.createQuery(
+            qlString, 
+            Jadwal.class
+        ).setParameter("id_pengajar", id_pengajar);
+        return query.getResultList();
+    }    
     
 }
