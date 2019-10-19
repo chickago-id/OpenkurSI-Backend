@@ -1,7 +1,6 @@
 package backend.repository;
 
-import backend.model.*;
-
+import backend.model.Materi;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

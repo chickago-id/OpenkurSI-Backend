@@ -1,6 +1,9 @@
-package backend.model;
+package backend.response;
 
 import java.util.List;
+
+import backend.model.Materi;
+
 import java.util.ArrayList;
 
 /**

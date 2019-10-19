@@ -74,7 +74,7 @@ import io.reactivex.annotations.Nullable;
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]")) {
                     Day result = dayRepository.save(day);
-                    DayResponse response = new DayResponse("ok", "Successfully posting data", result);
+                    DayResponse response = new DayResponse("ok", "Insert data is successfull.", result);
                     return new Gson().toJson(response);
                 } else {
                     DayResponse response = new DayResponse("error", "Your level not allowed posting");
@@ -164,10 +164,10 @@ import io.reactivex.annotations.Nullable;
                     Day result = dayRepository.findById(id);
                     if (result != null) {
                         dayRepository.deleteById(id);
-                        DayResponse response = new DayResponse("ok", "Deleting is successful.");
+                        DayResponse response = new DayResponse("ok", "Delete data is successful.");
                         return new Gson().toJson(response);
                     } else {
-                        DayResponse response = new DayResponse("error", "Failed delete, data not found.");
+                        DayResponse response = new DayResponse("error", "Failed, data not found.");
                         return new Gson().toJson(response);
                     }
                 } else {
