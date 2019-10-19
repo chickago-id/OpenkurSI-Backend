@@ -110,12 +110,16 @@ public class NilaiHuruf {
     public void setUpdated_date(Date updated_date) {
         this.updated_date = updated_date;
     }
-
-    public Long getId_nilai_huruf(){
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+    /**
+     * @return the id
+     */
+    public Long getId() {
         return id;
     }
-    public void setId_nilai_huruf(Long id){
-        this.id=id;
-    }
-
 }

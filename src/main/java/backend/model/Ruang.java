@@ -117,4 +117,40 @@ import org.hibernate.annotations.UpdateTimestamp;
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
     }
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    /**
+     * @return the updated_at
+     */
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+    /**
+     * @param updated_at the updated_at to set
+     */
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
+    }
+    /**
+     * @return the updated_by
+     */
+    public Long getUpdated_by() {
+        return updated_by;
+    }
+    /**
+     * @param updated_by the updated_by to set
+     */
+    public void setUpdated_by(Long updated_by) {
+        this.updated_by = updated_by;
+    }
  }
