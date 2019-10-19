@@ -22,7 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Materi {
 
     @Id
-    @GenericGenerator(name="incrementId",strategy="increment")
+    @GenericGenerator(name="incrementId", strategy="increment")
     @GeneratedValue(generator = "incrementId")
     @Column(name = "id")
     private Integer id;
@@ -114,5 +114,16 @@ public class Materi {
      */
     public void setUpdated_date(Date updated_date) {
         this.updated_date = updated_date;
+    }
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }/**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
     }
 }
