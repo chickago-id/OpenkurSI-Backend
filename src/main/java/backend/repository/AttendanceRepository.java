@@ -19,6 +19,7 @@ public interface AttendanceRepository {
     Attendance findById(@NotNull Long id);
     void deleteById(@NotNull Long id);
     AttendanceToken findByToken(String token);
-    Boolean existByUserIdAndToken(Long user_id, String token);
-    
+    Boolean existByIdUserAndToken(Long id_user, String token);
+    List<Attendance> findByIdKelasAndIdUser(Long id_kelas, Long id_user);
+    List<Attendance> findByIdKelasAndToken(Long id_kelas, String token);
 }
