@@ -8,8 +8,10 @@ import javax.annotation.Nullable;
 import com.google.gson.Gson;
 
 import backend.model.AttendanceToken;
+import backend.model.Jadwal;
 import backend.repository.AttendanceTokenRepository;
 import backend.response.AttendanceTokenResponse;
+import backend.response.JadwalResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
@@ -82,7 +84,7 @@ public class AttendanceTokenController {
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create(@Nullable Authentication auth) {
+    public String create(@Nullable Authentication auth, Long id_kelas) {
         try {
             if (auth == null) {
                 AttendanceTokenResponse response = new AttendanceTokenResponse(
@@ -93,10 +95,11 @@ public class AttendanceTokenController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Pengajar\"]")) {
                     AttendanceToken objAT = new AttendanceToken();
                     objAT.setToken(UUID.randomUUID().toString().substring(0, 6));
                     objAT.setExpiryDate(30);
+                    objAT.setId_kelas(id_kelas);
                     AttendanceToken result = repoAT.save(objAT);
                     if (result != null) {
                         AttendanceTokenResponse response = new AttendanceTokenResponse(
@@ -116,7 +119,7 @@ public class AttendanceTokenController {
                 } else {
                     AttendanceTokenResponse response = new AttendanceTokenResponse(
                         "ERROR",
-                        "POST DATA FAILED NOT Admin"
+                        "POST DATA FAILED NOT Pengajar"
                     );
                     return new Gson().toJson(response);
                 }
@@ -291,5 +294,53 @@ public class AttendanceTokenController {
             return new Gson().toJson(response);
         }
         
+    }
+
+    @Get(value = "/find/kelas")
+    @Secured("isAnonymous()")
+    public String findByIdPengajar(Authentication auth) {
+        try {
+            if(auth == null) {
+                AttendanceTokenResponse response = new AttendanceTokenResponse(
+                    "ERROR", 
+                    "GET DATA FAILED NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object dataRoles = auth.getAttributes().get("roles");
+                String roles = dataRoles.toString();
+                if(roles.equals("[\"Pengajar\"]")) {
+                    Object data = auth.getAttributes().get("userId");
+                    Long id_pengajar = Long.parseLong(data.toString());
+                    List<Jadwal> dataKelas = repoAT.findByIdPengajar(id_pengajar);
+                    if(dataKelas != null) {
+                        JadwalResponse response = new JadwalResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            dataKelas
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AttendanceTokenResponse response = new AttendanceTokenResponse(
+                            "ERROR", 
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AttendanceTokenResponse response = new AttendanceTokenResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Pengajar"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch (Exception e) {
+            AttendanceTokenResponse response = new AttendanceTokenResponse(
+                "ERROR", 
+                "Exception: " + e.getMessage()
+            );
+            return new Gson().toJson(response);
+        }
     }
 }
