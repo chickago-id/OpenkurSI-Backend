@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user_detail")

@@ -1,8 +1,8 @@
 package backend.controller;
 
 import backend.model.Materi;
-import backend.model.MateriResponse;
 import backend.repository.MateriRepository;
+import backend.response.MateriResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -116,27 +116,31 @@ public class MateriController {
     @Put("/{id}") 
     @Secured("isAnonymous()")
     public String update(Integer id, @Body Materi materi, @Nullable Authentication authentication) {
-        if(authentication == null) {
-            MateriResponse response = new MateriResponse("error", "Unauthorized user.");
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-
-            if(roles.equals("[\"Admin\"]")) {
-                Materi result = materiRepository.update(id, materi);
-
-                if(result != null) {
-                    MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
-                    return new Gson().toJson(response);
+        try {
+            if(authentication == null) {
+                MateriResponse response = new MateriResponse("error", "Unauthorized user.", materi);
+                return new Gson().toJson(response);
                 } else {
-                    MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+                    Object data = authentication.getAttributes().get("roles");
+                    String roles = data.toString();
+                    if(roles.equals("[\"Admin\"]")) {
+                        Materi result = materiRepository.update(id, materi);
+                        if(result != null) {
+                        MateriResponse response = new MateriResponse("ok", "Berhasil memperbarui data materi", result);
+                        return new Gson().toJson(response);
+                    } else {
+                        MateriResponse response = new MateriResponse("error", "Data materi tidak ditemukan");
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    MateriResponse response = new MateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
                     return new Gson().toJson(response);
                 }
-            } else {
-                MateriResponse response = new MateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
-                return new Gson().toJson(response);
-            } 
+            }
+        } catch (Exception e) {
+            String message = e.getMessage();
+            MateriResponse response = new MateriResponse("error", message);
+            return new Gson().toJson(response);
         }
     }
 
