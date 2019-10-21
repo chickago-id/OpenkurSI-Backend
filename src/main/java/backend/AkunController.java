@@ -52,7 +52,7 @@ public class AkunController {
         Optional<User> userByUsername = userRepository.findByUsername(username);
 
         if(userByUsername.isPresent()) {
-            errorBag.add("Username sudah dipakai.");
+            errorBag.add("Username sudah dipakai. ");
             errorCond += 1; // nek kosong brati error
         }
 
@@ -90,7 +90,7 @@ public class AkunController {
         if(errorCond > 0) {
 
             for(String err:errorBag) {
-                errorText += err + "<br>";
+                errorText += err;
             }
 
             // return pesan error
@@ -110,6 +110,7 @@ public class AkunController {
             userData.setEmail(email);
             userData.setPassword(passwordHash);
             userData.setRole("Peserta");
+            userData.setLevelid(4);
             
             // simpan data ke db user
             userRepository.save(userData);
