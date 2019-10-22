@@ -17,7 +17,8 @@ public interface KategoriNilaiMateriRepository {
     KategoriNilaiMateri findById(@NotNull Long id);
     void deleteById(@NotNull Long id);
     List<KategoriNilaiMateri> findByIdMateri(Integer id_materi);
-    KategoriNilaiMateri findByIdMateriAndIdKategoriNilai(@NotNull Integer id_materi, @NotNull Long id_kategori_nilai);
+    KategoriNilaiMateri findByIdMateriAndIdKategoriNilai(@NotNull Integer id_materi, @NotNull Integer id_kategori_nilai);
     //KategoriNilaiMateri sumOfMateri(Long id_materi);
+    Boolean existsByIdMateriAndIdKategoriNilai(Integer id_materi, Integer id_kategori_nilai);
     
 }

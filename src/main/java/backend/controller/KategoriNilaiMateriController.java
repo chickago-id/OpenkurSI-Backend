@@ -1,22 +1,23 @@
 package backend.controller;
 
-import backend.repository.KategoriNilaiMateriRepository;
-import backend.model.KategoriNilaiMateri;
-import backend.response.KategoriNilaiMateriResponse;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.validation.Validated;
-import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.annotation.Secured;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 
-import java.util.List;
+import backend.model.KategoriNilaiMateri;
+import backend.repository.KategoriNilaiMateriRepository;
+import backend.response.KategoriNilaiMateriResponse;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.authentication.Authentication;
+import io.micronaut.validation.Validated;
 
 /**
  * Author : akbar.lazuardi@yahoo.com | akbarlaz@github.com
@@ -26,9 +27,9 @@ import java.util.List;
 @Controller("/kategori-nilai-materi")
 @Secured("isAnonymous()")
 public class KategoriNilaiMateriController {
-    private KategoriNilaiMateriRepository KategoriNilaiMateriRepository;
-    public KategoriNilaiMateriController(KategoriNilaiMateriRepository KategoriNilaiMateriRepository) {
-        this.KategoriNilaiMateriRepository = KategoriNilaiMateriRepository;
+    private KategoriNilaiMateriRepository repoKNM;
+    public KategoriNilaiMateriController(KategoriNilaiMateriRepository repoKNM) {
+        this.repoKNM = repoKNM;
     }
 
     @Get("/")
@@ -45,18 +46,17 @@ public class KategoriNilaiMateriController {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
-                    List<KategoriNilaiMateri> result = KategoriNilaiMateriRepository.findAll();
-                    if (result != null) {
+                    List<KategoriNilaiMateri> result = repoKNM.findAll();
+                    if (result.isEmpty()) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                            "OK", 
-                            "GET DATA findAll() SUCCESS",
-                            result
+                            "ERROR", 
+                            "Data tidak ditemukan"
                         );
                         return new Gson().toJson(response);
                     } else {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                            "ERROR", 
-                            "GET DATA findALL() FAILED: NOT FOUND",
+                            "OK", 
+                            "Data berhasil diambil",
                             result
                         );
                         return new Gson().toJson(response);
@@ -64,7 +64,7 @@ public class KategoriNilaiMateriController {
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                         "ERROR", 
-                        "GET DATA findAll() FAILED: NOT ADMIN"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
@@ -72,7 +72,7 @@ public class KategoriNilaiMateriController {
         } catch(Exception e) {
             String message = e.getMessage();
             KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "ERROR", 
+                "EXCEPTION ERROR", 
                 message
             );
             return new Gson().toJson(response);
@@ -81,30 +81,49 @@ public class KategoriNilaiMateriController {
 
     @Post("/")
     @Secured("isAnonymous()")
-    public String create(@Body KategoriNilaiMateri KategoriNilaiMateri, @Nullable Authentication authentication) {
+    public String create(@Body KategoriNilaiMateri kategoriNilaiMateri, @Nullable Authentication auth) {
         try {
-            if(authentication == null) {
-                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Belum Login, anda tidak boleh posting.");
+            if(auth == null) {
+                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                    "ERROR", 
+                    "Anda belum sign in"
+                );
                 return new Gson().toJson(response);
             } else {
-                Object data = authentication.getAttributes().get("roles");
+                Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if(roles.equals("[\"Admin\"]")) {
-                    KategoriNilaiMateri result = KategoriNilaiMateriRepository.save(KategoriNilaiMateri);
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "ok", 
-                        "Berhasil menambahkan data kategori nilai", 
-                        result
+                    Integer id_materi = kategoriNilaiMateri.getId_materi();
+                    Integer id_kategori_nilai = kategoriNilaiMateri.getId_kategori_nilai();
+                    if (repoKNM.existsByIdMateriAndIdKategoriNilai(id_materi, id_kategori_nilai)) {
+                        KategoriNilaiMateri result = repoKNM.save(kategoriNilaiMateri);
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "OK", 
+                            "Berhasil menambahkan data kategori nilai", 
+                            result
                         );
-                    return new Gson().toJson(response);
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "ERROR",
+                            "Gagal menambahkan data: data sudah ada"
+                        );
+                        return new Gson().toJson(response);
+                    }   
                 } else {
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                        "ERROR", 
+                        "Anda tidak diizinkan mengakses data ini."
+                    );
                     return new Gson().toJson(response);
                 }
             }
         } catch(Exception e) {
             String message = e.getMessage();
-            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", message);
+            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                "EXCEPTION ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
@@ -116,25 +135,24 @@ public class KategoriNilaiMateriController {
             if (auth == null) {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                     "ERROR", 
-                    "NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
-                    List<KategoriNilaiMateri> result = KategoriNilaiMateriRepository.findByIdMateri(id_materi);
-                    if (result != null) {
+                    List<KategoriNilaiMateri> result = repoKNM.findByIdMateri(id_materi);
+                    if (result.isEmpty()) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                            "OK", 
-                            "GET DATA findByIdMater() SUCCESS", 
-                            result
+                            "ERROR", 
+                            "Data tidak ditemukan"
                         );
                         return new Gson().toJson(response);
                     } else {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                            "ERROR", 
-                            "GET DATA findByIdMateri() FAILED: NOT FOUND",
+                            "OK", 
+                            "Data berhasil diambil",
                             result
                         );
                         return new Gson().toJson(response);
@@ -142,7 +160,7 @@ public class KategoriNilaiMateriController {
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                         "ERROR", 
-                        "GET DATA FAILED: NOT ADMIN"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
@@ -150,31 +168,12 @@ public class KategoriNilaiMateriController {
         } catch (Exception e) {
             String message = e.getMessage();
             KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "ERROR", 
+                "EXCEPTION ERROR", 
                 message
             );
             return new Gson().toJson(response);
         }
     }
-
-    /* @Get("/materi/sum/{id_materi}")
-    @Secured("isAnonymous()")
-    public String showSumOfBobotNilai(Long id_materi) {
-        try {
-            KategoriNilaiMateri kategoriNilaiMateri = KategoriNilaiMateriRepository.sumOfMateri(id_materi);
-            if (kategoriNilaiMateri != null) {
-                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("ok", "Data Kategori nilai materi", kategoriNilaiMateri);
-                return new Gson().toJson(response);
-            } else {
-                KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", "Data kategori nilai tidak ditemukan");
-                return new Gson().toJson(response);
-            }
-        } catch (Exception e) {
-            String message = e.getMessage();
-            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse("error", message);
-            return new Gson().toJson(response);
-        }
-    } */
 
     @Get("/{id}")
     @Secured("isAnonymous()")
@@ -183,32 +182,32 @@ public class KategoriNilaiMateriController {
             if (auth == null) {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                     "ERROR", 
-                    "NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
-                    KategoriNilaiMateri result = KategoriNilaiMateriRepository.findById(id);
+                    KategoriNilaiMateri result = repoKNM.findById(id);
                     if(result != null) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                             "OK", 
-                            "GET DATA findById() SUCCESS", 
+                            "Data berhasil diambil", 
                             result
                         );
                         return new Gson().toJson(response);
                     } else {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                             "ERROR", 
-                            "GET DATA findById() FAILED: NOT FOUND"
+                            "Data tidak ditemukan"
                         );
                         return new Gson().toJson(response);
                     }       
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                         "ERROR", 
-                        "GET DATA findById() FAILED: NOT ADMIN"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
@@ -216,7 +215,7 @@ public class KategoriNilaiMateriController {
         } catch(Exception e) {
             String message = e.getMessage();
             KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "ERROR", 
+                "EXCEPTION ERROR", 
                 message
             );
             return new Gson().toJson(response);
@@ -225,92 +224,84 @@ public class KategoriNilaiMateriController {
 
     @Put("/{id_kategori_nilai}") 
     @Secured("isAnonymous()")
-    public String update(Long id_kategori_nilai, @Body KategoriNilaiMateri KategoriNilaiMateri, @Nullable Authentication authentication) {
-        if(authentication == null) {
-            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "error", 
-                "Bukan admin, anda tidak boleh update data.", 
-                KategoriNilaiMateri
-            );
-            return new Gson().toJson(response);
-        } else {
-            Object data = authentication.getAttributes().get("roles");
-            String roles = data.toString();
-            if(roles.equals("[\"Admin\"]")) {
-                KategoriNilaiMateri result = KategoriNilaiMateriRepository.update(id_kategori_nilai, KategoriNilaiMateri);
-                if(result != null) {
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "ok", 
-                        "Berhasil memperbarui data kategori nilai", 
-                        result
-                    );
-                    return new Gson().toJson(response);
-                } else {
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "error", 
-                        "Data kategori nilai tidak ditemukan"
-                    );
-                    return new Gson().toJson(response);
-                }
-            } else {
+    public String update(Long id_kategori_nilai, @Body KategoriNilaiMateri KategoriNilaiMateri, @Nullable Authentication auth) {
+        try {
+            if(auth == null) {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                    "error", 
-                    "Anda tidak boleh mengakses halaman ini."
+                    "ERROR", 
+                    "Anda belum sign in", 
+                    KategoriNilaiMateri
                 );
                 return new Gson().toJson(response);
-            } 
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if(roles.equals("[\"Admin\"]")) {
+                    KategoriNilaiMateri result = repoKNM.update(id_kategori_nilai, KategoriNilaiMateri);
+                    if(result != null) {
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "OK", 
+                            "Data berhasil diperbaharui", 
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                            "ERROR", 
+                            "Data tidak ditemukan"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                        "ERROR", 
+                        "Anda tidak diizinkan mengakses data ini."
+                    );
+                    return new Gson().toJson(response);
+                } 
+            }    
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
         }
     }
 
     @Delete("/{id}")
     @Secured("isAnonymous()")
-    public String delete(Long id, @Nullable Authentication authentication) {
-        if(authentication == null) {
+    public String delete(Long id, @Nullable Authentication auth) {
+        if(auth == null) {
             KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "error", 
-                "Bukan admin, anda tidak boleh hapus data."
+                "ERROR", 
+                "Anda belum sign in"
             );
             return new Gson().toJson(response);
         } else {
-            Object data = authentication.getAttributes().get("roles");
+            Object data = auth.getAttributes().get("roles");
             String roles = data.toString();
             if(roles.equals("[\"Admin\"]")) {
-                KategoriNilaiMateri result = KategoriNilaiMateriRepository.findById(id);                 
+                KategoriNilaiMateri result = repoKNM.findById(id);                 
                 if(result != null) {
-                    KategoriNilaiMateriRepository.deleteById(id);
+                    repoKNM.deleteById(id);
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "ok", 
-                        "Berhasil menghapus data kategori nilai"
+                        "OK", 
+                        "Data berhasil dihapus"
                     );
                     return new Gson().toJson(response);
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "error", 
-                        "Data kategori nilai tidak ditemukan"
-                    );
-                    return new Gson().toJson(response);
-                }
-            }
-            else if(roles.equals("[\"Peserta\"]")) {
-                KategoriNilaiMateri result = KategoriNilaiMateriRepository.findById(id);   
-                if(result != null) {
-                    KategoriNilaiMateriRepository.deleteById(id);
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "ok", 
-                        "Berhasil menghapus data kategori nilai"
-                    );
-                    return new Gson().toJson(response);
-                } else {
-                    KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                        "error", 
-                        "Data kategori nilai tidak ditemukan"
+                        "ERROR", 
+                        "Data tidak ditemukan"
                     );
                     return new Gson().toJson(response);
                 }
             } else {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                    "error", 
-                    "Anda tidak boleh mengakses halaman ini."
+                    "ERROR", 
+                    "Anda tidak diizinkan mengakses data ini."
                 );
                 return new Gson().toJson(response);
             }
@@ -319,37 +310,37 @@ public class KategoriNilaiMateriController {
 
     @Get("/materi/{id_materi}/kategori-nilai/{id_kategori_nilai}")
     @Secured("isAnonymous()")
-    public String showByIdMateriAndIdKategoriNilai(Integer id_materi, Long id_kategori_nilai, @Nullable Authentication auth) {
+    public String showByIdMateriAndIdKategoriNilai(Integer id_materi, Integer id_kategori_nilai, @Nullable Authentication auth) {
         try {
             if (auth == null) {
                 KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                     "ERROR", 
-                    "NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
-                    KategoriNilaiMateri result = KategoriNilaiMateriRepository.findByIdMateriAndIdKategoriNilai(id_materi, id_kategori_nilai);
+                    KategoriNilaiMateri result = repoKNM.findByIdMateriAndIdKategoriNilai(id_materi, id_kategori_nilai);
                     if(result != null) {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                             "OK", 
-                            "GET DATA findById() SUCCESS", 
+                            "Data berhasil diambil", 
                             result
                         );
                         return new Gson().toJson(response);
                     } else {
                         KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                             "ERROR", 
-                            "GET DATA findById() FAILED: NOT FOUND"
+                            "Data tidak ditemukan"
                         );
                         return new Gson().toJson(response);
                     }       
                 } else {
                     KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
                         "ERROR", 
-                        "GET DATA findById() FAILED: NOT ADMIN"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
@@ -357,7 +348,7 @@ public class KategoriNilaiMateriController {
         } catch(Exception e) {
             String message = e.getMessage();
             KategoriNilaiMateriResponse response = new KategoriNilaiMateriResponse(
-                "ERROR", 
+                "EXCEPTION ERROR", 
                 message
             );
             return new Gson().toJson(response);
