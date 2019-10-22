@@ -37,7 +37,8 @@ import io.micronaut.spring.tx.annotation.Transactional;
     @Override
     @Transactional
     public NotifCategory update(Integer id, NotifCategory notifCategory) {
-        return entityManager.merge(notifCategory);
+        entityManager.merge(notifCategory);
+        return notifCategory;
     }
 
     @Override

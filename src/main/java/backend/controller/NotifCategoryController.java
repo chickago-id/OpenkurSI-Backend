@@ -123,9 +123,9 @@ import io.reactivex.annotations.Nullable;
      @Put("/{id}")
      @Secured("isAnonymous()")
      public String update(Integer id, @Body NotifCategory notifCategory, @Nullable Authentication authentication) {
-         try {
+        try {
              if (authentication == null) {
-                 NotifCategoryResponse response = new NotifCategoryResponse("error", "Failed, you must sign in first.");
+                 NotifCategoryResponse response = new NotifCategoryResponse("error", "Failed, you must sign in first.", notifCategory);
                  return new Gson().toJson(response);
              } else {
                  Object data = authentication.getAttributes().get("roles");
