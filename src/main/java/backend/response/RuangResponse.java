@@ -1,7 +1,9 @@
-package backend.model;
+package backend.response;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import backend.model.Ruang;
 
 
 /**

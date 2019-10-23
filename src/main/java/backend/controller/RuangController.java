@@ -5,8 +5,8 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import backend.model.Ruang;
-import backend.model.RuangResponse;
 import backend.repository.RuangRepository;
+import backend.response.RuangResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
@@ -19,7 +19,7 @@ import io.micronaut.validation.Validated;
 import io.reactivex.annotations.Nullable;
 
 /**
- * Author : supi.core@gmail.com
+ * Author : supi.core@gmail.com | githun.com/sup1core
  */
 
  @Validated

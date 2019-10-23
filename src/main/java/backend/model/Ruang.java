@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -37,8 +39,9 @@ import org.hibernate.annotations.UpdateTimestamp;
     @Column (name = "keterangan", nullable = true, updatable = true)
     private String keterangan;
 
-    @NotNull (message = "ID user tidak boleh kosong !")
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "created_by", insertable = false, updatable = false, nullable = false)
+    private UserDetail userDetail;
     private Long created_by;
 
     //@NotNull (message = "Tanggal buat tidak boleh kosong !")
@@ -104,6 +107,18 @@ import org.hibernate.annotations.UpdateTimestamp;
      */
     public void setCreated_by(Long created_by) {
         this.created_by = created_by;
+    }
+    /**
+     * @return the userDetail
+     */
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+    /**
+     * @param userDetail the userDetail to set
+     */
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
     }
     /**
      * @return the created_at
