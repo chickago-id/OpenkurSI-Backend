@@ -1,7 +1,9 @@
 package backend;
 
 import backend.model.UserDetail;
+import backend.model.UserDetailResponse;
 import backend.repository.UserRepository;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -44,12 +46,17 @@ public class ProfilController {
                     UserDetail detail = userDetail.get();
                     detail.setUserPassword("");
 
+                    UserDetailResponse response = new UserDetailResponse(
+                        "OK",
+                        "GET DATA PROFILE SUCCESS",
+                        detail
+                    );
                     Map<String, String> returnData = new HashMap<String, String>();
                     returnData.put("status", "ok");
                     returnData.put("message", "Profil");
                     returnData.put("data", new Gson().toJson(detail));
-
-                    return new Gson().toJson(returnData);
+                    
+                    return new Gson().toJson(response);
 
                 } else {
                     ArrayList detail = new ArrayList();
@@ -59,7 +66,7 @@ public class ProfilController {
                     returnData.put("message", "Profil");
                     returnData.put("data", new Gson().toJson(detail));
 
-                    return new Gson().toJson(returnData);
+                    return new Gson().toJson(detail);
 
                 }
 
