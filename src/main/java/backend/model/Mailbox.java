@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 /**
  * Author : supi.core@gmail.com | github.com/sup1core
@@ -60,7 +61,8 @@ import org.hibernate.annotations.CreationTimestamp;
      @CreationTimestamp
      private Date date;
 
-     @Column(name = "bodymessage", nullable = false, columnDefinition = "text")
+     @Column(name = "bodymessage", nullable = false)
+     @Type(type="text")
      private String bodymessage;
 
      @Column(name = "status_id", nullable = false)

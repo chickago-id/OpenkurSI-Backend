@@ -5,11 +5,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,7 +34,7 @@ public class Jadwal {
 
     @ManyToOne
     @JoinColumn(name = "id_pengajar", insertable = false, updatable = false, nullable = false)
-    private User user;
+    private UserDetail userDetail;
     private Long id_pengajar;
 
     @ManyToOne
@@ -161,14 +161,17 @@ public class Jadwal {
     /**
      * @param user the user to set
      */
-    public void setUser(User user) {
-        this.user = user;
+    /**
+     * @param userDetail the userDetail to set
+     */
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
     }
     /**
-     * @return the user
+     * @return the userDetail
      */
-    public User getUser() {
-        return user;
+    public UserDetail getUserDetail() {
+        return userDetail;
     }
     /**
      * @param sesi the sesi to set

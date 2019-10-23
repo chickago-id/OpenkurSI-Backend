@@ -41,7 +41,7 @@ public class NilaiHurufRepositoryImpl implements NilaiHurufRepository{
     @Override
     @Transactional(readOnly = true)
     public List <NilaiHuruf> findAll(){
-        String qlString = "Select n from NilaiHuruf n";
+        String qlString = "Select n from NilaiHuruf n order by nilai_huruf asc";
         TypedQuery<NilaiHuruf> query = entityManager.createQuery(qlString, NilaiHuruf.class);
         return query.getResultList();
     }

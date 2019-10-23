@@ -2,10 +2,13 @@ package backend.model;
 
 import java.sql.Time;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -43,8 +46,9 @@ public class Sesi {
     // @Type (type ="mysql_enum")
     // private Enum setting;
 
-    @NotNull (message = "ID user tidak boleh kosong !")
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "created_by", insertable = false, updatable = false, nullable = false)
+    private UserDetail userDetail;
     private Long created_by;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -95,6 +99,30 @@ public class Sesi {
      */
     public void setCreated_by(Long created_by) {
         this.created_by = created_by;
+    }
+    /**
+     * @return the userDetail
+     */
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+    /**
+     * @param userDetail the userDetail to set
+     */
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**

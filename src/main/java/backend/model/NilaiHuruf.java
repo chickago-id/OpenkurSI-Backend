@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +39,9 @@ public class NilaiHuruf {
     @NotNull(message = "Batas Atas Harus Diisi")
     private Integer batas_atas;
 
-    @NotNull(message = "ID Pembuat Tidak Boleh Kosong !")
+    @ManyToOne
+    @JoinColumn(name = "created_by", insertable = false, updatable = false, nullable = false)
+    private UserDetail userDetail;
     private Long created_by;
 
     @Column(name = "created_date", nullable = false, updatable = false)
@@ -77,6 +81,18 @@ public class NilaiHuruf {
     }
     public void setCreated_by(Long created_by){
         this.created_by=created_by;
+    }
+    /**
+     * @return the userDetail
+     */
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+    /**
+     * @param userDetail the userDetail to set
+     */
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
     }
 
     public Date getCreated_date(){
