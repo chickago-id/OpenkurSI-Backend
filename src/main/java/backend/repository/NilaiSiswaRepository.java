@@ -18,5 +18,7 @@ public interface NilaiSiswaRepository {
     NilaiSiswa findById(@NotNull Long id);
     void deleteById(@NotNull Long id);
     List<NilaiSiswa> findByIdKelas(Long id_kelas);
+    List<NilaiSiswa> findByIdPeserta(Long id_peserta);
+    Boolean existByIdKelasPesertaAndIdKategoriNilaiMateri(Long id_kelas_peserta, Long id_kategori_nilai_materi);
 
 }

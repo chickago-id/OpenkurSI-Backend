@@ -1,7 +1,10 @@
 package backend.controller;
 
+import backend.model.KategoriNilai;
+import backend.model.KategoriNilaiMateri;
 import backend.model.NilaiSiswa;
 import backend.model.NilaiSiswaResponse;
+import backend.repository.KategoriNilaiMateriRepository;
 import backend.repository.NilaiSiswaRepository;
 
 
@@ -30,9 +33,14 @@ import java.util.List;
 public class NilaiSiswaController {
 
     private NilaiSiswaRepository nilaiSiswaRepository;
+    private KategoriNilaiMateriRepository kategoriNilaiMateriRepository;
 
-    public NilaiSiswaController(NilaiSiswaRepository nilaiSiswaRepository) {
+    public NilaiSiswaController(
+        NilaiSiswaRepository nilaiSiswaRepository, 
+        KategoriNilaiMateriRepository kategoriNilaiMateriRepository
+    ) {
         this.nilaiSiswaRepository = nilaiSiswaRepository;
+        this.kategoriNilaiMateriRepository = kategoriNilaiMateriRepository;
     }
 
     @Get("/")
@@ -42,7 +50,7 @@ public class NilaiSiswaController {
             if (auth == null) {
                 NilaiSiswaResponse response = new NilaiSiswaResponse(
                     "ERROR", 
-                    "GET DATA FAILED NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
@@ -53,14 +61,14 @@ public class NilaiSiswaController {
                     if (result != null) {
                         NilaiSiswaResponse response = new NilaiSiswaResponse(
                         "OK", 
-                        "GET DATA SUCCESS",
+                        "Data berhasil didapatkan",
                         result
                     );
                     return new Gson().toJson(response);
                     } else {
                         NilaiSiswaResponse response = new NilaiSiswaResponse(
                             "ERROR", 
-                            "GET DATA FAILED NOT FOUND",
+                            "Data tidak ditemukan",
                             result
                         );
                         return new Gson().toJson(response);
@@ -68,14 +76,17 @@ public class NilaiSiswaController {
                 } else {
                     NilaiSiswaResponse response = new NilaiSiswaResponse(
                         "ERROR",
-                        "GET DATA FAILED NOT Admin OR Pengajar"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
             }
         } catch(Exception e) {
             String message = e.getMessage();
-            NilaiSiswaResponse response = new NilaiSiswaResponse("error", message);
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
@@ -87,31 +98,52 @@ public class NilaiSiswaController {
             if(authentication == null) {
                 NilaiSiswaResponse response = new NilaiSiswaResponse(
                     "ERROR", 
-                    "POST FAILED NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
                 if(roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
-                    NilaiSiswa result = nilaiSiswaRepository.save(nilaiSiswa);
-                    NilaiSiswaResponse response = new NilaiSiswaResponse(
-                        "OK", 
-                        "POST SUCCESS", 
-                        result
-                    );
-                    return new Gson().toJson(response);
+                    Object dataId = authentication.getAttributes().get("userId");
+                    Long created_by = Long.parseLong(dataId.toString());
+                    Long id_kategori_nilai_materi = nilaiSiswa.getId_kategori_nilai_materi();
+                    KategoriNilaiMateri kategoriNilaiMateri = kategoriNilaiMateriRepository.findById(id_kategori_nilai_materi);
+                    if(!nilaiSiswaRepository.existByIdKelasPesertaAndIdKategoriNilaiMateri(nilaiSiswa.getId_kelas_peserta(), id_kategori_nilai_materi)) {
+                        NilaiSiswaResponse response = new NilaiSiswaResponse(
+                            "ERROR",
+                            "Data nilai siswa sudah ada"
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        Float bobot_nilai = kategoriNilaiMateri.getBobot_nilai();
+                        Float nilai_input = nilaiSiswa.getNilai_input();
+                        Float nilai_hitung = nilai_input * bobot_nilai /100;
+                        nilaiSiswa.setNilai_hitung(nilai_hitung);
+                        nilaiSiswa.setCreated_by(created_by);
+                        nilaiSiswa.setUpdated_by(created_by);
+                        NilaiSiswa result = nilaiSiswaRepository.save(nilaiSiswa);
+                        NilaiSiswaResponse response = new NilaiSiswaResponse(
+                            "OK", 
+                            "Berhasil menambah data", 
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
                 } else {
                     NilaiSiswaResponse response = new NilaiSiswaResponse(
                         "ERROR", 
-                        "POST FAILED NOT Admin OR Pengajar"
+                        "Anda tidak diizinkan untuk menambah data"
                     );
                     return new Gson().toJson(response);
                 }
             }
         } catch(Exception e) {
             String message = e.getMessage();
-            NilaiSiswaResponse response = new NilaiSiswaResponse("ERROR", message);
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
@@ -123,25 +155,29 @@ public class NilaiSiswaController {
             if (auth == null) {
                 NilaiSiswaResponse response = new NilaiSiswaResponse(
                     "ERROR", 
-                    "GET FAILED NOT SIGNED IN"
+                    "Anda belum sign in"
                 );
                 return new Gson().toJson(response);
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]") || roles.equals("[\"Peserta\"]")) {
+                if (
+                    roles.equals("[\"Admin\"]") || 
+                    roles.equals("[\"Pengajar\"]") || 
+                    roles.equals("[\"Peserta\"]")
+                ) {
                     NilaiSiswa result = nilaiSiswaRepository.findById(id_nilai_siswa);
                     if (result != null) {
                         NilaiSiswaResponse response = new NilaiSiswaResponse(
                             "OK", 
-                            "GET SUCCESS",
+                            "Data berhasil didapatkan",
                             result
                         );
                         return new Gson().toJson(response);
                     } else {
                         NilaiSiswaResponse response = new NilaiSiswaResponse(
                             "ERROR", 
-                            "GET FAILED NOT FOUND",
+                            "Data tidak ditemukan",
                             result
                         );
                         return new Gson().toJson(response);
@@ -149,14 +185,17 @@ public class NilaiSiswaController {
                 } else {
                     NilaiSiswaResponse response = new NilaiSiswaResponse(
                         "ERROR", 
-                        "GET FAILED DON'T HAVE ACCESS"
+                        "Anda tidak diizinkan mengakses data ini"
                     );
                     return new Gson().toJson(response);
                 }
             }
         } catch(Exception e) {
             String message = e.getMessage();
-            NilaiSiswaResponse response = new NilaiSiswaResponse("error", message);
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR", 
+                message
+            );
             return new Gson().toJson(response);
         }
     }
@@ -165,7 +204,10 @@ public class NilaiSiswaController {
     @Secured("isAnonymous()")
     public String update(Long id_nilai_siswa, @Body NilaiSiswa nilaiSiswa, @Nullable Authentication authentication) {
         if(authentication == null) {
-            NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Bukan admin, anda tidak boleh update data.");
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR", 
+                "Anda belum sign in"
+            );
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
@@ -173,14 +215,24 @@ public class NilaiSiswaController {
             if(roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                 NilaiSiswa result = nilaiSiswaRepository.update(id_nilai_siswa, nilaiSiswa);
                 if(result != null) {
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("ok", "Berhasil memperbarui data nilai siswa", result);
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "OK", 
+                        "Berhasil memperbarui data", 
+                        result
+                    );
                     return new Gson().toJson(response);
                 } else {
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Data nilai siswa tidak ditemukan");
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "ERROR", 
+                        "Data tidak ditemukan"
+                    );
                     return new Gson().toJson(response);
                 }
             } else {
-                NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                NilaiSiswaResponse response = new NilaiSiswaResponse(
+                    "ERROR", 
+                    "Anda tidak diizinkan memperbarui data"
+                );
                 return new Gson().toJson(response);
             } 
         }
@@ -190,7 +242,10 @@ public class NilaiSiswaController {
     @Secured("isAnonymous()")
     public String delete(Long id, @Nullable Authentication authentication) {
         if(authentication == null) {
-            NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Bukan admin, anda tidak boleh hapus data.");
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR", 
+                "Anda belum masuk"
+            );
             return new Gson().toJson(response);
         } else {
             Object data = authentication.getAttributes().get("roles");
@@ -199,10 +254,16 @@ public class NilaiSiswaController {
                 NilaiSiswa result = nilaiSiswaRepository.findById(id);
                 if(result != null) {
                     nilaiSiswaRepository.deleteById(id);
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("ok", "Berhasil menghapus data nilai siswa");
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "OK", 
+                        "Berhasil menghapus data nilai siswa"
+                    );
                     return new Gson().toJson(response);
                 } else {
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Data nilai siswa tidak ditemukan");
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "ERROR", 
+                        "Data nilai siswa tidak ditemukan"
+                    );
                     return new Gson().toJson(response);
                 }
             }
@@ -210,14 +271,23 @@ public class NilaiSiswaController {
                 NilaiSiswa result = nilaiSiswaRepository.findById(id);
                 if(result != null) {
                     nilaiSiswaRepository.deleteById(id);
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("ok", "Berhasil menghapus data nilai siswa");
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "OK", 
+                        "Berhasil menghapus data nilai siswa"
+                    );
                     return new Gson().toJson(response);
                 } else {
-                    NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Data nilai siswa tidak ditemukan");
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "ERROR", 
+                        "Data nilai siswa tidak ditemukan"
+                    );
                     return new Gson().toJson(response);
                 }
             } else {
-                NilaiSiswaResponse response = new NilaiSiswaResponse("error", "Anda tidak boleh mengakses halaman ini.");
+                NilaiSiswaResponse response = new NilaiSiswaResponse(
+                    "ERROR", 
+                    "Anda tidak boleh mengakses halaman ini."
+                );
                 return new Gson().toJson(response);
             }
         }
@@ -238,6 +308,56 @@ public class NilaiSiswaController {
                 String roles = data.toString();
                 if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     List<NilaiSiswa> result = nilaiSiswaRepository.findByIdKelas(id_kelas);
+                    if (result != null) {
+                        NilaiSiswaResponse response = new NilaiSiswaResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        NilaiSiswaResponse response = new NilaiSiswaResponse(
+                            "ERROR",
+                            "GET FAILED NOT FOUND",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    NilaiSiswaResponse response = new NilaiSiswaResponse(
+                        "ERROR",
+                        "GET FAILED DON'T HAVE ACCESS"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            NilaiSiswaResponse response = new NilaiSiswaResponse(
+                "ERROR",
+                msg
+            );
+            return new Gson().toJson(response);
+        }
+    }
+
+    @Get("/get/peserta")
+    @Secured("isAnonymous()")
+    public String showByIdPeserta(Authentication auth) {
+        try {
+            if (auth == null) {
+                NilaiSiswaResponse response = new NilaiSiswaResponse(
+                    "ERROR",
+                    "GET FAILED NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]") || roles.equals("[\"Peserta\"]")) {
+                    Object dataId = auth.getAttributes().get("userId");
+                    Long id_peserta = Long.parseLong(dataId.toString());
+                    List<NilaiSiswa> result = nilaiSiswaRepository.findByIdPeserta(id_peserta);
                     if (result != null) {
                         NilaiSiswaResponse response = new NilaiSiswaResponse(
                             "OK",
