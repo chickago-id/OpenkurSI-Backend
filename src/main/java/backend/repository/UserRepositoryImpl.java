@@ -1,17 +1,17 @@
 package backend.repository;
 
-import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
-import io.micronaut.spring.tx.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Optional;
 
 import backend.model.User;
+import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
+import io.micronaut.spring.tx.annotation.Transactional;
 
 @Singleton
 public class UserRepositoryImpl implements UserRepository{
@@ -47,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     @Transactional(readOnly = true)
     public List<User> getAll(){
-        String qlString ="select u FROM User u inner join UserDetail ud on ud.id_user = ud.id";
+        String qlString ="select u FROM User u inner join UserDetail ud on ud.id_user = u.id";
         TypedQuery<User> query = entityManager.createQuery(qlString, User.class);
         return query.getResultList();
     }

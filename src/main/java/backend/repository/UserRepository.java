@@ -1,10 +1,11 @@
 package backend.repository;
 
-import backend.model.User;
-
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.constraints.NotNull;
+
+import backend.model.User;
 
 public interface UserRepository {
     User save(@NotNull User user);
