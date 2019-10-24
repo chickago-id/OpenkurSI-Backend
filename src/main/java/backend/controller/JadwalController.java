@@ -1,22 +1,24 @@
 package backend.controller;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.google.gson.Gson;
+
 import backend.model.Jadwal;
 import backend.repository.JadwalRepository;
 import backend.response.DayResponse;
 import backend.response.JadwalResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.validation.Validated;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
-import javax.annotation.Nullable;
-
-import com.google.gson.Gson;
-import java.util.List;
+import io.micronaut.validation.Validated;
 
 /**
  * Author : supi.core@gmail.com | github.com/sup1core
@@ -40,7 +42,7 @@ public class JadwalController {
             } else {
                 Object data = authentication.getAttributes().get("roles");
                 String roles =data.toString();
-                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]" ) || roles.equals("[\"Frontdesj\"]") || roles.equals("[\"Peserta\"]")) {
                     List<Jadwal> result = jadwalRepository.findAll();
                     if (result != null) {
                         JadwalResponse response = new JadwalResponse ("ok", "Successfull getAll()", result);
