@@ -31,7 +31,6 @@ public class KategoriNilai {
     @Column(name = "nama_kategori")
     private String nama_kategori;
 
-    @NotNull(message = "Created by tidak boleh kosong")
     @Column(name = "created_by", nullable = false, updatable = false)
     private Long created_by;
 

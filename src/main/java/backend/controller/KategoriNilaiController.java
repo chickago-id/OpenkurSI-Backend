@@ -95,12 +95,9 @@ public class KategoriNilaiController {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
                 if(roles.equals("[\"Admin\"]")) {
-                    /*
-                    Object objectId = auth.getAttributes().get("id");
-                    String stringId = objectId.toString();
-                    Long id = Long.parseLong(stringId);
+                    Object objectId = auth.getAttributes().get("userId");
+                    Long id = Long.parseLong(objectId.toString());
                     kategoriNilai.setCreated_by(id);
-                    */
                     KategoriNilai result = kategoriNilaiRepository.save(kategoriNilai);
                     KategoriNilaiResponse response = new KategoriNilaiResponse(
                         "OK", 
@@ -189,6 +186,9 @@ public class KategoriNilaiController {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
                 if(roles.equals("[\"Admin\"]")) {
+                    Object dataId = authentication.getAttributes().get("userId");
+                    Long user_id = Long.parseLong(dataId.toString());
+                    kategoriNilai.setUpdated_by(user_id);
                     KategoriNilai result = kategoriNilaiRepository.update(id_kategori_nilai, kategoriNilai);
                     if(result != null) {
                         KategoriNilaiResponse response = new KategoriNilaiResponse(
