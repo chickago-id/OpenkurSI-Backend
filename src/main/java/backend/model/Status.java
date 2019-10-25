@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -35,6 +34,9 @@ import org.hibernate.annotations.UpdateTimestamp;
     @Column(name = "name", unique = true)
     private String name;
 
+    @Column (name = "description")
+    private String desc;
+
     @ManyToOne
     @JoinColumn(name = "created_by", insertable = false, updatable = false, nullable = false)
     private UserDetail userDetail;
@@ -45,7 +47,7 @@ import org.hibernate.annotations.UpdateTimestamp;
     private Date created_at;
 
     @Column(name = "updated_by", nullable =  true)
-    @ColumnDefault("1")
+    //@ColumnDefault("1")
     private Long updated_by;
 
     @Column(name = "updated_at", nullable = false, updatable = true)
@@ -165,5 +167,18 @@ import org.hibernate.annotations.UpdateTimestamp;
      */
     public UserDetail getUserDetail() {
         return userDetail;
+    }
+
+    /**
+     * @param desc the desc to set
+     */
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+    /**
+     * @return the desc
+     */
+    public String getDesc() {
+        return desc;
     }
  }
