@@ -185,7 +185,7 @@ public class KategoriNilaiController {
             } else {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
-                if(roles.equals("[\"Admin\"]")) {
+                if(roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     Object dataId = authentication.getAttributes().get("userId");
                     Long user_id = Long.parseLong(dataId.toString());
                     kategoriNilai.setUpdated_by(user_id);

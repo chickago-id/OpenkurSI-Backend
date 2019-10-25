@@ -42,7 +42,7 @@ public class MateriController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     List<Materi> result = materiRepository.findAll();
                     if (result != null){
                         MateriResponse response = new MateriResponse("ok", "success findAll() !", result);

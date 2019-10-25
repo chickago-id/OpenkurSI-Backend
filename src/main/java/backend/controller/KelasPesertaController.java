@@ -134,7 +134,7 @@ public class KelasPesertaController {
             } else {
                 Object data = authentication.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]")) {
                     List<KelasPeserta>  result = kelasPesertaRepository.findByIdKelas(id_kelas);
                     if (result != null) {
                         KelasPesertaResponse response = new KelasPesertaResponse(
