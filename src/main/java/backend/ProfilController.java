@@ -3,6 +3,9 @@ package backend;
 import backend.model.UserDetail;
 import backend.model.UserDetailResponse;
 import backend.repository.UserRepository;
+
+import backend.repository.UserDetailRepository;
+
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;

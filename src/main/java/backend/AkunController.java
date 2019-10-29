@@ -5,6 +5,8 @@ import backend.model.UserDetail;
 import backend.repository.UserRepository;
 import backend.helpers.MD5;
 
+import backend.repository.UserDetailRepository;
+
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
