@@ -4,7 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -16,15 +20,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class MasterKelas {
 
     @Id
-    @Column(name = "kode_kelas", length = 100, unique = true)
-    private String kode_kelas;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @NotNull(message = "Nama Materi harus diisi.")
+    @NotNull(message = "Nama kelas harus diisi.")
     @Column(name = "nama_kelas")
     private String nama_kelas;
 
-    @Column(name = "created_by")
-    private Integer created_by;
+    @ManyToOne
+    @JoinColumn(name = "created_by", insertable = false, updatable = false, referencedColumnName="id_user")
+    private UserDetail userDetail;
+    private Long created_by;
 
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreationTimestamp
@@ -37,12 +43,17 @@ public class MasterKelas {
     @UpdateTimestamp
     private Date updated_date;
 
-    public String getKode_kelas() {
-        return kode_kelas;
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
-
-    public void setKode_kelas(String kode_kelas) {
-        this.kode_kelas = kode_kelas;
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
     }
 
     public String getNama_kelas() {
@@ -53,11 +64,11 @@ public class MasterKelas {
         this.nama_kelas = nama_kelas;
     }
 
-    public Integer getCreated_by() {
+    public Long getCreated_by() {
         return created_by;
     }
 
-    public void setCreated_by(Integer created_by) {
+    public void setCreated_by(Long created_by) {
         this.created_by = created_by;
     }
 

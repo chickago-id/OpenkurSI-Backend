@@ -17,6 +17,10 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+/**
+ * Author : aries ==> revised by  :supi.core@gmail.com | github.com/sup1core
+ */
+
 @Validated
 @Controller("/masterkelas")
 @Secured("isAnonymous()")
@@ -76,12 +80,12 @@ public class MasterKelasController {
         }
     }
 
-    @Get("/{kode_kelas}")
+    @Get("/{id}")
     @Secured("isAnonymous()")
-    public String show(String kode_kelas) {
+    public String show(String id) {
 
         try {
-            MasterKelas masterKelas = masterKelasRepository.findById(kode_kelas);
+            MasterKelas masterKelas = masterKelasRepository.findById(id);
 
             if (masterKelas != null) {
                 MasterKelasResponse response = new MasterKelasResponse("ok", "Data Master Kelas", masterKelas);
@@ -99,7 +103,7 @@ public class MasterKelasController {
         }
     }
 
-    @Post("/{kode_kelas}")
+    @Post("/{id}")
     @Secured("isAnonymous()")
     public String update(@Body MasterKelas masterKelas, @Nullable Authentication authentication) {
 
@@ -130,9 +134,9 @@ public class MasterKelasController {
         }
     }
 
-    @Delete("/{kode_kelas}")
+    @Delete("/{id}")
     @Secured("isAnonymous()")
-    public String delete(String kode_kelas, @Nullable Authentication authentication) {
+    public String delete(String id, @Nullable Authentication authentication) {
         if (authentication == null) {
             MasterKelasResponse response = new MasterKelasResponse("error", "Unauthorized user");
             return new Gson().toJson(response);
@@ -141,12 +145,12 @@ public class MasterKelasController {
             String roles = data.toString();
 
             if (roles.equals("[\"Admin\"]")) {
-                MasterKelas getMasterKelas = masterKelasRepository.findById(kode_kelas);
+                MasterKelas getMasterKelas = masterKelasRepository.findById(id);
 
-                // MasterKelas getKelas = masterKelasRepository.findById(kode_kelas);
+                // MasterKelas getKelas = masterKelasRepository.findById(id);
 
                 if (getMasterKelas != null) {
-                    masterKelasRepository.deleteById(kode_kelas);
+                    masterKelasRepository.deleteById(id);
                     MasterKelasResponse response = new MasterKelasResponse("ok",
                             "Berhasil menghapus data master kelas");
                     return new Gson().toJson(response);
