@@ -31,6 +31,9 @@ import org.hibernate.annotations.UpdateTimestamp;
      @Column (name = "name", unique = true, nullable = false)
      private String name;
 
+     @Column (name = "code", unique = true, nullable = false, length = 4)
+     private String code;
+
      @ManyToOne
      //@NotNull(message = "creator not null")
      @JoinColumn(name = "created_by", nullable = false, insertable = false, updatable = false)
@@ -163,5 +166,16 @@ import org.hibernate.annotations.UpdateTimestamp;
      public UserDetail getUserDetail() {
          return userDetail;
      }
-
+     /**
+      * @param code the code to set
+      */
+     public void setCode(String code) {
+         this.code = code;
+     }
+     /**
+      * @return the code
+      */
+     public String getCode() {
+         return code;
+     }
  }

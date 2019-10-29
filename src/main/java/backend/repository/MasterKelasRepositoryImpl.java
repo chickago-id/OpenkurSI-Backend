@@ -23,8 +23,8 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
 
     @Override
     @Transactional
-    public void deleteById(@NotNull String kode_kelas) {
-        MasterKelas masterKelas = findById(kode_kelas);
+    public void deleteById(@NotNull Integer id) {
+        MasterKelas masterKelas = findById(id);
         if (masterKelas != null)
 
         {
@@ -42,8 +42,8 @@ public class MasterKelasRepositoryImpl implements MasterKelasRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public MasterKelas findById(@NotNull String kode_kelas) {
-        return entityManager.find(MasterKelas.class, kode_kelas);
+    public MasterKelas findById(@NotNull Integer id) {
+        return entityManager.find(MasterKelas.class, id);
     }
 
     @Override

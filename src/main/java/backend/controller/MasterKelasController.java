@@ -82,7 +82,7 @@ public class MasterKelasController {
 
     @Get("/{id}")
     @Secured("isAnonymous()")
-    public String show(String id) {
+    public String show(Integer id) {
 
         try {
             MasterKelas masterKelas = masterKelasRepository.findById(id);
@@ -136,7 +136,7 @@ public class MasterKelasController {
 
     @Delete("/{id}")
     @Secured("isAnonymous()")
-    public String delete(String id, @Nullable Authentication authentication) {
+    public String delete(Integer id, @Nullable Authentication authentication) {
         if (authentication == null) {
             MasterKelasResponse response = new MasterKelasResponse("error", "Unauthorized user");
             return new Gson().toJson(response);

@@ -13,7 +13,7 @@ public interface MasterKelasRepository {
 
     List<MasterKelas> findAll();
 
-    MasterKelas findById(@NotNull String kode_kelas);
+    MasterKelas findById(@NotNull Integer id);
 
-    void deleteById(@NotNull String kode_kelas);
+    void deleteById(@NotNull Integer id);
 }

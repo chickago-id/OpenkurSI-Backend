@@ -24,7 +24,7 @@ public class MasterKelas {
     private Integer id;
 
     @NotNull(message = "Nama kelas harus diisi.")
-    @Column(name = "nama_kelas")
+    @Column(name = "nama_kelas", unique = true)
     private String nama_kelas;
 
     @ManyToOne
@@ -96,4 +96,16 @@ public class MasterKelas {
         this.updated_date = updated_date;
     }
 
+    /**
+     * @param userDetail the userDetail to set
+     */
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+    /**
+     * @return the userDetail
+     */
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
 }
