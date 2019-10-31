@@ -26,6 +26,10 @@ public class MasterKelas {
     @NotNull(message = "Nama kelas harus diisi.")
     @Column(name = "nama_kelas", unique = true)
     private String nama_kelas;
+ 
+    @NotNull(message = "kode master kelas harus diisi.")
+    @Column(name = "kode_masterkelas", unique = true)
+    private String kode_masterkelas;
 
     @ManyToOne
     @JoinColumn(name = "created_by", insertable = false, updatable = false, referencedColumnName="id_user")
@@ -107,5 +111,17 @@ public class MasterKelas {
      */
     public UserDetail getUserDetail() {
         return userDetail;
+    }
+    /**
+     * @param kode_masterkelas the kode_masterkelas to set
+     */
+    public void setKode_masterkelas(String kode_masterkelas) {
+        this.kode_masterkelas = kode_masterkelas;
+    }
+    /**
+     * @return the kode_masterkelas
+     */
+    public String getKode_masterkelas() {
+        return kode_masterkelas;
     }
 }
