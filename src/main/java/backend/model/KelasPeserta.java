@@ -28,7 +28,7 @@ public class KelasPeserta implements Serializable {
   private Long id_kelas;
   
   @ManyToOne
-  @JoinColumn(name = "id_user", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "id_user", referencedColumnName="id_user", insertable = false, updatable = false, nullable = false)
   private UserDetail user;
   private Long id_user;
   
