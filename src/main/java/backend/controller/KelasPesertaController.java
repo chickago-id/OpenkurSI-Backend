@@ -18,6 +18,10 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+/**
+ * Author : aried modify supi.core@gmail.com | github.com/sup1core
+ */
+
 @Validated
 @Controller("/kelaspeserta")
 @Secured("isAnonymous()")
@@ -40,7 +44,7 @@ public class KelasPesertaController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Admin\"]")) {
+                if (roles.equals("[\"Admin\"]") || roles.equals("[\"Pengajar\"]") || roles.equals("[\"Frontdesk\"]") || roles.equals("[\"Peserta\"]")) {
                     List<KelasPeserta> result = kelasPesertaRepository.findAll();
                     if (result != null) {
                         KelasPesertaResponse response = new KelasPesertaResponse(
