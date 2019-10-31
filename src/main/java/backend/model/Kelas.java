@@ -6,10 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.ManyToOne;
 
 import javax.persistence.JoinColumn;
@@ -20,23 +16,29 @@ import java.util.Date;
 @Table(name = "kelas")
 public class Kelas {
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "kode_kelas", referencedColumnName = "kode_kelas", insertable = false, updatable = false)
-  private MasterKelas masterKelas;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotNull(message = "Kode Kelas harus di isi.")
-  @Column(name = "kode_kelas", length = 100)
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "id_kelas", referencedColumnName = "id", insertable = false, updatable = false)
+  private MasterKelas masterKelas;
+  private Integer id_kelas;
+
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "id_kelastype", referencedColumnName = "id", insertable = false, updatable = false)
+  private KelasType kelasType;
+  private Integer id_kelastype;
+
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "id_batch", referencedColumnName = "id_batch", insertable = false, updatable = false)
+  private Batch batch;
+  private Long id_batch;
+
+  @Column(name = "kode_kelas", length = 100, unique = true)
   private String kode_kelas;
 
-  @Column(name = "jenis_kelas")
-  private String jenis_kelas;
-
   @Column(name = "tanggal_mulai", nullable = false, updatable = true)
-  @CreationTimestamp
   private Date tanggal_mulai;
 
   @Column(name = "target_peserta")
@@ -48,8 +50,10 @@ public class Kelas {
   @Column(name = "biaya")
   private String biaya;
 
-  @Column(name = "status")
-  private String status;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "id_status", referencedColumnName = "id", insertable = false, updatable = false)
+  private Status status;
+  private Integer id_status;
 
   public String getKode_kelas() {
     return kode_kelas;
@@ -57,14 +61,6 @@ public class Kelas {
 
   public void setKode_kelas(String kode_kelas) {
     this.kode_kelas = kode_kelas;
-  }
-
-  public String getJenis_kelas() {
-    return jenis_kelas;
-  }
-
-  public void setJenis_kelas(String jenis_kelas) {
-    this.jenis_kelas = jenis_kelas;
   }
 
   public Date getTanggal_mulai() {
@@ -89,14 +85,6 @@ public class Kelas {
 
   public void setBiaya(String biaya) {
     this.biaya = biaya;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
   }
 
   public Long getId() {
@@ -124,6 +112,91 @@ public class Kelas {
    */
   public void setMasterKelas(MasterKelas masterKelas) {
     this.masterKelas = masterKelas;
+  }
+  /**
+   * @param id_kelas the id_kelas to set
+   */
+  public void setId_kelas(Integer id_kelas) {
+    this.id_kelas = id_kelas;
+  }
+  /**
+   * @return the id_kelas
+   */
+  public Integer getId_kelas() {
+    return id_kelas;
+  }
+  /**
+   * @param kelasType the kelasType to set
+   */
+  public void setKelasType(KelasType kelasType) {
+    this.kelasType = kelasType;
+  }
+  /**
+   * @return the kelasType
+   */
+  public KelasType getKelasType() {
+    return kelasType;
+  }
+  /**
+   * @param id_kelastype the id_kelastype to set
+   */
+  public void setId_kelastype(Integer id_kelastype) {
+    this.id_kelastype = id_kelastype;
+  }
+  /**
+   * @return the id_kelastype
+   */
+  public Integer getId_kelastype() {
+    return id_kelastype;
+  }
+  /**
+   * @param id_status the id_status to set
+   */
+  public void setId_status(Integer id_status) {
+    this.id_status = id_status;
+  }
+  /**
+   * @return the id_status
+   */
+  public Integer getId_status() {
+    return id_status;
+  }
+  /**
+   * @param status the status to set
+   */
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+  /**
+   * @return the status
+   */
+  public Status getStatus() {
+    return status;
+  }
+
+  /**
+   * @param batch the batch to set
+   */
+  public void setBatch(Batch batch) {
+    this.batch = batch;
+  }
+  /**
+   * @return the batch
+   */
+  public Batch getBatch() {
+    return batch;
+  }
+  /**
+   * @param id_batch the id_batch to set
+   */
+  public void setId_batch(Long id_batch) {
+    this.id_batch = id_batch;
+  }
+  /**
+   * @return the id_batch
+   */
+  public Long getId_batch() {
+    return id_batch;
   }
 
 }
