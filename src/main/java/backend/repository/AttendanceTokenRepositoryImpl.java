@@ -35,7 +35,7 @@ public class AttendanceTokenRepositoryImpl implements AttendanceTokenRepository{
 
     @Override
     @Transactional
-    public AttendanceToken update(Integer id, AttendanceToken objAT) {
+    public AttendanceToken update(Long id, AttendanceToken objAT) {
         entityManager.merge(objAT);
          return objAT;
     }
@@ -50,13 +50,13 @@ public class AttendanceTokenRepositoryImpl implements AttendanceTokenRepository{
 
     @Override
     @Transactional(readOnly = true)
-    public AttendanceToken findById(@NotNull Integer id) {
+    public AttendanceToken findById(@NotNull Long id) {
         return entityManager.find(AttendanceToken.class, id);
     }
 
     @Override
     @Transactional
-    public void deleteById(@NotNull Integer id) {
+    public void deleteById(@NotNull Long id) {
         AttendanceToken objAT = findById(id);
         if(objAT != null) {
             entityManager.remove(objAT);
@@ -86,6 +86,31 @@ public class AttendanceTokenRepositoryImpl implements AttendanceTokenRepository{
             Jadwal.class
         ).setParameter("id_pengajar", id_pengajar);
         return query.getResultList();
-    }    
+    }
     
+    @Override
+    @Transactional
+    public List<Jadwal> findByIdKelas(Long id_kelas) {
+        String qlString = "select a from Jadwal a " +
+            "join fetch Materi b on a.id_materi = b.id where " +
+            "a.id_kelas = :id_kelas group by a.id_materi";
+        TypedQuery<Jadwal> query =entityManager.createQuery(
+            qlString, 
+            Jadwal.class
+        ).setParameter("id_kelas", id_kelas);
+        return query.getResultList();
+    }
+    
+    @Override
+    @Transactional
+    public Jadwal findByIdKelasAndIdMateri(Long id_kelas, Integer id_materi) {
+        String qlString = "SELECT a from Jadwal a WHERE a.id_kelas = :id_kelas AND " +
+            "a.id_materi = :id_materi";
+        TypedQuery<Jadwal> query =entityManager.createQuery(
+            qlString, 
+            Jadwal.class
+        ).setParameter("id_kelas", id_kelas)
+        .setParameter("id_materi", id_materi);
+        return query.getResultList().get(0);
+    }
 }
