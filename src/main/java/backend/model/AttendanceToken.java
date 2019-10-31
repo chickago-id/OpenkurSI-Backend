@@ -30,9 +30,9 @@ public class AttendanceToken {
     @Column(nullable = false)
     private Date expired_at;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
-    private Kelas kelas;
-    private Long id_kelas;
+    @JoinColumn(name = "id_jadwal", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
+    private Jadwal jadwal;
+    private Integer id_jadwal;
     /**
      * @return the id
      */
@@ -82,28 +82,28 @@ public class AttendanceToken {
         this.expired_at = expired_at;
     }
     /**
-     * @return the kelas
+     * @return the jadwal
      */
-    public Kelas getKelas() {
-        return kelas;
+    public Jadwal getJadwal() {
+        return jadwal;
     }
     /**
-     * @param kelas the kelas to set
+     * @param jadwal the jadwal to set
      */
-    public void setKelas(Kelas kelas) {
-        this.kelas = kelas;
+    public void setJadwal(Jadwal jadwal) {
+        this.jadwal = jadwal;
     }
     /**
-     * @return the id_kelas
+     * @return the id_jadwal
      */
-    public Long getId_kelas() {
-        return id_kelas;
+    public Integer getId_jadwal() {
+        return id_jadwal;
     }
     /**
-     * @param id_kelas the id_kelas to set
+     * @param id_jadwal the id_jadwal to set
      */
-    public void setId_kelas(Long id_kelas) {
-        this.id_kelas = id_kelas;
+    public void setId_jadwal(Integer id_jadwal) {
+        this.id_jadwal = id_jadwal;
     }
     public void setExpiryDate(int minutes){
         Calendar now = Calendar.getInstance();
