@@ -1,6 +1,5 @@
 package backend.model;
 
-import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -33,10 +32,10 @@ public class Sesi {
     private Integer id;
 
     @NotNull(message = "Jam mulai tidak boleh kosong !")
-    private Time jam_mulai;
+    private Date jam_mulai;
 
     @NotNull(message = "Jam selesai tidak boleh kosong !")
-    private Time jam_selesai;
+    private Date jam_selesai;
 
    // @NotNull(message = "Status setting tidak boleh kosong !")
     @ColumnDefault("1")
@@ -65,26 +64,26 @@ public class Sesi {
     /**
      * @return the jam_mulai
      */
-    public Time getJam_mulai() {
+    public Date getJam_mulai() {
         return jam_mulai;
     }
     /**
      * @param jam_mulai the jam_mulai to set
      */
-    public void setJam_mulai(Time jam_mulai) {
+    public void setJam_mulai(Date jam_mulai) {
         this.jam_mulai = jam_mulai;
     }
 
     /**
      * @return the jam_selesai
      */
-    public Time getJam_selesai() {
+    public Date getJam_selesai() {
         return jam_selesai;
     }
     /**
      * @param jam_selesai the jam_selesai to set
      */
-    public void setJam_selesai(Time jam_selesai) {
+    public void setJam_selesai(Date jam_selesai) {
         this.jam_selesai = jam_selesai;
     }
 
