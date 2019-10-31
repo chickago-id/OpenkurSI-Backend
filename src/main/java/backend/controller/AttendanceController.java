@@ -9,8 +9,11 @@ import com.google.gson.Gson;
 
 import backend.model.Attendance;
 import backend.model.AttendanceToken;
+import backend.model.KelasPeserta;
+import backend.model.KelasPesertaResponse;
 import backend.repository.AttendanceRepository;
 import backend.response.AttendanceResponse;
+import backend.response.ObjectResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
@@ -303,8 +306,9 @@ public class AttendanceController {
                                     objAttendance.setClock(clock);
                                     objAttendance.setToken(token);
                                     objAttendance.setId_user(id_user);
-                                    objAttendance.setId_kelas(objAT.getId_kelas());
+                                    objAttendance.setId_jadwal(objAT.getId_jadwal());
                                     objAttendance.setStatus(1);
+                                    objAttendance.setIs_approved(0);
                                     Attendance result = repoAttendance.save(objAttendance);
                                     AttendanceResponse response = new AttendanceResponse(
                                         "OK", 
@@ -357,9 +361,129 @@ public class AttendanceController {
         }   
     }
 
-    @Post(uri = "/find/peserta")
+    @Post(uri = "/absen/verify/{is_approved}")
     @Secured("isAnonymous()")
-    public String findByIdPeserta(Long id_kelas, Authentication auth) {
+    public String notApprovedAttendance(Integer is_approved, Authentication auth, Integer id_jadwal, Long id_user) {
+        try {
+            if(auth == null) {
+                AttendanceResponse response = new AttendanceResponse(
+                    "ERROR", 
+                    "ABSEN GAGAL: BELUM SIGN IN"
+                );
+                return new Gson().toJson(response);    
+            } else {
+                Object userRoles = auth.getAttributes().get("roles");
+                String roles = userRoles.toString();
+                if(roles.equals("[\"Pengajar\"]") || roles.equals("[\"Admin\"]")) {
+                    try {
+                        Attendance objA = repoAttendance.findByIdJadwalAndIdUserAndStatus(id_jadwal, id_user);
+                        Date clock_out = new Date();
+                        objA.setClock_out(clock_out);
+                        switch (is_approved) {
+                            case 1: // tepat waktu(sudah check in)
+                                objA.setIs_approved(1);
+                                objA.setStatus(1);
+                                break;
+                            case 2: // terlambat
+                                objA.setIs_approved(2);
+                                objA.setStatus(2);
+                                break;
+                            case 3: // sakit
+                                objA.setIs_approved(3);
+                                objA.setStatus(3);
+                                break;
+                            case 4: // izin
+                                objA.setIs_approved(4);
+                                objA.setStatus(4);
+                                break;
+                            case 5: // alpha
+                                objA.setIs_approved(5);
+                                objA.setStatus(5);
+                                break;
+                            default:
+                                break;
+                        }
+                        Attendance result = repoAttendance.update(objA.getId(), objA);
+                        if(result == null) {
+                            AttendanceResponse response = new AttendanceResponse(
+                                "ERROR",
+                                "Gagal memperbarui data presensi"
+                            );
+                            return new Gson().toJson(response);
+                        } else {
+                            AttendanceResponse response = new AttendanceResponse(
+                                "OK",
+                                "Berhasil memperbarui data presensi"
+                            );
+                            return new Gson().toJson(response);
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        Date clock = new Date();
+                        Attendance objB = new Attendance();
+                        objB.setId_jadwal(id_jadwal);
+                        objB.setId_user(id_user);
+                        objB.setClock(clock);
+                        objB.setClock_out(clock);
+                        switch (is_approved) {
+                            case 1: // hadir tepat waktu
+                                objB.setIs_approved(1);
+                                objB.setStatus(1);
+                                break;
+                            case 2: // terlambat
+                                objB.setIs_approved(2);
+                                objB.setStatus(2);
+                                break;
+                            case 3: // sakit
+                                objB.setIs_approved(3);
+                                objB.setStatus(3);
+                                break;
+                            case 4: // izin
+                                objB.setIs_approved(4);
+                                objB.setStatus(4);
+                                break;
+                            case 5: // alpha
+                                objB.setIs_approved(5);
+                                objB.setStatus(5);
+                                break;
+                            default:
+                                break;
+                        }
+                        Attendance result = repoAttendance.save(objB);
+                        if(result == null) {
+                            AttendanceResponse response = new AttendanceResponse(
+                                "ERROR",
+                                "Gagal menyimpan data presensi"
+                            );
+                            return new Gson().toJson(response);
+                        } else {
+                            AttendanceResponse response = new AttendanceResponse(
+                                "OK", 
+                                "Berhasil menyimpan data presensi",
+                                result
+                            );
+                            return new Gson().toJson(response);
+                        }
+                    }
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR", 
+                        "Absen gagal: Bukan Pengajar atau Admin"
+                    );
+                    return new Gson().toJson(response);
+                }   
+            }
+        } catch (Exception e) {
+            AttendanceResponse response = new AttendanceResponse(
+                "ERROR", 
+                "ABSEN GAGAL: " + e.getMessage()
+            );
+            return new Gson().toJson(response);
+        }   
+    }
+
+    @Get(uri = "/find/peserta/{id_jadwal}")
+    @Secured("isAnonymous()")
+    public String findByIdPeserta(Integer id_jadwal, Authentication auth) {
         try {
             if (auth == null) {
                 AttendanceResponse response = new AttendanceResponse(
@@ -373,7 +497,7 @@ public class AttendanceController {
                 Long id_user = Long.parseLong(userId.toString());
                 String roles = data.toString();
                 if (roles.equals("[\"Peserta\"]")) {
-                    List<Attendance> result = repoAttendance.findByIdKelasAndIdUser(id_kelas, id_user);
+                    List<Attendance> result = repoAttendance.findByIdJadwalAndIdUser(id_jadwal, id_user);
                     if (result != null) {
                         AttendanceResponse response = new AttendanceResponse(
                             "OK",
@@ -406,9 +530,9 @@ public class AttendanceController {
         }
     }
     
-    @Post(uri = "/find/kelas")
+    @Get(uri = "/find/kelaspeserta/{id_jadwal}")
     @Secured("isAnonymous()")
-    public String findByIdKelasAndToken(Long id_kelas, String token, Authentication auth) {
+    public String findByIdKelasAndToken(Integer id_jadwal, Authentication auth) {
         try {
             if (auth == null) {
                 AttendanceResponse response = new AttendanceResponse(
@@ -419,10 +543,10 @@ public class AttendanceController {
             } else {
                 Object data = auth.getAttributes().get("roles");
                 String roles = data.toString();
-                if (roles.equals("[\"Pengajar\"]")) {
-                    List<Attendance> result = repoAttendance.findByIdKelasAndToken(id_kelas, token);
-                    if (result != null) {
-                        AttendanceResponse response = new AttendanceResponse(
+                if (roles.equals("[\"Pengajar\"]") || roles.equals("[\"Admin\"]")) {
+                    List<Object> result = repoAttendance.findByIdJadwal(id_jadwal);
+                    if (!result.isEmpty()) {
+                        ObjectResponse response = new ObjectResponse(
                             "OK",
                             "GET DATA SUCCESS",
                             result
@@ -451,5 +575,102 @@ public class AttendanceController {
             );
             return new Gson().toJson(response);
         }
+    }
+
+    @Get(uri = "/find/kelaspeserta/verify/{id_kelas}")
+    @Secured("isAnonymous()")
+    public String showKelasPeserta(Long id_kelas, Authentication auth) {
+        try {
+            if (auth == null) {
+                AttendanceResponse response = new AttendanceResponse(
+                    "ERROR",
+                    "NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                String roles = data.toString();
+                if (roles.equals("[\"Pengajar\"]") || roles.equals("[\"Admin\"]")) {
+                    List<KelasPeserta> result = repoAttendance.findByIdKelas(id_kelas);
+                    if (!result.isEmpty()) {
+                        KelasPesertaResponse response = new KelasPesertaResponse(
+                            "OK",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Pengajar"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch(Exception e) {
+            String msg = e.getMessage();
+            AttendanceResponse response = new AttendanceResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
+        }
+    }
+
+    @Get(uri = "/find/presensi/peserta/{id_user}")
+    @Secured("isAnonymous()")
+    public String findByIdPeserta(Long id_user, Authentication auth) {
+        try {
+            if (auth == null) {
+                AttendanceResponse response = new AttendanceResponse(
+                    "ERROR",
+                    "NOT SIGNED IN"
+                );
+                return new Gson().toJson(response);
+            } else {
+                Object data = auth.getAttributes().get("roles");
+                //Object userId = auth.getAttributes().get("userId");
+                //Long user_id = Long.parseLong(userId.toString());
+                String roles = data.toString();
+                if (roles.equals("[\"Peserta\"]")) { 
+                    
+                    List<Object> result = repoAttendance.findByIdUser(id_user);
+                    if (result != null) {
+                        ObjectResponse response = new ObjectResponse(
+                            "SUCCESS",
+                            "GET DATA SUCCESS",
+                            result
+                        );
+                        return new Gson().toJson(response);
+                    } else {
+                        AttendanceResponse response = new AttendanceResponse(
+                            "ERROR",
+                            "GET DATA FAILED NOT FOUND"
+                        );
+                        return new Gson().toJson(response);
+                    }
+                } else {
+                    AttendanceResponse response = new AttendanceResponse(
+                        "ERROR",
+                        "GET DATA FAILED NOT Peserta"
+                    );
+                    return new Gson().toJson(response);
+                }
+            }
+        } catch(Exception e) {
+            String msg = e.getMessage();
+            AttendanceResponse response = new AttendanceResponse(
+                "EXCEPTION ERROR", 
+                msg
+            );
+            return new Gson().toJson(response);
+        } 
     }
 }

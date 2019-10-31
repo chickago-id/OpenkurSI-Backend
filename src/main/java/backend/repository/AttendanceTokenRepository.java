@@ -13,10 +13,12 @@ import java.util.List;
 public interface AttendanceTokenRepository {
    
     AttendanceToken save(AttendanceToken objAT);
-    AttendanceToken update(Integer id, AttendanceToken objAT);
+    AttendanceToken update(Long id, AttendanceToken objAT);
     List<AttendanceToken> findAll();
-    AttendanceToken findById(@NotNull Integer id);
-    void deleteById(@NotNull Integer id);
+    AttendanceToken findById(@NotNull Long id);
+    void deleteById(@NotNull Long id);
     AttendanceToken findByToken(String token);
     List<Jadwal> findByIdPengajar(Long id_pengajar);
+    List<Jadwal> findByIdKelas(Long id_kelas);
+    Jadwal findByIdKelasAndIdMateri(Long id_kelas, Integer id_materi);
 }

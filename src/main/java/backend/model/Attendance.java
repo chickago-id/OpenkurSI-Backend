@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,14 +22,18 @@ public class Attendance implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "id_user", referencedColumnName="id_user", insertable = false, updatable = false, nullable = false)
     private UserDetail userDetail;
     private Long id_user;
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_kelas", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
-    private Kelas kelas;
-    private Long id_kelas;
+    @JoinColumn(name = "id_jadwal", referencedColumnName="id", insertable = false, updatable = false, nullable = false)
+    private Jadwal jadwal;
+    private Integer id_jadwal;
     private Date clock;
+    @Nullable
+    private Date clock_out;
+    @Nullable
+    private Integer is_approved;
     private Integer status;
     private Integer type;
     private String token;
@@ -73,28 +78,28 @@ public class Attendance implements Serializable {
         this.id_user = id_user;
     }
     /**
-     * @return the kelas
+     * @return the jadwal
      */
-    public Kelas getKelas() {
-        return kelas;
+    public Jadwal getJadwal() {
+        return jadwal;
     }
     /**
-     * @param kelas the kelas to set
+     * @param jadwal the jadwal to set
      */
-    public void setKelas(Kelas kelas) {
-        this.kelas = kelas;
+    public void setJadwal(Jadwal jadwal) {
+        this.jadwal = jadwal;
     }
     /**
-     * @return the id_kelas
+     * @return the id_jadwal
      */
-    public Long getId_kelas() {
-        return id_kelas;
+    public Integer getId_jadwal() {
+        return id_jadwal;
     }
     /**
-     * @param id_kelas the id_kelas to set
+     * @param id_jadwal the id_jadwal to set
      */
-    public void setId_kelas(Long id_kelas) {
-        this.id_kelas = id_kelas;
+    public void setId_jadwal(Integer id_jadwal) {
+        this.id_jadwal = id_jadwal;
     }
     /**
      * @return the clock
@@ -180,6 +185,30 @@ public class Attendance implements Serializable {
     public void setRecognition_id(Long recognition_id) {
         this.recognition_id = recognition_id;
     }
+    /**
+     * @return the clock_out
+     */
+    public Date getClock_out() {
+        return clock_out;
+    }
+    /**
+     * @param clock_out the clock_out to set
+     */
+    public void setClock_out(Date clock_out) {
+        this.clock_out = clock_out;
+    }
+    /**
+     * @return the is_approved
+     */
+    public Integer getIs_approved() {
+        return is_approved;
+    }
+    /**
+     * @param is_approved the is_approved to set
+     */
+    public void setIs_approved(Integer is_approved) {
+        this.is_approved = is_approved;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -187,28 +216,32 @@ public class Attendance implements Serializable {
         if (!(o instanceof Attendance)) return false;
         Attendance that = (Attendance) o;
         return Objects.equals(userDetail.getNama_lengkap(), that.userDetail.getNama_lengkap()) &&
-                Objects.equals(kelas.getKode_kelas(), that.kelas.getKode_kelas()) &&
+                Objects.equals(jadwal.getId(), that.jadwal.getId()) &&
                 Objects.equals(clock, that.clock) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(type, that.type) &&
                 Objects.equals(token, that.token) &&
                 Objects.equals(latitude, that.latitude) &&
                 Objects.equals(longitude, that.longitude) &&
-                Objects.equals(recognition_id, that.recognition_id);
+                Objects.equals(recognition_id, that.recognition_id) &&
+                Objects.equals(clock_out, that.clock_out) &&
+                Objects.equals(is_approved, that.is_approved);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
             userDetail.getNama_lengkap(), 
-            kelas.getKode_kelas(), 
+            jadwal.getId(), 
             clock, 
             status, 
             type, 
             token, 
             latitude, 
             longitude, 
-            recognition_id
+            recognition_id,
+            clock_out,
+            is_approved
         );
     }
 }
